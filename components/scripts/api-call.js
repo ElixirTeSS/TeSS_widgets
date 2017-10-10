@@ -1,4 +1,10 @@
+// At least temporarily, wrap in self-invoking function to keep variables
+// in local scope.
+(function () {
 
+'use strict';
+
+// Variables
 var app = require("biojs-rest-tessapi");
 var api = new app.EventsApi(); // Allocate the API class we're going to use.
 var resultsDiv = document.getElementById('results');
@@ -7,11 +13,21 @@ var eventDayOfMonth;
 var eventMonth;
 var eventYear;
 var displayDate;
+var html;
 var dayName = new Array("Sunday","Monday","Tuesday","Wednesday", "Thursday",
   "Friday","Saturday");
 var month = new Array("January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December");
 
+// Construct the query, process returned data, print the HTML
+//
+// Notes:
+// 1. Split these three actions up.
+// 2. Pull the raw parameters and callback out of eventsJsonGet() here and pass
+// them in instead? So:
+// api.eventsJsonGet(queryParameters, callbackFunction);
+// 3. Put query parameters into a 'settings' file?
+// 4. Make callbackFunction create variables that are printed into a separate template?
 api.eventsJsonGet (
 	{
     "q": "RNA-SEQ",
@@ -47,4 +63,6 @@ api.eventsJsonGet (
     html += '<p><a href="' + response.req.url + '">View your results on TeSS</a></p>';
 		resultsDiv.innerHTML = html;
 	}
-)
+) // End api.eventsJsonGet()
+
+}()); // End anonymous function
