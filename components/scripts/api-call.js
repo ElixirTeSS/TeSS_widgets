@@ -6,18 +6,11 @@
 
 	// Variables
 	var app = require("biojs-rest-tessapi");
+	var moment = require('moment');
 	var api = new app.EventsApi();
 	var resultsDiv = document.getElementById('results');
-	var startDate;
-	var eventDayOfMonth;
-	var eventMonth;
-	var eventYear;
 	var displayDate;
 	var html;
-	var dayName = new Array("Sunday","Monday","Tuesday","Wednesday", "Thursday",
-	  "Friday","Saturday");
-	var month = new Array("January", "February", "March", "April", "May", "June",
-	  "July", "August", "September", "October", "November", "December");
 
 	// Capture the query parameters
 	// See lib/api/EventsApi.js for full params options.
@@ -27,6 +20,64 @@
 		"country[]": ["Belgium"]
 	}
 
+	/**
+	 * Formats a date using moment.js
+	 * Notice that moment.js can deal with dates as strings
+	 * and dates as Javascript Date objects.
+	 *
+	 * @param {String or Date object} date
+	 * @param {String} dateFormat
+	 * @return {String} Formatted date
+	 */
+	function formatDate (date, dateFormat) {
+		if (dateFormat=='long'){
+			return moment(date).format('D MMMM YYYY');
+		} else if (dateFormat=='short') {
+			return moment(date).format('DD/MM/YYYY');
+		} else {
+			return moment(date).format('MM/DD/YYYY');
+		}
+	}
+
+	/**
+	 * NEEDS FIXING - day of month is wrong
+	 * Formats a date
+	 * Provides a simpler and more lightweight option than formatDate() above,
+	 * but at the cost of robustness and flexibility.
+	 * Converts a date string into a Date object first.
+	 *
+	 * @param {String} date
+	 * @param {String} dateFormat
+	 * @return {String} Formatted date
+
+	function formatDate2(date, dateFormat) {
+		var startDate;
+		var eventDayOfMonth;
+		var eventMonth;
+		var eventYear;
+		var displayDate;
+		var dayName = new Array("Sunday","Monday","Tuesday","Wednesday", "Thursday",
+		  "Friday","Saturday");
+		var month = new Array("January", "February", "March", "April", "May", "June",
+		  "July", "August", "September", "October", "November", "December");
+
+		startDate = new Date(date);
+		eventDayOfMonth = startDate.getDay();
+		eventMonth = month[startDate.getMonth()];
+		eventYear = startDate.getFullYear();
+
+		if(dateFormat=='long') {
+			displayDate = eventDayOfMonth + ' ' + eventMonth + ' ' + eventYear;
+		} else if (dateFormat=='short'){
+			displayDate = eventDayOfMonth + '/' + startDate.getMonth() + '/' + eventYear;
+		} else {
+			displayDate = 'test';
+		}
+
+		return displayDate;
+	}
+	*/
+
 	// Process returned data, print the HTML (callback function)
 	// TO-DO: Create variables that are printed into a separate template?
 	// i.e. pull the HTML out of here.
@@ -34,14 +85,7 @@
 		html = '<h1>Events</h1>';
 		html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
 		data.forEach(function(value){
-			// Refactor date conversion into a function/method
-			// or use moment.js
-			startDate = new Date(value['start']);
-			eventDayOfMonth = startDate.getDay();
-			eventMonth = month[startDate.getMonth()];
-			eventYear = startDate.getFullYear();
-			displayDate = eventDayOfMonth + ' ' + eventMonth + ' ' + eventYear;
-			//eventDay = dayName[startDate.getDay()];
+			displayDate = formatDate(value['start'], 'long');
 			html += '<tr><td>' + displayDate + '</td>';
 			html += '<td><a href="' + value['url'] + '">';
 			html += value['title'] + '</a></td>';

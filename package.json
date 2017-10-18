@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "?.git"
+    "url": "https://github.com/ElixirTeSS/list_widget.git"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "gulp-connect": "^5.0.0",
     "gulp-if": "^2.0.2",
     "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.8"
+    "gulp-util": "^3.0.8",
+    "moment": "^2.19.1"
   }
 }

@@ -15,6 +15,7 @@ var env,
     outputDir,
     sassStyle;
 
+// Use 'NODE_ENV=production gulp' for production mode.
 env = process.env.NODE_ENV || 'development';
 
 if (env==='development') {
