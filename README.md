@@ -11,3 +11,16 @@ The idea for the widget came from a need to share events across ELIXIR (see the 
 Work started on the widget in October 2017 and we are aiming to follow the [specification](https://docs.google.com/document/d/1nrEY2UlY5VHF4EPY_SdnwUNY2XyozMXErtQEyWPkzZY/edit) written a while ago for the widget. The goal will be to present a simple 'copy and paste' version for people who are less familiar with coding websites, and a customisable version for developers.
 
 The code makes use of the [TeSS Rest API client](https://github.com/ElixirTeSS/biojs-rest-tessapi).
+
+## Usage
+First you'll need npm and ruby installed. 
+
+`git clone https://github.com/ElixirTeSS/list_widget.git`
+
+`npm install`
+
+`gem install compass`
+
+`gulp`
+
+
