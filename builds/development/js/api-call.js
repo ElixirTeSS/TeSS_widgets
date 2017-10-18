@@ -41,7 +41,6 @@
 	}
 
 	/**
-	 * NEEDS FIXING - day of month is wrong
 	 * Formats a date
 	 * Provides a simpler and more lightweight option than formatDate() above,
 	 * but at the cost of robustness and flexibility.
@@ -50,7 +49,7 @@
 	 * @param {String} date
 	 * @param {String} dateFormat
 	 * @return {String} Formatted date
-
+*/
 	function formatDate2(date, dateFormat) {
 		var startDate;
 		var eventDayOfMonth;
@@ -63,7 +62,7 @@
 		  "July", "August", "September", "October", "November", "December");
 
 		startDate = new Date(date);
-		eventDayOfMonth = startDate.getDay();
+		eventDayOfMonth = startDate.getDate();
 		eventMonth = month[startDate.getMonth()];
 		eventYear = startDate.getFullYear();
 
@@ -72,12 +71,12 @@
 		} else if (dateFormat=='short'){
 			displayDate = eventDayOfMonth + '/' + startDate.getMonth() + '/' + eventYear;
 		} else {
-			displayDate = 'test';
+			displayDate = eventDayOfMonth + ' ' + eventMonth + ' ' + eventYear;
 		}
 
 		return displayDate;
 	}
-	*/
+
 
 	// Process returned data, print the HTML (callback function)
 	// TO-DO: Create variables that are printed into a separate template?
