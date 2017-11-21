@@ -30,7 +30,7 @@
 	 * @param {String} dateFormat
 	 * @return {String} Formatted date
 	 */
-	function formatDate (date, dateFormat) {
+	function formatDate(date, dateFormat) {
 		if (dateFormat=='long'){
 			return moment(date).format('D MMMM YYYY');
 		} else if (dateFormat=='short') {
@@ -40,73 +40,63 @@
 		}
 	}
 
-	/**
-	 * Formats a date 
-	 * Provides a simpler and more lightweight option than formatDate() above,
-	 * but at the cost of robustness and flexibility.
-	 * Converts a date string into a Date object first.
-	 *
-	 * @param {String} date
-	 * @param {String} dateFormat
-	 * @return {String} Formatted date
-*/
-	function formatDate2(date, dateFormat) {
-		var startDate;
-		var eventDayOfMonth;
-		var eventMonth;
-		var eventYear;
-		var displayDate;
-		var dayName = new Array("Sunday","Monday","Tuesday","Wednesday", "Thursday",
-		  "Friday","Saturday");
-		var month = new Array("January", "February", "March", "April", "May", "June",
-		  "July", "August", "September", "October", "November", "December");
-
-		startDate = new Date(date);
-		eventDayOfMonth = startDate.getDate();
-		eventMonth = month[startDate.getMonth()];
-		eventYear = startDate.getFullYear();
-
-		if(dateFormat=='long') {
-			displayDate = eventDayOfMonth + ' ' + eventMonth + ' ' + eventYear;
-		} else if (dateFormat=='short'){
-			displayDate = eventDayOfMonth + '/' + startDate.getMonth() + '/' + eventYear;
-		} else {
-			displayDate = eventDayOfMonth + ' ' + eventMonth + ' ' + eventYear;
-		}
-
-		return displayDate;
-	}
-
+    function humanize(string) {
+        var stripped = string.toLowerCase().replace('-', ' ');
+        // Replace first character, and any character occurring after whitespace, with a capitalized version.
+        return stripped.replace(/(^| )(\w)/g, function(x) {
+            return x.toUpperCase();
+        });
+    }
 
 	// Process returned data, print the HTML (callback function)
 	// TO-DO: Create variables that are printed into a separate template?
 	// i.e. pull the HTML out of here.
-	function processReturnedData (error, data, response){
-		html = '<h1>Events</h1>';
+	function processReturnedData(error, data, response){
+        console.log(data);
+
+        var html = '<div class="tess-list-widget">';
+        html += '<div class="tess-facets">';
+
+        for (var key in data.meta['available-facets']) {
+            html += '<div class="tess-facet">';
+            html += '<h3>' + humanize(key) + '</h3>';
+            html += '<ul>';
+            data.meta['available-facets'][key].forEach(function (facet) {
+                html += '<li>' + facet.value + ' (' + facet.count + ')</li>';
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+        html += '<div class="tess-results">';
+        html += '<h1>Events</h1>';
 		html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
 		data.data.forEach(function(event){
-            var value = event.attributes;
-			displayDate = formatDate(value['start'], 'long');
+            var attributes = event.attributes;
+			displayDate = formatDate(attributes['start'], 'long');
 			html += '<tr><td>' + displayDate + '</td>';
-			html += '<td><a href="' + value['url'] + '">';
-			html += value['title'] + '</a></td>';
-			if ((value['city'] !== 'null') && (value['country'] !== 'null')) {
-				value['city'] = value['city'] + ', ';
+			html += '<td><a href="' + event.links.redirect + '">';
+			html += attributes['title'] + '</a></td>';
+			if ((attributes['city'] !== 'null') && (attributes['country'] !== 'null')) {
+				attributes['city'] = attributes['city'] + ', ';
 			}
-			if(value['city'] === 'null') {
-				value['city'] = '';
+			if(attributes['city'] === 'null') {
+				attributes['city'] = '';
 			}
-			if(value['country'] === 'null' ) {
-				value['country'] = '';
+			if(attributes['country'] === 'null' ) {
+				attributes['country'] = '';
 			}
-			html += '<td>' + value['city'] + value['country'] + '</td></tr>';
-		})
+			html += '<td>' + attributes['city'] + attributes['country'] + '</td></tr>';
+		});
 		html += '</table>';
 		html += '<p><a href="' + response.req.url + '">View your results on TeSS</a></p>';
+        html += '</div>';
 		resultsDiv.innerHTML = html;
 	}
 
-	api.eventsGet(processReturnedData);
+	api.eventsGet({ q: 'python' }, processReturnedData);
+
+    //
+
 }()); // End anonymous function
 
 },{"moment":6,"tess_json_api":12}],2:[function(require,module,exports){
@@ -7926,16 +7916,24 @@ Emitter.prototype.hasListeners = function(event){
      */
 
     /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.q Search keywords.
+     * @param {Number} opts.pageNumber The page of the collection to view. (default to 1)
+     * @param {Number} opts.pageSize The number of results to return per page. (default to 30)
      * @param {module:api/DefaultApi~eventsGetCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/EventCollection}
      */
-    this.eventsGet = function(callback) {
+    this.eventsGet = function(opts, callback) {
+      opts = opts || {};
       var postBody = null;
 
 
       var pathParams = {
       };
       var queryParams = {
+        'q': opts['q'],
+        'page_number': opts['pageNumber'],
+        'page_size': opts['pageSize']
       };
       var headerParams = {
       };
@@ -8002,7 +8000,7 @@ Emitter.prototype.hasListeners = function(event){
   return exports;
 }));
 
-},{"../ApiClient":10,"../model/Event":14,"../model/EventCollection":16}],12:[function(require,module,exports){
+},{"../ApiClient":10,"../model/Event":13,"../model/EventCollection":15}],12:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8030,12 +8028,12 @@ Emitter.prototype.hasListeners = function(event){
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ApiResource', 'model/Event', 'model/EventAttributes', 'model/EventCollection', 'model/EventResource', 'model/EventResourceRelationships', 'model/EventResourceRelationshipsNodes', 'model/EventResourceRelationshipsUser', 'model/Facet', 'model/FacetedCollection', 'model/FacetedCollectionMeta', 'model/Links', 'model/PaginationLinks', 'model/ScientificTopic', 'api/DefaultApi'], factory);
+    define(['ApiClient', 'model/Event', 'model/EventAttributes', 'model/EventCollection', 'model/EventResource', 'model/EventResourceRelationships', 'model/Facet', 'model/FacetedCollection', 'model/FacetedCollectionMeta', 'model/JsonApiResponse', 'model/Links', 'model/MultiRelationshipObject', 'model/PaginationLinks', 'model/ResourceIdentifierObject', 'model/ResourceObject', 'model/ScientificTopic', 'model/SingleRelationshipObject', 'api/DefaultApi'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('./ApiClient'), require('./model/ApiResource'), require('./model/Event'), require('./model/EventAttributes'), require('./model/EventCollection'), require('./model/EventResource'), require('./model/EventResourceRelationships'), require('./model/EventResourceRelationshipsNodes'), require('./model/EventResourceRelationshipsUser'), require('./model/Facet'), require('./model/FacetedCollection'), require('./model/FacetedCollectionMeta'), require('./model/Links'), require('./model/PaginationLinks'), require('./model/ScientificTopic'), require('./api/DefaultApi'));
+    module.exports = factory(require('./ApiClient'), require('./model/Event'), require('./model/EventAttributes'), require('./model/EventCollection'), require('./model/EventResource'), require('./model/EventResourceRelationships'), require('./model/Facet'), require('./model/FacetedCollection'), require('./model/FacetedCollectionMeta'), require('./model/JsonApiResponse'), require('./model/Links'), require('./model/MultiRelationshipObject'), require('./model/PaginationLinks'), require('./model/ResourceIdentifierObject'), require('./model/ResourceObject'), require('./model/ScientificTopic'), require('./model/SingleRelationshipObject'), require('./api/DefaultApi'));
   }
-}(function(ApiClient, ApiResource, Event, EventAttributes, EventCollection, EventResource, EventResourceRelationships, EventResourceRelationshipsNodes, EventResourceRelationshipsUser, Facet, FacetedCollection, FacetedCollectionMeta, Links, PaginationLinks, ScientificTopic, DefaultApi) {
+}(function(ApiClient, Event, EventAttributes, EventCollection, EventResource, EventResourceRelationships, Facet, FacetedCollection, FacetedCollectionMeta, JsonApiResponse, Links, MultiRelationshipObject, PaginationLinks, ResourceIdentifierObject, ResourceObject, ScientificTopic, SingleRelationshipObject, DefaultApi) {
   'use strict';
 
   /**
@@ -8076,11 +8074,6 @@ Emitter.prototype.hasListeners = function(event){
      */
     ApiClient: ApiClient,
     /**
-     * The ApiResource model constructor.
-     * @property {module:model/ApiResource}
-     */
-    ApiResource: ApiResource,
-    /**
      * The Event model constructor.
      * @property {module:model/Event}
      */
@@ -8106,16 +8099,6 @@ Emitter.prototype.hasListeners = function(event){
      */
     EventResourceRelationships: EventResourceRelationships,
     /**
-     * The EventResourceRelationshipsNodes model constructor.
-     * @property {module:model/EventResourceRelationshipsNodes}
-     */
-    EventResourceRelationshipsNodes: EventResourceRelationshipsNodes,
-    /**
-     * The EventResourceRelationshipsUser model constructor.
-     * @property {module:model/EventResourceRelationshipsUser}
-     */
-    EventResourceRelationshipsUser: EventResourceRelationshipsUser,
-    /**
      * The Facet model constructor.
      * @property {module:model/Facet}
      */
@@ -8131,20 +8114,45 @@ Emitter.prototype.hasListeners = function(event){
      */
     FacetedCollectionMeta: FacetedCollectionMeta,
     /**
+     * The JsonApiResponse model constructor.
+     * @property {module:model/JsonApiResponse}
+     */
+    JsonApiResponse: JsonApiResponse,
+    /**
      * The Links model constructor.
      * @property {module:model/Links}
      */
     Links: Links,
+    /**
+     * The MultiRelationshipObject model constructor.
+     * @property {module:model/MultiRelationshipObject}
+     */
+    MultiRelationshipObject: MultiRelationshipObject,
     /**
      * The PaginationLinks model constructor.
      * @property {module:model/PaginationLinks}
      */
     PaginationLinks: PaginationLinks,
     /**
+     * The ResourceIdentifierObject model constructor.
+     * @property {module:model/ResourceIdentifierObject}
+     */
+    ResourceIdentifierObject: ResourceIdentifierObject,
+    /**
+     * The ResourceObject model constructor.
+     * @property {module:model/ResourceObject}
+     */
+    ResourceObject: ResourceObject,
+    /**
      * The ScientificTopic model constructor.
      * @property {module:model/ScientificTopic}
      */
     ScientificTopic: ScientificTopic,
+    /**
+     * The SingleRelationshipObject model constructor.
+     * @property {module:model/SingleRelationshipObject}
+     */
+    SingleRelationshipObject: SingleRelationshipObject,
     /**
      * The DefaultApi service constructor.
      * @property {module:api/DefaultApi}
@@ -8155,7 +8163,7 @@ Emitter.prototype.hasListeners = function(event){
   return exports;
 }));
 
-},{"./ApiClient":10,"./api/DefaultApi":11,"./model/ApiResource":13,"./model/Event":14,"./model/EventAttributes":15,"./model/EventCollection":16,"./model/EventResource":17,"./model/EventResourceRelationships":18,"./model/EventResourceRelationshipsNodes":19,"./model/EventResourceRelationshipsUser":20,"./model/Facet":21,"./model/FacetedCollection":22,"./model/FacetedCollectionMeta":23,"./model/Links":24,"./model/PaginationLinks":25,"./model/ScientificTopic":26}],13:[function(require,module,exports){
+},{"./ApiClient":10,"./api/DefaultApi":11,"./model/Event":13,"./model/EventAttributes":14,"./model/EventCollection":15,"./model/EventResource":16,"./model/EventResourceRelationships":17,"./model/Facet":18,"./model/FacetedCollection":19,"./model/FacetedCollectionMeta":20,"./model/JsonApiResponse":21,"./model/Links":22,"./model/MultiRelationshipObject":23,"./model/PaginationLinks":24,"./model/ResourceIdentifierObject":25,"./model/ResourceObject":26,"./model/ScientificTopic":27,"./model/SingleRelationshipObject":28}],13:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8183,126 +8191,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/Links'], factory);
+    define(['ApiClient', 'model/EventResource', 'model/JsonApiResponse', 'model/Links'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./Links'));
+    module.exports = factory(require('../ApiClient'), require('./EventResource'), require('./JsonApiResponse'), require('./Links'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.ApiResource = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.Links);
+    root.TessJsonApi.Event = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventResource, root.TessJsonApi.JsonApiResponse, root.TessJsonApi.Links);
   }
-}(this, function(ApiClient, Links) {
-  'use strict';
-
-
-
-
-  /**
-   * The ApiResource model module.
-   * @module model/ApiResource
-   * @version 0.0.1
-   */
-
-  /**
-   * Constructs a new <code>ApiResource</code>.
-   * @alias module:model/ApiResource
-   * @class
-   */
-  var exports = function() {
-    var _this = this;
-
-
-
-
-  };
-
-  /**
-   * Constructs a <code>ApiResource</code> from a plain JavaScript object, optionally creating a new instance.
-   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
-   * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/ApiResource} obj Optional instance to populate.
-   * @return {module:model/ApiResource} The populated <code>ApiResource</code> instance.
-   */
-  exports.constructFromObject = function(data, obj) {
-    if (data) {
-      obj = obj || new exports();
-
-      if (data.hasOwnProperty('id')) {
-        obj['id'] = ApiClient.convertToType(data['id'], 'String');
-      }
-      if (data.hasOwnProperty('type')) {
-        obj['type'] = ApiClient.convertToType(data['type'], 'String');
-      }
-      if (data.hasOwnProperty('links')) {
-        obj['links'] = Links.constructFromObject(data['links']);
-      }
-    }
-    return obj;
-  }
-
-  /**
-   * @member {String} id
-   */
-  exports.prototype['id'] = undefined;
-  /**
-   * @member {String} type
-   */
-  exports.prototype['type'] = undefined;
-  /**
-   * @member {module:model/Links} links
-   */
-  exports.prototype['links'] = undefined;
-
-
-
-  return exports;
-}));
-
-
-
-},{"../ApiClient":10,"./Links":24}],14:[function(require,module,exports){
-/**
- * TeSS JSON-API
- * Testing the JSON-API API for TeSS. 
- *
- * OpenAPI spec version: 0.0.1
- * Contact: tess-support@googlegroups.com
- *
- * NOTE: This class is auto generated by the swagger code generator program.
- * https://github.com/swagger-api/swagger-codegen.git
- * Do not edit the class manually.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/EventResource'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./EventResource'));
-  } else {
-    // Browser globals (root is window)
-    if (!root.TessJsonApi) {
-      root.TessJsonApi = {};
-    }
-    root.TessJsonApi.Event = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventResource);
-  }
-}(this, function(ApiClient, EventResource) {
+}(this, function(ApiClient, EventResource, JsonApiResponse, Links) {
   'use strict';
 
 
@@ -8318,10 +8218,11 @@ Emitter.prototype.hasListeners = function(event){
    * Constructs a new <code>Event</code>.
    * @alias module:model/Event
    * @class
+   * @extends module:model/JsonApiResponse
    */
   var exports = function() {
     var _this = this;
-
+    JsonApiResponse.call(_this);
 
   };
 
@@ -8335,13 +8236,16 @@ Emitter.prototype.hasListeners = function(event){
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
-
+      JsonApiResponse.constructFromObject(data, obj);
       if (data.hasOwnProperty('data')) {
         obj['data'] = EventResource.constructFromObject(data['data']);
       }
     }
     return obj;
   }
+
+  exports.prototype = Object.create(JsonApiResponse.prototype);
+  exports.prototype.constructor = exports;
 
   /**
    * @member {module:model/EventResource} data
@@ -8355,7 +8259,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./EventResource":17}],15:[function(require,module,exports){
+},{"../ApiClient":10,"./EventResource":16,"./JsonApiResponse":21,"./Links":22}],14:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8664,7 +8568,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./ScientificTopic":26}],16:[function(require,module,exports){
+},{"../ApiClient":10,"./ScientificTopic":27}],15:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8692,18 +8596,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/EventResource', 'model/FacetedCollection', 'model/FacetedCollectionMeta'], factory);
+    define(['ApiClient', 'model/EventResource', 'model/FacetedCollection', 'model/FacetedCollectionMeta', 'model/Links'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./EventResource'), require('./FacetedCollection'), require('./FacetedCollectionMeta'));
+    module.exports = factory(require('../ApiClient'), require('./EventResource'), require('./FacetedCollection'), require('./FacetedCollectionMeta'), require('./Links'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.EventCollection = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventResource, root.TessJsonApi.FacetedCollection, root.TessJsonApi.FacetedCollectionMeta);
+    root.TessJsonApi.EventCollection = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventResource, root.TessJsonApi.FacetedCollection, root.TessJsonApi.FacetedCollectionMeta, root.TessJsonApi.Links);
   }
-}(this, function(ApiClient, EventResource, FacetedCollection, FacetedCollectionMeta) {
+}(this, function(ApiClient, EventResource, FacetedCollection, FacetedCollectionMeta, Links) {
   'use strict';
 
 
@@ -8760,7 +8664,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./EventResource":17,"./FacetedCollection":22,"./FacetedCollectionMeta":23}],17:[function(require,module,exports){
+},{"../ApiClient":10,"./EventResource":16,"./FacetedCollection":19,"./FacetedCollectionMeta":20,"./Links":22}],16:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8788,18 +8692,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ApiResource', 'model/EventAttributes', 'model/EventResourceRelationships', 'model/Links'], factory);
+    define(['ApiClient', 'model/EventAttributes', 'model/EventResourceRelationships', 'model/Links', 'model/ResourceObject'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./ApiResource'), require('./EventAttributes'), require('./EventResourceRelationships'), require('./Links'));
+    module.exports = factory(require('../ApiClient'), require('./EventAttributes'), require('./EventResourceRelationships'), require('./Links'), require('./ResourceObject'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.EventResource = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.ApiResource, root.TessJsonApi.EventAttributes, root.TessJsonApi.EventResourceRelationships, root.TessJsonApi.Links);
+    root.TessJsonApi.EventResource = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventAttributes, root.TessJsonApi.EventResourceRelationships, root.TessJsonApi.Links, root.TessJsonApi.ResourceObject);
   }
-}(this, function(ApiClient, ApiResource, EventAttributes, EventResourceRelationships, Links) {
+}(this, function(ApiClient, EventAttributes, EventResourceRelationships, Links, ResourceObject) {
   'use strict';
 
 
@@ -8815,11 +8719,11 @@ Emitter.prototype.hasListeners = function(event){
    * Constructs a new <code>EventResource</code>.
    * @alias module:model/EventResource
    * @class
-   * @extends module:model/ApiResource
+   * @extends module:model/ResourceObject
    */
   var exports = function() {
     var _this = this;
-    ApiResource.call(_this);
+    ResourceObject.call(_this);
 
 
   };
@@ -8834,7 +8738,7 @@ Emitter.prototype.hasListeners = function(event){
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
-      ApiResource.constructFromObject(data, obj);
+      ResourceObject.constructFromObject(data, obj);
       if (data.hasOwnProperty('attributes')) {
         obj['attributes'] = EventAttributes.constructFromObject(data['attributes']);
       }
@@ -8845,7 +8749,7 @@ Emitter.prototype.hasListeners = function(event){
     return obj;
   }
 
-  exports.prototype = Object.create(ApiResource.prototype);
+  exports.prototype = Object.create(ResourceObject.prototype);
   exports.prototype.constructor = exports;
 
   /**
@@ -8864,7 +8768,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./ApiResource":13,"./EventAttributes":15,"./EventResourceRelationships":18,"./Links":24}],18:[function(require,module,exports){
+},{"../ApiClient":10,"./EventAttributes":14,"./EventResourceRelationships":17,"./Links":22,"./ResourceObject":26}],17:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -8892,18 +8796,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/EventResourceRelationshipsNodes', 'model/EventResourceRelationshipsUser'], factory);
+    define(['ApiClient', 'model/MultiRelationshipObject', 'model/SingleRelationshipObject'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./EventResourceRelationshipsNodes'), require('./EventResourceRelationshipsUser'));
+    module.exports = factory(require('../ApiClient'), require('./MultiRelationshipObject'), require('./SingleRelationshipObject'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.EventResourceRelationships = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.EventResourceRelationshipsNodes, root.TessJsonApi.EventResourceRelationshipsUser);
+    root.TessJsonApi.EventResourceRelationships = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.MultiRelationshipObject, root.TessJsonApi.SingleRelationshipObject);
   }
-}(this, function(ApiClient, EventResourceRelationshipsNodes, EventResourceRelationshipsUser) {
+}(this, function(ApiClient, MultiRelationshipObject, SingleRelationshipObject) {
   'use strict';
 
 
@@ -8940,28 +8844,28 @@ Emitter.prototype.hasListeners = function(event){
       obj = obj || new exports();
 
       if (data.hasOwnProperty('user')) {
-        obj['user'] = EventResourceRelationshipsUser.constructFromObject(data['user']);
+        obj['user'] = SingleRelationshipObject.constructFromObject(data['user']);
       }
       if (data.hasOwnProperty('content-provider')) {
-        obj['content-provider'] = EventResourceRelationshipsUser.constructFromObject(data['content-provider']);
+        obj['content-provider'] = SingleRelationshipObject.constructFromObject(data['content-provider']);
       }
       if (data.hasOwnProperty('nodes')) {
-        obj['nodes'] = EventResourceRelationshipsNodes.constructFromObject(data['nodes']);
+        obj['nodes'] = MultiRelationshipObject.constructFromObject(data['nodes']);
       }
     }
     return obj;
   }
 
   /**
-   * @member {module:model/EventResourceRelationshipsUser} user
+   * @member {module:model/SingleRelationshipObject} user
    */
   exports.prototype['user'] = undefined;
   /**
-   * @member {module:model/EventResourceRelationshipsUser} content-provider
+   * @member {module:model/SingleRelationshipObject} content-provider
    */
   exports.prototype['content-provider'] = undefined;
   /**
-   * @member {module:model/EventResourceRelationshipsNodes} nodes
+   * @member {module:model/MultiRelationshipObject} nodes
    */
   exports.prototype['nodes'] = undefined;
 
@@ -8972,191 +8876,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./EventResourceRelationshipsNodes":19,"./EventResourceRelationshipsUser":20}],19:[function(require,module,exports){
-/**
- * TeSS JSON-API
- * Testing the JSON-API API for TeSS. 
- *
- * OpenAPI spec version: 0.0.1
- * Contact: tess-support@googlegroups.com
- *
- * NOTE: This class is auto generated by the swagger code generator program.
- * https://github.com/swagger-api/swagger-codegen.git
- * Do not edit the class manually.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ApiResource'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./ApiResource'));
-  } else {
-    // Browser globals (root is window)
-    if (!root.TessJsonApi) {
-      root.TessJsonApi = {};
-    }
-    root.TessJsonApi.EventResourceRelationshipsNodes = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.ApiResource);
-  }
-}(this, function(ApiClient, ApiResource) {
-  'use strict';
-
-
-
-
-  /**
-   * The EventResourceRelationshipsNodes model module.
-   * @module model/EventResourceRelationshipsNodes
-   * @version 0.0.1
-   */
-
-  /**
-   * Constructs a new <code>EventResourceRelationshipsNodes</code>.
-   * @alias module:model/EventResourceRelationshipsNodes
-   * @class
-   */
-  var exports = function() {
-    var _this = this;
-
-
-  };
-
-  /**
-   * Constructs a <code>EventResourceRelationshipsNodes</code> from a plain JavaScript object, optionally creating a new instance.
-   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
-   * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/EventResourceRelationshipsNodes} obj Optional instance to populate.
-   * @return {module:model/EventResourceRelationshipsNodes} The populated <code>EventResourceRelationshipsNodes</code> instance.
-   */
-  exports.constructFromObject = function(data, obj) {
-    if (data) {
-      obj = obj || new exports();
-
-      if (data.hasOwnProperty('data')) {
-        obj['data'] = ApiClient.convertToType(data['data'], [ApiResource]);
-      }
-    }
-    return obj;
-  }
-
-  /**
-   * @member {Array.<module:model/ApiResource>} data
-   */
-  exports.prototype['data'] = undefined;
-
-
-
-  return exports;
-}));
-
-
-
-},{"../ApiClient":10,"./ApiResource":13}],20:[function(require,module,exports){
-/**
- * TeSS JSON-API
- * Testing the JSON-API API for TeSS. 
- *
- * OpenAPI spec version: 0.0.1
- * Contact: tess-support@googlegroups.com
- *
- * NOTE: This class is auto generated by the swagger code generator program.
- * https://github.com/swagger-api/swagger-codegen.git
- * Do not edit the class manually.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ApiResource'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./ApiResource'));
-  } else {
-    // Browser globals (root is window)
-    if (!root.TessJsonApi) {
-      root.TessJsonApi = {};
-    }
-    root.TessJsonApi.EventResourceRelationshipsUser = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.ApiResource);
-  }
-}(this, function(ApiClient, ApiResource) {
-  'use strict';
-
-
-
-
-  /**
-   * The EventResourceRelationshipsUser model module.
-   * @module model/EventResourceRelationshipsUser
-   * @version 0.0.1
-   */
-
-  /**
-   * Constructs a new <code>EventResourceRelationshipsUser</code>.
-   * @alias module:model/EventResourceRelationshipsUser
-   * @class
-   */
-  var exports = function() {
-    var _this = this;
-
-
-  };
-
-  /**
-   * Constructs a <code>EventResourceRelationshipsUser</code> from a plain JavaScript object, optionally creating a new instance.
-   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
-   * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/EventResourceRelationshipsUser} obj Optional instance to populate.
-   * @return {module:model/EventResourceRelationshipsUser} The populated <code>EventResourceRelationshipsUser</code> instance.
-   */
-  exports.constructFromObject = function(data, obj) {
-    if (data) {
-      obj = obj || new exports();
-
-      if (data.hasOwnProperty('data')) {
-        obj['data'] = ApiResource.constructFromObject(data['data']);
-      }
-    }
-    return obj;
-  }
-
-  /**
-   * @member {module:model/ApiResource} data
-   */
-  exports.prototype['data'] = undefined;
-
-
-
-  return exports;
-}));
-
-
-
-},{"../ApiClient":10,"./ApiResource":13}],21:[function(require,module,exports){
+},{"../ApiClient":10,"./MultiRelationshipObject":23,"./SingleRelationshipObject":28}],18:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9256,7 +8976,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10}],22:[function(require,module,exports){
+},{"../ApiClient":10}],19:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9284,18 +9004,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/FacetedCollectionMeta'], factory);
+    define(['ApiClient', 'model/FacetedCollectionMeta', 'model/JsonApiResponse', 'model/Links'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./FacetedCollectionMeta'));
+    module.exports = factory(require('../ApiClient'), require('./FacetedCollectionMeta'), require('./JsonApiResponse'), require('./Links'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.FacetedCollection = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.FacetedCollectionMeta);
+    root.TessJsonApi.FacetedCollection = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.FacetedCollectionMeta, root.TessJsonApi.JsonApiResponse, root.TessJsonApi.Links);
   }
-}(this, function(ApiClient, FacetedCollectionMeta) {
+}(this, function(ApiClient, FacetedCollectionMeta, JsonApiResponse, Links) {
   'use strict';
 
 
@@ -9311,10 +9031,11 @@ Emitter.prototype.hasListeners = function(event){
    * Constructs a new <code>FacetedCollection</code>.
    * @alias module:model/FacetedCollection
    * @class
+   * @extends module:model/JsonApiResponse
    */
   var exports = function() {
     var _this = this;
-
+    JsonApiResponse.call(_this);
 
   };
 
@@ -9328,13 +9049,16 @@ Emitter.prototype.hasListeners = function(event){
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
-
+      JsonApiResponse.constructFromObject(data, obj);
       if (data.hasOwnProperty('meta')) {
         obj['meta'] = FacetedCollectionMeta.constructFromObject(data['meta']);
       }
     }
     return obj;
   }
+
+  exports.prototype = Object.create(JsonApiResponse.prototype);
+  exports.prototype.constructor = exports;
 
   /**
    * @member {module:model/FacetedCollectionMeta} meta
@@ -9348,7 +9072,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10,"./FacetedCollectionMeta":23}],23:[function(require,module,exports){
+},{"../ApiClient":10,"./FacetedCollectionMeta":20,"./JsonApiResponse":21,"./Links":22}],20:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9376,18 +9100,18 @@ Emitter.prototype.hasListeners = function(event){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient'], factory);
+    define(['ApiClient', 'model/Facet'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'));
+    module.exports = factory(require('../ApiClient'), require('./Facet'));
   } else {
     // Browser globals (root is window)
     if (!root.TessJsonApi) {
       root.TessJsonApi = {};
     }
-    root.TessJsonApi.FacetedCollectionMeta = factory(root.TessJsonApi.ApiClient);
+    root.TessJsonApi.FacetedCollectionMeta = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.Facet);
   }
-}(this, function(ApiClient) {
+}(this, function(ApiClient, Facet) {
   'use strict';
 
 
@@ -9408,6 +9132,8 @@ Emitter.prototype.hasListeners = function(event){
     var _this = this;
 
 
+
+
   };
 
   /**
@@ -9424,6 +9150,12 @@ Emitter.prototype.hasListeners = function(event){
       if (data.hasOwnProperty('query')) {
         obj['query'] = ApiClient.convertToType(data['query'], 'String');
       }
+      if (data.hasOwnProperty('facets')) {
+        obj['facets'] = ApiClient.convertToType(data['facets'], {'String': 'String'});
+      }
+      if (data.hasOwnProperty('available-facets')) {
+        obj['available-facets'] = ApiClient.convertToType(data['available-facets'], {'String': [Facet]});
+      }
     }
     return obj;
   }
@@ -9434,6 +9166,16 @@ Emitter.prototype.hasListeners = function(event){
    * @default ''
    */
   exports.prototype['query'] = '';
+  /**
+   * The filters that are currently applied to the collection.
+   * @member {Object.<String, String>} facets
+   */
+  exports.prototype['facets'] = undefined;
+  /**
+   * The set of filters that are available to be applied to the collection.
+   * @member {Object.<String, Array.<module:model/Facet>>} available-facets
+   */
+  exports.prototype['available-facets'] = undefined;
 
 
 
@@ -9442,7 +9184,131 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10}],24:[function(require,module,exports){
+},{"../ApiClient":10,"./Facet":18}],21:[function(require,module,exports){
+/**
+ * TeSS JSON-API
+ * Testing the JSON-API API for TeSS. 
+ *
+ * OpenAPI spec version: 0.0.1
+ * Contact: tess-support@googlegroups.com
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['ApiClient', 'model/Links'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // CommonJS-like environments that support module.exports, like Node.
+    module.exports = factory(require('../ApiClient'), require('./Links'));
+  } else {
+    // Browser globals (root is window)
+    if (!root.TessJsonApi) {
+      root.TessJsonApi = {};
+    }
+    root.TessJsonApi.JsonApiResponse = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.Links);
+  }
+}(this, function(ApiClient, Links) {
+  'use strict';
+
+
+
+
+  /**
+   * The JsonApiResponse model module.
+   * @module model/JsonApiResponse
+   * @version 0.0.1
+   */
+
+  /**
+   * Constructs a new <code>JsonApiResponse</code>.
+   * @alias module:model/JsonApiResponse
+   * @class
+   */
+  var exports = function() {
+    var _this = this;
+
+
+
+
+
+
+  };
+
+  /**
+   * Constructs a <code>JsonApiResponse</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {module:model/JsonApiResponse} obj Optional instance to populate.
+   * @return {module:model/JsonApiResponse} The populated <code>JsonApiResponse</code> instance.
+   */
+  exports.constructFromObject = function(data, obj) {
+    if (data) {
+      obj = obj || new exports();
+
+      if (data.hasOwnProperty('errors')) {
+        obj['errors'] = ApiClient.convertToType(data['errors'], Object);
+      }
+      if (data.hasOwnProperty('meta')) {
+        obj['meta'] = ApiClient.convertToType(data['meta'], Object);
+      }
+      if (data.hasOwnProperty('links')) {
+        obj['links'] = Links.constructFromObject(data['links']);
+      }
+      if (data.hasOwnProperty('included')) {
+        obj['included'] = ApiClient.convertToType(data['included'], Object);
+      }
+      if (data.hasOwnProperty('jsonapi')) {
+        obj['jsonapi'] = ApiClient.convertToType(data['jsonapi'], Object);
+      }
+    }
+    return obj;
+  }
+
+  /**
+   * @member {Object} errors
+   */
+  exports.prototype['errors'] = undefined;
+  /**
+   * @member {Object} meta
+   */
+  exports.prototype['meta'] = undefined;
+  /**
+   * @member {module:model/Links} links
+   */
+  exports.prototype['links'] = undefined;
+  /**
+   * @member {Object} included
+   */
+  exports.prototype['included'] = undefined;
+  /**
+   * @member {Object} jsonapi
+   */
+  exports.prototype['jsonapi'] = undefined;
+
+
+
+  return exports;
+}));
+
+
+
+},{"../ApiClient":10,"./Links":22}],22:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9535,7 +9401,115 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10}],25:[function(require,module,exports){
+},{"../ApiClient":10}],23:[function(require,module,exports){
+/**
+ * TeSS JSON-API
+ * Testing the JSON-API API for TeSS. 
+ *
+ * OpenAPI spec version: 0.0.1
+ * Contact: tess-support@googlegroups.com
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['ApiClient', 'model/ResourceIdentifierObject'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // CommonJS-like environments that support module.exports, like Node.
+    module.exports = factory(require('../ApiClient'), require('./ResourceIdentifierObject'));
+  } else {
+    // Browser globals (root is window)
+    if (!root.TessJsonApi) {
+      root.TessJsonApi = {};
+    }
+    root.TessJsonApi.MultiRelationshipObject = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.ResourceIdentifierObject);
+  }
+}(this, function(ApiClient, ResourceIdentifierObject) {
+  'use strict';
+
+
+
+
+  /**
+   * The MultiRelationshipObject model module.
+   * @module model/MultiRelationshipObject
+   * @version 0.0.1
+   */
+
+  /**
+   * Constructs a new <code>MultiRelationshipObject</code>.
+   * @alias module:model/MultiRelationshipObject
+   * @class
+   */
+  var exports = function() {
+    var _this = this;
+
+
+
+
+  };
+
+  /**
+   * Constructs a <code>MultiRelationshipObject</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {module:model/MultiRelationshipObject} obj Optional instance to populate.
+   * @return {module:model/MultiRelationshipObject} The populated <code>MultiRelationshipObject</code> instance.
+   */
+  exports.constructFromObject = function(data, obj) {
+    if (data) {
+      obj = obj || new exports();
+
+      if (data.hasOwnProperty('links')) {
+        obj['links'] = ApiClient.convertToType(data['links'], Object);
+      }
+      if (data.hasOwnProperty('data')) {
+        obj['data'] = ApiClient.convertToType(data['data'], [ResourceIdentifierObject]);
+      }
+      if (data.hasOwnProperty('meta')) {
+        obj['meta'] = ApiClient.convertToType(data['meta'], Object);
+      }
+    }
+    return obj;
+  }
+
+  /**
+   * @member {Object} links
+   */
+  exports.prototype['links'] = undefined;
+  /**
+   * @member {Array.<module:model/ResourceIdentifierObject>} data
+   */
+  exports.prototype['data'] = undefined;
+  /**
+   * @member {Object} meta
+   */
+  exports.prototype['meta'] = undefined;
+
+
+
+  return exports;
+}));
+
+
+
+},{"../ApiClient":10,"./ResourceIdentifierObject":25}],24:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9655,7 +9629,227 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
+},{"../ApiClient":10}],25:[function(require,module,exports){
+/**
+ * TeSS JSON-API
+ * Testing the JSON-API API for TeSS. 
+ *
+ * OpenAPI spec version: 0.0.1
+ * Contact: tess-support@googlegroups.com
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['ApiClient'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // CommonJS-like environments that support module.exports, like Node.
+    module.exports = factory(require('../ApiClient'));
+  } else {
+    // Browser globals (root is window)
+    if (!root.TessJsonApi) {
+      root.TessJsonApi = {};
+    }
+    root.TessJsonApi.ResourceIdentifierObject = factory(root.TessJsonApi.ApiClient);
+  }
+}(this, function(ApiClient) {
+  'use strict';
+
+
+
+
+  /**
+   * The ResourceIdentifierObject model module.
+   * @module model/ResourceIdentifierObject
+   * @version 0.0.1
+   */
+
+  /**
+   * Constructs a new <code>ResourceIdentifierObject</code>.
+   * @alias module:model/ResourceIdentifierObject
+   * @class
+   */
+  var exports = function() {
+    var _this = this;
+
+
+
+
+  };
+
+  /**
+   * Constructs a <code>ResourceIdentifierObject</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {module:model/ResourceIdentifierObject} obj Optional instance to populate.
+   * @return {module:model/ResourceIdentifierObject} The populated <code>ResourceIdentifierObject</code> instance.
+   */
+  exports.constructFromObject = function(data, obj) {
+    if (data) {
+      obj = obj || new exports();
+
+      if (data.hasOwnProperty('id')) {
+        obj['id'] = ApiClient.convertToType(data['id'], 'String');
+      }
+      if (data.hasOwnProperty('type')) {
+        obj['type'] = ApiClient.convertToType(data['type'], 'String');
+      }
+      if (data.hasOwnProperty('meta')) {
+        obj['meta'] = ApiClient.convertToType(data['meta'], Object);
+      }
+    }
+    return obj;
+  }
+
+  /**
+   * @member {String} id
+   */
+  exports.prototype['id'] = undefined;
+  /**
+   * @member {String} type
+   */
+  exports.prototype['type'] = undefined;
+  /**
+   * @member {Object} meta
+   */
+  exports.prototype['meta'] = undefined;
+
+
+
+  return exports;
+}));
+
+
+
 },{"../ApiClient":10}],26:[function(require,module,exports){
+/**
+ * TeSS JSON-API
+ * Testing the JSON-API API for TeSS. 
+ *
+ * OpenAPI spec version: 0.0.1
+ * Contact: tess-support@googlegroups.com
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['ApiClient', 'model/Links', 'model/ResourceIdentifierObject'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // CommonJS-like environments that support module.exports, like Node.
+    module.exports = factory(require('../ApiClient'), require('./Links'), require('./ResourceIdentifierObject'));
+  } else {
+    // Browser globals (root is window)
+    if (!root.TessJsonApi) {
+      root.TessJsonApi = {};
+    }
+    root.TessJsonApi.ResourceObject = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.Links, root.TessJsonApi.ResourceIdentifierObject);
+  }
+}(this, function(ApiClient, Links, ResourceIdentifierObject) {
+  'use strict';
+
+
+
+
+  /**
+   * The ResourceObject model module.
+   * @module model/ResourceObject
+   * @version 0.0.1
+   */
+
+  /**
+   * Constructs a new <code>ResourceObject</code>.
+   * @alias module:model/ResourceObject
+   * @class
+   * @extends module:model/ResourceIdentifierObject
+   */
+  var exports = function() {
+    var _this = this;
+    ResourceIdentifierObject.call(_this);
+
+
+
+  };
+
+  /**
+   * Constructs a <code>ResourceObject</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {module:model/ResourceObject} obj Optional instance to populate.
+   * @return {module:model/ResourceObject} The populated <code>ResourceObject</code> instance.
+   */
+  exports.constructFromObject = function(data, obj) {
+    if (data) {
+      obj = obj || new exports();
+      ResourceIdentifierObject.constructFromObject(data, obj);
+      if (data.hasOwnProperty('attributes')) {
+        obj['attributes'] = ApiClient.convertToType(data['attributes'], Object);
+      }
+      if (data.hasOwnProperty('relationships')) {
+        obj['relationships'] = ApiClient.convertToType(data['relationships'], Object);
+      }
+      if (data.hasOwnProperty('links')) {
+        obj['links'] = Links.constructFromObject(data['links']);
+      }
+    }
+    return obj;
+  }
+
+  exports.prototype = Object.create(ResourceIdentifierObject.prototype);
+  exports.prototype.constructor = exports;
+
+  /**
+   * @member {Object} attributes
+   */
+  exports.prototype['attributes'] = undefined;
+  /**
+   * @member {Object} relationships
+   */
+  exports.prototype['relationships'] = undefined;
+  /**
+   * @member {module:model/Links} links
+   */
+  exports.prototype['links'] = undefined;
+
+
+
+  return exports;
+}));
+
+
+
+},{"../ApiClient":10,"./Links":22,"./ResourceIdentifierObject":25}],27:[function(require,module,exports){
 /**
  * TeSS JSON-API
  * Testing the JSON-API API for TeSS. 
@@ -9755,4 +9949,112 @@ Emitter.prototype.hasListeners = function(event){
 
 
 
-},{"../ApiClient":10}]},{},[1])
+},{"../ApiClient":10}],28:[function(require,module,exports){
+/**
+ * TeSS JSON-API
+ * Testing the JSON-API API for TeSS. 
+ *
+ * OpenAPI spec version: 0.0.1
+ * Contact: tess-support@googlegroups.com
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['ApiClient', 'model/ResourceIdentifierObject'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // CommonJS-like environments that support module.exports, like Node.
+    module.exports = factory(require('../ApiClient'), require('./ResourceIdentifierObject'));
+  } else {
+    // Browser globals (root is window)
+    if (!root.TessJsonApi) {
+      root.TessJsonApi = {};
+    }
+    root.TessJsonApi.SingleRelationshipObject = factory(root.TessJsonApi.ApiClient, root.TessJsonApi.ResourceIdentifierObject);
+  }
+}(this, function(ApiClient, ResourceIdentifierObject) {
+  'use strict';
+
+
+
+
+  /**
+   * The SingleRelationshipObject model module.
+   * @module model/SingleRelationshipObject
+   * @version 0.0.1
+   */
+
+  /**
+   * Constructs a new <code>SingleRelationshipObject</code>.
+   * @alias module:model/SingleRelationshipObject
+   * @class
+   */
+  var exports = function() {
+    var _this = this;
+
+
+
+
+  };
+
+  /**
+   * Constructs a <code>SingleRelationshipObject</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {module:model/SingleRelationshipObject} obj Optional instance to populate.
+   * @return {module:model/SingleRelationshipObject} The populated <code>SingleRelationshipObject</code> instance.
+   */
+  exports.constructFromObject = function(data, obj) {
+    if (data) {
+      obj = obj || new exports();
+
+      if (data.hasOwnProperty('links')) {
+        obj['links'] = ApiClient.convertToType(data['links'], Object);
+      }
+      if (data.hasOwnProperty('data')) {
+        obj['data'] = ResourceIdentifierObject.constructFromObject(data['data']);
+      }
+      if (data.hasOwnProperty('meta')) {
+        obj['meta'] = ApiClient.convertToType(data['meta'], Object);
+      }
+    }
+    return obj;
+  }
+
+  /**
+   * @member {Object} links
+   */
+  exports.prototype['links'] = undefined;
+  /**
+   * @member {module:model/ResourceIdentifierObject} data
+   */
+  exports.prototype['data'] = undefined;
+  /**
+   * @member {Object} meta
+   */
+  exports.prototype['meta'] = undefined;
+
+
+
+  return exports;
+}));
+
+
+
+},{"../ApiClient":10,"./ResourceIdentifierObject":25}]},{},[1])

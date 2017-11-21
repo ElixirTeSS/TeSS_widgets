@@ -21,3 +21,16 @@ th {
 th:first-child {
   width: 20%;
 }
+
+.tess-list-widget {
+  display: flex;
+
+  .tess-results {
+    flex-grow: 1;
+  }
+
+  .tess-facets {
+    flex-shrink: 0;
+    width: 200px;
+  }
+}

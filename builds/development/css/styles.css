@@ -24,3 +24,14 @@ th {
 th:first-child {
   width: 20%;
 }
+
+.tess-list-widget {
+  display: flex;
+}
+.tess-list-widget .tess-results {
+  flex-grow: 1;
+}
+.tess-list-widget .tess-facets {
+  flex-shrink: 0;
+  width: 200px;
+}
