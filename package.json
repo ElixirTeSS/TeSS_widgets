@@ -13,7 +13,6 @@
     "gulp": "^3.9.1"
   },
   "dependencies": {
-    "biojs-rest-tessapi": "^0.1.2",
     "browser-sync": "^2.18.13",
     "gulp-browserify": "^0.5.1",
     "gulp-compass": "^2.1.0",
@@ -22,6 +21,7 @@
     "gulp-if": "^2.0.2",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-    "moment": "^2.19.1"
+    "moment": "^2.19.1",
+    "tess_json_api": "git+https://github.com/ElixirTeSS/tess-json-api-client.git"
   }
 }

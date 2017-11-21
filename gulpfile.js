@@ -5,7 +5,6 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
-    app = require('biojs-rest-tessapi'),
     browserSync = require('browser-sync').create();
 
 var env,

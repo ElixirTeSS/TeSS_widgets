@@ -5,9 +5,9 @@
 	'use strict';
 
 	// Variables
-	var app = require("biojs-rest-tessapi");
+	var tessApi = require('tess_json_api');
+	var api = new tessApi.DefaultApi();
 	var moment = require('moment');
-	var api = new app.EventsApi();
 	var resultsDiv = document.getElementById('results');
 	var displayDate;
 	var html;
@@ -40,7 +40,7 @@
 	}
 
 	/**
-	 * Formats a date 
+	 * Formats a date
 	 * Provides a simpler and more lightweight option than formatDate() above,
 	 * but at the cost of robustness and flexibility.
 	 * Converts a date string into a Date object first.
@@ -76,14 +76,14 @@
 		return displayDate;
 	}
 
-
 	// Process returned data, print the HTML (callback function)
 	// TO-DO: Create variables that are printed into a separate template?
 	// i.e. pull the HTML out of here.
 	function processReturnedData (error, data, response){
 		html = '<h1>Events</h1>';
 		html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
-		data.forEach(function(value){
+		data.data.forEach(function(event){
+            var value = event.attributes;
 			displayDate = formatDate(value['start'], 'long');
 			html += '<tr><td>' + displayDate + '</td>';
 			html += '<td><a href="' + value['url'] + '">';
@@ -104,7 +104,5 @@
 		resultsDiv.innerHTML = html;
 	}
 
-	// Pass the query parameters and callback function to .eventsJsonGet
-	api.eventsJsonGet (queryParameters, processReturnedData);
-
+	api.eventsGet(processReturnedData);
 }()); // End anonymous function
