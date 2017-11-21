@@ -35,3 +35,6 @@ th:first-child {
   flex-shrink: 0;
   width: 200px;
 }
+.tess-list-widget .tess-facets ul li.active {
+  background-color: #7ac844;
+}

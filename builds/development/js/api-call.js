@@ -11,15 +11,14 @@
 	var moment = require('moment');
 	var resultsDiv = document.getElementById('results');
 	var displayDate;
-	var html;
 
 	// Capture the query parameters
 	// See lib/api/EventsApi.js for full params options.
 	// TO-DO: Put default query parameters into a 'settings' file?
 	var queryParameters = {
 		"q": "Python",
-		"country[]": ["Belgium"]
-	}
+		facets: { "country[]": ["Belgium",  "United Kingdom"] }
+	};
 
 	/**
 	 * Formats a date using moment.js
@@ -52,23 +51,43 @@
 	// TO-DO: Create variables that are printed into a separate template?
 	// i.e. pull the HTML out of here.
 	function processReturnedData(error, data, response){
-        console.log(data);
-
         var html = '<div class="tess-list-widget">';
         html += '<div class="tess-facets">';
 
         for (var key in data.meta['available-facets']) {
-            html += '<div class="tess-facet">';
-            html += '<h3>' + humanize(key) + '</h3>';
-            html += '<ul>';
-            data.meta['available-facets'][key].forEach(function (facet) {
-                html += '<li>' + facet.value + ' (' + facet.count + ')</li>';
-            });
-            html += '</div>';
+            if (data.meta['available-facets'][key].length) {
+                html += '<div class="tess-facet">';
+                html += '<h3>' + humanize(key) + '</h3>';
+                html += '<ul>';
+                (data.meta['facets'][key] || []).forEach(function (activeFacet) {
+                    html += '<li class="active">' + activeFacet + '</li>';
+                });
+                data.meta['available-facets'][key].forEach(function (facet) {
+                    if (!(data.meta['facets'][key] && data.meta['facets'][key].includes(facet.value))) {
+                        html += '<li>' + facet.value + ' (' + facet.count + ')</li>';
+                    }
+                });
+                html += '</div>';
+            }
         }
         html += '</div>';
         html += '<div class="tess-results">';
         html += '<h1>Events</h1>';
+        html += '<div class="tess-active-facets">';
+        if (data.meta['query'] && data.meta['query'] !== '') {
+            html += '<strong>Search terms:</strong> "' + data.meta['query'] + '"<br/>';
+        }
+        
+        for (var key in data.meta['facets']) {
+            html += '<strong>' + humanize(key) + ':</strong> ';
+            (data.meta['facets'][key] || []).forEach(function (activeFacet, index) {
+                html += '"' + activeFacet + '"';
+                if (index !== (data.meta['facets'][key].length - 1))
+                    html += ' or ';
+            });
+            html += '</br>';
+        }
+        html += '</div>';
 		html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
 		data.data.forEach(function(event){
             var attributes = event.attributes;
@@ -93,10 +112,7 @@
 		resultsDiv.innerHTML = html;
 	}
 
-	api.eventsGet({ q: 'python' }, processReturnedData);
-
-    //
-
+	api.eventsGet(queryParameters, processReturnedData);
 }()); // End anonymous function
 
 },{"moment":6,"tess_json_api":12}],2:[function(require,module,exports){
@@ -7930,11 +7946,14 @@ Emitter.prototype.hasListeners = function(event){
 
       var pathParams = {
       };
-      var queryParams = {
+      
+      // Hacked by Finn to merge arbitrary facet params
+      var queryParams = Object.assign({
         'q': opts['q'],
         'page_number': opts['pageNumber'],
         'page_size': opts['pageSize']
-      };
+      }, (opts['facets'] || {}));
+
       var headerParams = {
       };
       var formParams = {
@@ -9151,7 +9170,7 @@ Emitter.prototype.hasListeners = function(event){
         obj['query'] = ApiClient.convertToType(data['query'], 'String');
       }
       if (data.hasOwnProperty('facets')) {
-        obj['facets'] = ApiClient.convertToType(data['facets'], {'String': 'String'});
+        obj['facets'] = ApiClient.convertToType(data['facets'], {'String': ['String']});
       }
       if (data.hasOwnProperty('available-facets')) {
         obj['available-facets'] = ApiClient.convertToType(data['available-facets'], {'String': [Facet]});
@@ -9168,7 +9187,7 @@ Emitter.prototype.hasListeners = function(event){
   exports.prototype['query'] = '';
   /**
    * The filters that are currently applied to the collection.
-   * @member {Object.<String, String>} facets
+   * @member {Object.<String, Array.<String>>} facets
    */
   exports.prototype['facets'] = undefined;
   /**
