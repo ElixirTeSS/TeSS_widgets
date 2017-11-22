@@ -32,12 +32,12 @@ htmlSources = [outputDir + '*.html'];
 
 gulp.task('serve', ['compass'], function() {
     browserSync.init({
-        server: "builds/development/"
+        server: outputDir
     });
 
     gulp.watch("components/sass/*.scss", ['compass']);
     gulp.watch("components/scripts/*.js", ['js']);
-    gulp.watch("builds/development/*.html", ['html']);
+    gulp.watch(outputDir + '*.html', ['html']);
 });
 
 gulp.task('js', function() {
@@ -60,7 +60,7 @@ gulp.task('compass', function() {
 });
 
 gulp.task('html', function() {
-  gulp.src('builds/development/*.html')
+  gulp.src(outputDir + '*.html')
     .pipe(gulp.dest(outputDir))
     .pipe(browserSync.stream());
 });
