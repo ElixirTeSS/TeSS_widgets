@@ -35,6 +35,9 @@ th:first-child {
   flex-shrink: 0;
   width: 200px;
 }
+.tess-list-widget .tess-facets ul li.tess-facet-row {
+  cursor: pointer;
+}
 .tess-list-widget .tess-facets ul li.active {
-  background-color: #7ac844;
+  background-color: #eee;
 }
