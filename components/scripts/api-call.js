@@ -2,16 +2,16 @@
 // in local scope.
 (function () {
 
-	'use strict';
+    'use strict';
 
-	// Variables
-	var tessApi = require('tess_json_api');
-	var api = new tessApi.DefaultApi();
-	var moment = require('moment');
-	var container = document.getElementById('tess-list-widget');
-	var facetsContainer = document.createElement('div');
-	facetsContainer.className = 'tess-facets';
-	var wrapper = document.createElement('div');
+    // Variables
+    var tessApi = require('tess_json_api');
+    var api = new tessApi.DefaultApi();
+    var moment = require('moment');
+    var container = document.getElementById('tess-list-widget');
+    var facetsContainer = document.createElement('div');
+    facetsContainer.className = 'tess-facets';
+    var wrapper = document.createElement('div');
     wrapper.className = 'tess-wrapper';
     wrapper.innerHTML = '<h1>Events</h1>';
     var resultsContainer = document.createElement('div');
@@ -23,34 +23,34 @@
     container.appendChild(facetsContainer);
     container.appendChild(wrapper);
 
-	var displayDate;
+    var displayDate;
 
-	// Capture the query parameters
-	// See lib/api/EventsApi.js for full params options.
-	// TO-DO: Put default query parameters into a 'settings' file?
-	var queryParameters = {
-		"q": "Python",
-		facets: { "country[]": ["Belgium",  "United Kingdom"] }
-	};
+    // Capture the query parameters
+    // See lib/api/EventsApi.js for full params options.
+    // TO-DO: Put default query parameters into a 'settings' file?
+    var queryParameters = {
+        "q": "Python",
+        facets: { "country[]": ["Belgium",  "United Kingdom"] }
+    };
 
-	/**
-	 * Formats a date using moment.js
-	 * Notice that moment.js can deal with dates as strings
-	 * and dates as Javascript Date objects.
-	 *
-	 * @param {String or Date object} date
-	 * @param {String} dateFormat
-	 * @return {String} Formatted date
-	 */
-	function formatDate(date, dateFormat) {
-		if (dateFormat=='long'){
-			return moment(date).format('D MMMM YYYY');
-		} else if (dateFormat=='short') {
-			return moment(date).format('DD/MM/YYYY');
-		} else {
-			return moment(date).format('MM/DD/YYYY');
-		}
-	}
+    /**
+     * Formats a date using moment.js
+     * Notice that moment.js can deal with dates as strings
+     * and dates as Javascript Date objects.
+     *
+     * @param {String or Date object} date
+     * @param {String} dateFormat
+     * @return {String} Formatted date
+     */
+    function formatDate(date, dateFormat) {
+        if (dateFormat=='long'){
+            return moment(date).format('D MMMM YYYY');
+        } else if (dateFormat=='short') {
+            return moment(date).format('DD/MM/YYYY');
+        } else {
+            return moment(date).format('MM/DD/YYYY');
+        }
+    }
 
     function humanize(string) {
         var stripped = string.toLowerCase().replace('-', ' ');
@@ -68,7 +68,7 @@
         row.setAttribute('data-tess-facet-active', active);
 
         container.appendChild(row);
-	}
+    }
 
     function renderFacet(container, key, available, active) {
         var category = document.createElement('div');
@@ -80,43 +80,43 @@
 
         // Render the active facets first so they appear at the top.
         active.forEach(function (val) {
-        	renderFacetRow(list, true, val);
-		});
+            renderFacetRow(list, true, val);
+        });
         available.forEach(function (row) {
             // Don't render active facets twice!
-        	if (!active.includes(row.value)) {
-        		renderFacetRow(list, false, row.value, row.count);
+            if (!active.includes(row.value)) {
+                renderFacetRow(list, false, row.value, row.count);
             }
-		});
+        });
 
         category.addEventListener('click', function (event) {
-        	var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
-        	f(this.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
-		});
+            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
+            f(this.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
+        });
 
         container.appendChild(category);
-	}
+    }
 
-	function applyFacet(key, value) {
-		var actualKey = key.replace(/-/g, '_') + '[]';
+    function applyFacet(key, value) {
+        var actualKey = key.replace(/-/g, '_') + '[]';
 
         if (!queryParameters.facets[actualKey]) {
             queryParameters.facets[actualKey] = [];
-		}
+        }
 
         if (!queryParameters.facets[actualKey].includes(value)) {
             queryParameters.facets[actualKey].push(value);
-		}
+        }
 
         getEvents(queryParameters);
-	}
+    }
 
-	function removeFacet(key, value) {
-		console.log("Removing: ", key, value);
+    function removeFacet(key, value) {
+        console.log("Removing: ", key, value);
         var actualKey = key.replace(/-/g, '_') + '[]';
 
         if (!queryParameters.facets[actualKey])
-        	return;
+            return;
 
         var index = queryParameters.facets[actualKey].indexOf(value);
 
@@ -129,25 +129,25 @@
         }
 
         getEvents(queryParameters);
-	}
+    }
 
-	// Process returned data, print the HTML (callback function)
-	// TO-DO: Create variables that are printed into a separate template?
-	// i.e. pull the HTML out of here.
-	function processReturnedData(error, data, response){
-		facetsContainer.innerHTML = '';
+    // Process returned data, print the HTML (callback function)
+    // TO-DO: Create variables that are printed into a separate template?
+    // i.e. pull the HTML out of here.
+    function processReturnedData(error, data, response){
+        facetsContainer.innerHTML = '';
 
         for (var key in data.meta['available-facets']) {
             if (data.meta['available-facets'][key].length) {
                 renderFacet(facetsContainer, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
-			}
+            }
         }
 
         var html = '';
         if (data.meta['query'] && data.meta['query'] !== '') {
             html += '<strong>Search terms:</strong> "' + data.meta['query'] + '"<br/>';
         }
-        
+
         for (var key in data.meta['facets']) {
             html += '<strong>' + humanize(key) + ':</strong> ';
             (data.meta['facets'][key] || []).forEach(function (activeFacet, index) {
@@ -161,33 +161,33 @@
         activeFacetsContainer.innerHTML = html;
 
         html = '';
-		html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
-		data.data.forEach(function(event){
+        html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
+        data.data.forEach(function(event){
             var attributes = event.attributes;
-			displayDate = formatDate(attributes['start'], 'long');
-			html += '<tr><td>' + displayDate + '</td>';
-			html += '<td><a href="' + event.links.redirect + '">';
-			html += attributes['title'] + '</a></td>';
-			if ((attributes['city'] !== 'null') && (attributes['country'] !== 'null')) {
-				attributes['city'] = attributes['city'] + ', ';
-			}
-			if(attributes['city'] === 'null') {
-				attributes['city'] = '';
-			}
-			if(attributes['country'] === 'null' ) {
-				attributes['country'] = '';
-			}
-			html += '<td>' + attributes['city'] + attributes['country'] + '</td></tr>';
-		});
-		html += '</table>';
-		html += '<p><a href="' + response.req.url + '">View your results on TeSS</a></p>';
+            displayDate = formatDate(attributes['start'], 'long');
+            html += '<tr><td>' + displayDate + '</td>';
+            html += '<td><a href="' + event.links.redirect + '">';
+            html += attributes['title'] + '</a></td>';
+            if ((attributes['city'] !== 'null') && (attributes['country'] !== 'null')) {
+                attributes['city'] = attributes['city'] + ', ';
+            }
+            if(attributes['city'] === 'null') {
+                attributes['city'] = '';
+            }
+            if(attributes['country'] === 'null' ) {
+                attributes['country'] = '';
+            }
+            html += '<td>' + attributes['city'] + attributes['country'] + '</td></tr>';
+        });
+        html += '</table>';
+        html += '<p><a href="' + response.req.url + '">View your results on TeSS</a></p>';
         html += '</div>';
-		resultsContainer.innerHTML = html;
-	}
+        resultsContainer.innerHTML = html;
+    }
 
-	function getEvents(queryParameters) {
-		api.eventsGet(queryParameters, processReturnedData);
-	}
+    function getEvents(queryParameters) {
+        api.eventsGet(queryParameters, processReturnedData);
+    }
 
-	getEvents(queryParameters);
+    getEvents(queryParameters);
 }()); // End anonymous function
