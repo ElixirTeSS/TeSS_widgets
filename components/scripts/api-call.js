@@ -114,7 +114,6 @@
     }
 
     function removeFacet(key, value) {
-        console.log("Removing: ", key, value);
         var actualKey = key.replace(/-/g, '_') + '[]';
 
         if (!queryParameters.facets[actualKey])
