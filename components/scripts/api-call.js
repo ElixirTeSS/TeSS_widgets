@@ -7,7 +7,6 @@
     // Variables
     var tessApi = require('tess_json_api');
     var api = new tessApi.DefaultApi();
-    var moment = require('moment');
     var container = document.getElementById('tess-list-widget');
     var facetsContainer = document.createElement('div');
     facetsContainer.className = 'tess-facets';
@@ -23,7 +22,8 @@
     container.appendChild(facetsContainer);
     container.appendChild(wrapper);
 
-    var displayDate;
+    var locale = getLocale();
+    var dateFormat = { year: 'numeric', month: 'long', day: 'numeric' };
 
     // Capture the query parameters
     // See lib/api/EventsApi.js for full params options.
@@ -33,23 +33,25 @@
         facets: { "country[]": ["Belgium",  "United Kingdom"] }
     };
 
+    function getLocale() {
+        if (navigator.languages !== undefined)
+            return navigator.languages[0];
+        else if (navigator.language !== undefined)
+            return navigator.language;
+        else
+            return 'en-GB';
+    }
+
     /**
-     * Formats a date using moment.js
-     * Notice that moment.js can deal with dates as strings
-     * and dates as Javascript Date objects.
+     * Formats a date.
      *
      * @param {String or Date object} date
-     * @param {String} dateFormat
      * @return {String} Formatted date
      */
-    function formatDate(date, dateFormat) {
-        if (dateFormat=='long'){
-            return moment(date).format('D MMMM YYYY');
-        } else if (dateFormat=='short') {
-            return moment(date).format('DD/MM/YYYY');
-        } else {
-            return moment(date).format('MM/DD/YYYY');
-        }
+    function formatDate(date) {
+        var parsedDate = new Date(date);
+
+        return parsedDate.toLocaleDateString(locale, dateFormat);
     }
 
     function humanize(string) {
@@ -164,8 +166,7 @@
         html += '<table><tr><th>Date</th><th>Name</th><th>Location</th></tr>';
         data.data.forEach(function(event){
             var attributes = event.attributes;
-            displayDate = formatDate(attributes['start'], 'long');
-            html += '<tr><td>' + displayDate + '</td>';
+            html += '<tr><td>' + formatDate(attributes['start']) + '</td>';
             html += '<td><a href="' + event.links.redirect + '">';
             html += attributes['title'] + '</a></td>';
             if ((attributes['city'] !== 'null') && (attributes['country'] !== 'null')) {
