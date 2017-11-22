@@ -7,26 +7,26 @@ section {
   width: 80%;
 }
 
-table {
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 8px 10px;
-}
-th {
-  text-align: left;
-  border-bottom: 2px solid #ddd;
-}
-th:first-child {
-  width: 20%;
-}
-
 .tess-list-widget {
   display: flex;
 
   .tess-results {
     flex-grow: 1;
+
+    table {
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px 10px;
+    }
+    th {
+      text-align: left;
+      border-bottom: 2px solid #ddd;
+    }
+    th:first-child {
+      width: 20%;
+    }
   }
 
   .tess-facets {
