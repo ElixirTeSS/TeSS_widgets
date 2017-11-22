@@ -34,8 +34,11 @@ th:first-child {
     width: 200px;
 
     ul {
+      li.tess-facet-row {
+        cursor: pointer;
+      }
       li.active {
-        background-color: #7ac844;
+        background-color: #eee;
       }
     }
   }
