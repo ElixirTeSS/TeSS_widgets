@@ -8,6 +8,7 @@
     var api = new tessApi.DefaultApi();
     var locale = getLocale();
     var dateFormat = { year: 'numeric', month: 'long', day: 'numeric' };
+    var widgetName = 'ElixirTess_list_widget';
 
     // Elements
     var container = document.getElementById('tess-list-widget');
@@ -87,7 +88,10 @@
         // Name
         var nameCell = eventRow.insertCell();
         var link = document.createElement('a');
-        link.href = event.links['redirect'];
+        var redirectUrl = (event.links['self'] + '/redirect?widget=' + widgetName); // TODO: Fix me when 'redirect' link is available through API
+        link.href = api.apiClient.buildUrl(redirectUrl);
+
+        link.target = '_blank';
         link.appendChild(document.createTextNode(event.attributes['title']));
         nameCell.appendChild(link);
 
