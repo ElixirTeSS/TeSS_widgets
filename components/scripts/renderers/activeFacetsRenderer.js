@@ -1,0 +1,54 @@
+function ActiveFacetsRenderer(widget, element, options) {
+    this.widget = widget;
+    this.options = options || {};
+    this.container = element;
+    this.elements = {};
+}
+
+ActiveFacetsRenderer.prototype.initialize = function () { };
+
+ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
+    this.renderActiveFacets(this.container, data.meta['facets'], data.meta['query']);
+};
+
+ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets, searchQuery) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    if (searchQuery && searchQuery !== '') {
+        container.appendChild(this.generateActiveFacet('Search Query', searchQuery));
+    }
+
+    for (var key in activeFacets) {
+        container.appendChild(this.generateActiveFacet(key, activeFacets[key]));
+    }
+};
+
+ActiveFacetsRenderer.prototype.generateActiveFacet = function (key, value) {
+    var af = document.createElement('div');
+    af.className = 'tess-active-facet';
+    var afKey = document.createElement('strong');
+    afKey.appendChild(document.createTextNode(this.widget.humanize(key) + ': '));
+
+    af.appendChild(afKey);
+
+    var values = Array.isArray(value) ? value : [value];
+    values.forEach(function (value, index) {
+        var afVal = document.createElement('a');
+        afVal.href = '#';
+        afVal.className = 'tess-facet-row active';
+
+        afVal.appendChild(document.createTextNode(value));
+        afVal.setAttribute('data-tess-facet-key', key);
+        afVal.setAttribute('data-tess-facet-value', value);
+        afVal.setAttribute('data-tess-facet-active', true);
+
+        af.appendChild(afVal);
+        if (index < (values.length - 1))
+            af.appendChild(document.createTextNode(' or '));
+    });
+
+    return af;
+};
+

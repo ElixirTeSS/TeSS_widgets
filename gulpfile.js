@@ -26,7 +26,7 @@ if (env==='development') {
 }
 
 // Sources (arrays)
-jsSources = ['components/scripts/api-call.js'];
+jsSources = ['components/scripts/renderers/*.js', 'components/scripts/widget.js'];
 sassSources = ['components/sass/style.scss'];
 htmlSources = [outputDir + '*.html'];
 
@@ -36,13 +36,13 @@ gulp.task('serve', ['compass'], function() {
     });
 
     gulp.watch("components/sass/*.scss", ['compass']);
-    gulp.watch("components/scripts/*.js", ['js']);
+    gulp.watch("components/scripts/**", ['js']);
     gulp.watch(outputDir + '*.html', ['html']);
 });
 
 gulp.task('js', function() {
   gulp.src(jsSources)
-    .pipe(concat('api-call.js'))
+    .pipe(concat('widget-package.js'))
     .pipe(browserify())
     .pipe(gulpif(env === 'production', uglify()))
     .pipe(gulp.dest(outputDir + 'js'))
