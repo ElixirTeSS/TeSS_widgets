@@ -5,7 +5,6 @@ function TableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
-    this.elements = {};
 }
 
 TableRenderer.prototype.initialize = function () { };

@@ -26,7 +26,7 @@ module.exports = {
     formatDate: function (date, dateFormat) {
         var parsedDate = new Date(date);
 
-        return parsedDate.toLocaleDateString(locale, dateFormat || this.dateFormat);
+        return parsedDate.toLocaleDateString(this.locale(), dateFormat || this.dateFormat);
     },
 
     /**

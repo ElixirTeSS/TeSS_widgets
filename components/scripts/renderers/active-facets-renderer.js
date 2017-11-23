@@ -5,7 +5,6 @@ function ActiveFacetsRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
-    this.elements = {};
 }
 
 ActiveFacetsRenderer.prototype.initialize = function () { };
