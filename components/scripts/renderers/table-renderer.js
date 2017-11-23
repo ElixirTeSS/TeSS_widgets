@@ -1,3 +1,6 @@
+'use strict';
+var Util = require('../util.js');
+
 function TableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
@@ -25,7 +28,7 @@ TableRenderer.prototype.renderEvent = function (container, event) {
 
     // Date
     var dateCell = eventRow.insertCell();
-    dateCell.appendChild(document.createTextNode(this.widget.formatDate(event.attributes['start'])));
+    dateCell.appendChild(document.createTextNode(Util.formatDate(event.attributes['start'])));
 
     // Name
     var nameCell = eventRow.insertCell();
@@ -80,3 +83,5 @@ TableRenderer.prototype.renderEvents = function (container, events) {
         self.renderEvent(body, event);
     });
 };
+
+module.exports = TableRenderer;

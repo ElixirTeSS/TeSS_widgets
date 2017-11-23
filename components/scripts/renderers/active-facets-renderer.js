@@ -1,3 +1,6 @@
+'use strict';
+var Util = require('../util.js');
+
 function ActiveFacetsRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
@@ -29,7 +32,7 @@ ActiveFacetsRenderer.prototype.generateActiveFacet = function (key, value) {
     var af = document.createElement('div');
     af.className = 'tess-active-facet';
     var afKey = document.createElement('strong');
-    afKey.appendChild(document.createTextNode(this.widget.humanize(key) + ': '));
+    afKey.appendChild(document.createTextNode(Util.humanize(key) + ': '));
 
     af.appendChild(afKey);
 
@@ -52,3 +55,4 @@ ActiveFacetsRenderer.prototype.generateActiveFacet = function (key, value) {
     return af;
 };
 
+module.exports = ActiveFacetsRenderer;

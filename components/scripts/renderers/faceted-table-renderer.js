@@ -1,3 +1,7 @@
+var FacetsSidebarRenderer = require('./facets-sidebar-renderer.js');
+var ActiveFacetsRenderer = require('./active-facets-renderer.js');
+var TableRenderer = require('./table-renderer.js');
+
 function FacetedTableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
@@ -46,3 +50,5 @@ FacetedTableRenderer.prototype.render = function (errors, data, response) {
     this.renderers.activeFacets.render(errors, data, response);
     this.renderers.table.render(errors, data, response);
 };
+
+module.exports = FacetedTableRenderer;

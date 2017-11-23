@@ -26,7 +26,7 @@ if (env==='development') {
 }
 
 // Sources (arrays)
-jsSources = ['components/scripts/renderers/*.js', 'components/scripts/widget.js'];
+jsSources = ['components/scripts/embed.js'];
 sassSources = ['components/sass/style.scss'];
 htmlSources = [outputDir + '*.html'];
 
@@ -42,7 +42,6 @@ gulp.task('serve', ['compass'], function() {
 
 gulp.task('js', function() {
   gulp.src(jsSources)
-    .pipe(concat('widget-package.js'))
     .pipe(browserify())
     .pipe(gulpif(env === 'production', uglify()))
     .pipe(gulp.dest(outputDir + 'js'))

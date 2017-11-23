@@ -1,3 +1,6 @@
+'use strict';
+var Util = require('../util.js');
+
 function FacetsSidebarRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
@@ -50,7 +53,7 @@ FacetsSidebarRenderer.prototype.renderFacet = function (container, key, availabl
     category.setAttribute('data-tess-facet-key', key);
 
     var title = document.createElement('h3');
-    title.appendChild(document.createTextNode(this.widget.humanize(key)));
+    title.appendChild(document.createTextNode(Util.humanize(key)));
     category.appendChild(title);
 
     var list = document.createElement('ul');
@@ -70,3 +73,5 @@ FacetsSidebarRenderer.prototype.renderFacet = function (container, key, availabl
 
     container.appendChild(category);
 };
+
+module.exports = FacetsSidebarRenderer;
