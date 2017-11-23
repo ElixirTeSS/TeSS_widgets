@@ -33,6 +33,12 @@
     container.appendChild(facetsContainer);
     container.appendChild(wrapper);
 
+    container.addEventListener('click', function (event) {
+        if (event.target.hasAttribute('data-tess-facet-key')) {
+            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
+            f(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
+        }
+    });
 
     // Capture the query parameters
     // See lib/api/EventsApi.js for full params options.
@@ -128,14 +134,29 @@
         });
     }
 
-    function renderFacetRow(container, active, value, count) {
-        var row = document.createElement('li');
+    function renderFacetRow(container, active, key, value, count) {
+        var li = document.createElement('li');
+
+        var row = document.createElement('a');
+        row.href = '#';
         row.className = 'tess-facet-row' + (active ? ' active' : '');
-        row.appendChild(document.createTextNode(value + (active ? '' : ' (' + count + ')')));
+
+        var valueSpan = document.createElement('span');
+        valueSpan.innerText = value;
+        row.appendChild(valueSpan);
+
+        if (!active) {
+            var countSpan = document.createElement('span');
+            countSpan.innerText = ' (' + count + ')';
+            row.appendChild(countSpan);
+        }
+
+        row.setAttribute('data-tess-facet-key', key);
         row.setAttribute('data-tess-facet-value', value);
         row.setAttribute('data-tess-facet-active', active);
 
-        container.appendChild(row);
+        li.appendChild(row);
+        container.appendChild(li);
     }
 
     function renderFacet(container, key, availableFacets, activeFacets) {
@@ -152,18 +173,13 @@
 
         // Render the active facets first so they appear at the top.
         activeFacets.forEach(function (val) {
-            renderFacetRow(list, true, val);
+            renderFacetRow(list, true, key, val);
         });
         availableFacets.forEach(function (row) {
             // Don't render active facets twice!
             if (!activeFacets.includes(row.value)) {
-                renderFacetRow(list, false, row.value, row.count);
+                renderFacetRow(list, false, key, row.value, row.count);
             }
-        });
-
-        category.addEventListener('click', function (event) {
-            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
-            f(this.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
         });
 
         container.appendChild(category);
@@ -184,9 +200,15 @@
 
             var values = Array.isArray(value) ? value : [value];
             values.forEach(function (value, index) {
-                var afVal = document.createElement('span');
-                afVal.className = 'tess-active-facet-value';
+                var afVal = document.createElement('a');
+                afVal.href = '#';
+                afVal.className = 'tess-facet-row active';
+
                 afVal.appendChild(document.createTextNode(value));
+                afVal.setAttribute('data-tess-facet-key', key);
+                afVal.setAttribute('data-tess-facet-value', value);
+                afVal.setAttribute('data-tess-facet-active', true);
+
                 af.appendChild(afVal);
                 if (index < (values.length - 1))
                     af.appendChild(document.createTextNode(' or '));

@@ -29,17 +29,21 @@ section {
     }
   }
 
+  a.tess-facet-row {
+    &.active {
+      background-color: #eee;
+    }
+    span {
+      pointer-events: none;
+    }
+  }
+
   .tess-facets {
     flex-shrink: 0;
     width: 200px;
 
     ul {
-      li.tess-facet-row {
-        cursor: pointer;
-      }
-      li.active {
-        background-color: #eee;
-      }
+      li { }
     }
   }
 }
