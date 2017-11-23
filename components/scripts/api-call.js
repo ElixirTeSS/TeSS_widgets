@@ -9,37 +9,35 @@
     var locale = getLocale();
     var dateFormat = { year: 'numeric', month: 'long', day: 'numeric' };
     var widgetName = 'ElixirTess_list_widget';
+    var elements = {};
 
-    // Elements
-    var container = document.getElementById('tess-list-widget');
+    function initRender() {
+        elements.container = document.getElementById('tess-list-widget');
 
-    var facetsContainer = document.createElement('div');
-    facetsContainer.className = 'tess-facets';
+        elements.facetsContainer = document.createElement('div');
+        elements.facetsContainer.className = 'tess-facets';
 
-    var wrapper = document.createElement('div');
-    wrapper.className = 'tess-wrapper';
+        elements.wrapper = document.createElement('div');
+        elements.wrapper.className = 'tess-wrapper';
 
-    var widgetTitle = document.createElement('h1');
-    widgetTitle.appendChild(document.createTextNode('Events'));
+        elements.resultsContainer = document.createElement('div');
+        elements.resultsContainer.className = 'tess-results';
 
-    var resultsContainer = document.createElement('div');
-    resultsContainer.className = 'tess-results';
+        elements.activeFacetsContainer = document.createElement('div');
+        elements.activeFacetsContainer.className = 'tess-active-facets';
 
-    var activeFacetsContainer = document.createElement('div');
-    activeFacetsContainer.className = 'tess-active-facets';
+        elements.container.addEventListener('click', function (event) {
+            if (event.target.hasAttribute('data-tess-facet-key')) {
+                var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
+                f(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
+            }
+        });
 
-    wrapper.appendChild(widgetTitle);
-    wrapper.appendChild(activeFacetsContainer);
-    wrapper.appendChild(resultsContainer);
-    container.appendChild(facetsContainer);
-    container.appendChild(wrapper);
-
-    container.addEventListener('click', function (event) {
-        if (event.target.hasAttribute('data-tess-facet-key')) {
-            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? removeFacet : applyFacet;
-            f(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
-        }
-    });
+        elements.wrapper.appendChild(elements.activeFacetsContainer);
+        elements.wrapper.appendChild(elements.resultsContainer);
+        elements.container.appendChild(elements.facetsContainer);
+        elements.container.appendChild(elements.wrapper);
+    }
 
     // Capture the query parameters
     // See lib/api/EventsApi.js for full params options.
@@ -263,25 +261,25 @@
         getEvents(queryParameters);
     }
 
-    // Process returned data, print the HTML (callback function)
+    // Render the API results
     // TO-DO: Create variables that are printed into a separate template?
     // i.e. pull the HTML out of here.
-    function processReturnedData(error, data, response) {
+    function render(error, data, response) {
         // Render facet sidebar
-        while (facetsContainer.firstChild) {
-            facetsContainer.removeChild(facetsContainer.firstChild);
+        while (elements.facetsContainer.firstChild) {
+            elements.facetsContainer.removeChild(elements.facetsContainer.firstChild);
         }
         for (var key in data.meta['available-facets']) {
             if (data.meta['available-facets'][key].length) {
-                renderFacet(facetsContainer, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
+                renderFacet(elements.facetsContainer, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
             }
         }
 
         // Render active facet bar
-        renderActiveFacets(activeFacetsContainer, data.meta['facets'], data.meta['query']);
+        renderActiveFacets(elements.activeFacetsContainer, data.meta['facets'], data.meta['query']);
 
         // Render results
-        renderEvents(resultsContainer, data.data);
+        renderEvents(elements.resultsContainer, data.data);
 
         // Render TeSS link
         var tessLinkContainer = document.createElement('p');
@@ -289,12 +287,13 @@
         tessLink.href = response.req.url;
         tessLink.appendChild(document.createTextNode('View your results on TeSS'));
         tessLinkContainer.appendChild(tessLink);
-        resultsContainer.appendChild(tessLinkContainer);
+        elements.resultsContainer.appendChild(tessLinkContainer);
     }
 
     function getEvents(queryParameters) {
-        api.eventsGet(queryParameters, processReturnedData);
+        api.eventsGet(queryParameters, render);
     }
 
+    initRender();
     getEvents(queryParameters);
 }()); // End anonymous function
