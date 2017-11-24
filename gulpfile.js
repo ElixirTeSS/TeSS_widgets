@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
-    gutil = require('gulp-util'),
     browserify = require('gulp-browserify'),
-    compass = require('gulp-compass'),
+    sass = require('gulp-sass'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
@@ -30,12 +29,12 @@ jsSources = ['components/scripts/embed.js'];
 sassSources = ['components/sass/style.scss'];
 htmlSources = [outputDir + '*.html'];
 
-gulp.task('serve', ['compass'], function() {
+gulp.task('serve', ['js', 'sass'], function() {
     browserSync.init({
         server: outputDir
     });
 
-    gulp.watch("components/sass/*.scss", ['compass']);
+    gulp.watch("components/sass/*.scss", ['sass']);
     gulp.watch("components/scripts/**", ['js']);
     gulp.watch(outputDir + '*.html', ['html']);
 });
@@ -48,13 +47,10 @@ gulp.task('js', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('compass', function() {
+gulp.task('sass', function() {
   gulp.src("components/sass/*.scss")
-  .pipe(compass({
-    css: outputDir + 'css',
-    sass: 'components/sass',
-    style: sassStyle
-  }))
+  .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+  .pipe(gulp.dest(outputDir + 'css'))
   .pipe(browserSync.stream());
 });
 

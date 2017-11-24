@@ -10,17 +10,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^3.9.1"
-  },
-  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
     "browser-sync": "^2.18.13",
     "gulp-browserify": "^0.5.1",
-    "gulp-compass": "^2.1.0",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.0.0",
     "gulp-if": "^2.0.2",
     "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.8",
+    "gulp-util": "^3.0.8"
+  },
+  "dependencies": {
     "tess_json_api": "git+https://github.com/ElixirTeSS/tess-json-api-client.git"
   }
 }
