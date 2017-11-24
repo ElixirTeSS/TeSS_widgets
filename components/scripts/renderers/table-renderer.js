@@ -1,10 +1,34 @@
 'use strict';
 var Util = require('../util.js');
 
+var fieldRenderers = {
+    location: function (event) {
+        var city = event.attributes['city'];
+        var country = event.attributes['country'];
+
+        if ((event.attributes['city'] !== 'null') && (event.attributes['country'] !== 'null')) {
+            city = event.attributes['city'] + ', ';
+        }
+        if (event.attributes['city'] === 'null') {
+            city = '';
+        }
+        if (event.attributes['country'] === 'null' ) {
+            country = '';
+        }
+
+        return city + country;
+    }
+};
+
 function TableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
+    this.options.fields = this.options.fields ||
+        [{ name: 'Date', field: 'start' },
+            { name: 'Name', field: 'title' },
+            // { name: 'Organizer', field: 'organizer' },
+            { name: 'Location', field: 'location' }]
 }
 
 TableRenderer.prototype.initialize = function () { };
@@ -25,35 +49,34 @@ TableRenderer.prototype.render = function (errors, data, response) {
 TableRenderer.prototype.renderEvent = function (container, event) {
     var eventRow = container.insertRow();
 
-    // Date
-    var dateCell = eventRow.insertCell();
-    dateCell.appendChild(document.createTextNode(Util.formatDate(event.attributes['start'])));
+    var widget = this.widget;
+    this.options.fields.forEach(function (fieldPair) {
+        var field = fieldPair.field;
+        var value = event.attributes[field];
+        var valueNode;
+        console.log(field);
+        console.log(typeof value);
 
-    // Name
-    var nameCell = eventRow.insertCell();
-    var link = document.createElement('a');
-    var redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.name); // TODO: Fix me when 'redirect' link is available through API
-    link.href = this.widget.buildUrl(redirectUrl);
+        if (fieldRenderers.hasOwnProperty(field)) {
+            value = fieldRenderers[field](event);
+            valueNode = document.createTextNode(value);
+        } else if (value instanceof Date) {
+            valueNode = document.createTextNode(Util.formatDate(value));
+        } else if (field === 'title') {
+            valueNode = document.createElement('a');
+            var redirectUrl = (event.links['self'] + '/redirect?widget=' + widget.name); // TODO: Fix me when 'redirect' link is available through API
+            valueNode.href = widget.buildUrl(redirectUrl);
+            valueNode.target = '_blank';
+            valueNode.appendChild(document.createTextNode(value));
+        } else if (value === null || value === 'null') {
+            valueNode = document.createTextNode('');
+        } else {
+            valueNode = document.createTextNode(value);
+        }
 
-    link.target = '_blank';
-    link.appendChild(document.createTextNode(event.attributes['title']));
-    nameCell.appendChild(link);
-
-    // Location
-    var locCell = eventRow.insertCell();
-    var city = event.attributes['city'];
-    var country = event.attributes['country'];
-
-    if ((event.attributes['city'] !== 'null') && (event.attributes['country'] !== 'null')) {
-        city = event.attributes['city'] + ', ';
-    }
-    if (event.attributes['city'] === 'null') {
-        city = '';
-    }
-    if (event.attributes['country'] === 'null' ) {
-        country = '';
-    }
-    locCell.appendChild(document.createTextNode(city + country));
+        var cell = eventRow.insertCell();
+        cell.appendChild(valueNode);
+    });
 };
 
 TableRenderer.prototype.renderEvents = function (container, events) {
@@ -70,7 +93,8 @@ TableRenderer.prototype.renderEvents = function (container, events) {
 
     // Headings
     var headingRow = head.insertRow();
-    ['Date', 'Name', 'Location'].forEach(function (heading) {
+    this.options.fields.forEach(function (fieldPair) {
+        var heading = fieldPair.name;
         var cell = document.createElement('th');
         cell.appendChild(document.createTextNode(heading));
         headingRow.appendChild(cell);
