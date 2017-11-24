@@ -10,16 +10,12 @@ function ActiveFacetsRenderer(widget, element, options) {
 ActiveFacetsRenderer.prototype.initialize = function () { };
 
 ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
-    this.renderActiveFacets(this.container, data.meta['facets'], data.meta['query']);
+    this.renderActiveFacets(this.container, data.meta['facets']);
 };
 
-ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets, searchQuery) {
+ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets) {
     while (container.firstChild) {
         container.removeChild(container.firstChild);
-    }
-
-    if (searchQuery && searchQuery !== '') {
-        container.appendChild(this.generateActiveFacet('Search Query', searchQuery));
     }
 
     for (var key in activeFacets) {

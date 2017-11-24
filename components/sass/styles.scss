@@ -10,6 +10,17 @@ section {
 .tess-widget-faceted-table {
   display: flex;
 
+  .tess-controls {
+    display: flex;
+    .tess-active-facets {
+      flex-grow: 1;
+    }
+    .tess-search {
+      text-align: right;
+      flex-shrink: 1;
+    }
+  }
+
   .tess-results {
     flex-grow: 1;
 

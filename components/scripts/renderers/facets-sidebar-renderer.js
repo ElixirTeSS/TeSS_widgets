@@ -14,10 +14,23 @@ FacetsSidebarRenderer.prototype.render = function (errors, data, response) {
     while (this.container.firstChild) {
         this.container.removeChild(this.container.firstChild);
     }
+
+    var title = document.createElement('h2');
+    title.innerText = 'Filters';
+    this.container.appendChild(title);
+
+    var anyFacets = false;
     for (var key in data.meta['available-facets']) {
         if (data.meta['available-facets'][key].length) {
+            anyFacets = true;
             this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
         }
+    }
+
+    if (!anyFacets) {
+        var notice = document.createElement('span');
+        notice.innerText = 'No filters available';
+        this.container.appendChild(notice);
     }
 };
 
