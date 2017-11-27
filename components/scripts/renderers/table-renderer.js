@@ -54,8 +54,6 @@ TableRenderer.prototype.renderEvent = function (container, event) {
         var field = fieldPair.field;
         var value = event.attributes[field];
         var valueNode;
-        console.log(field);
-        console.log(typeof value);
 
         if (fieldRenderers.hasOwnProperty(field)) {
             value = fieldRenderers[field](event);
