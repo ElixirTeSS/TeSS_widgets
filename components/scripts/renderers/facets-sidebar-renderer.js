@@ -40,14 +40,17 @@ FacetsSidebarRenderer.prototype.renderFacetRow = function (container, active, ke
     var row = document.createElement('a');
     row.href = '#';
     row.className = 'tess-facet-row' + (active ? ' active' : '');
+    row.title = (active ? 'Remove' : 'Add') + ' filter for ' + value;
 
     var valueSpan = document.createElement('span');
+    valueSpan.className = 'tess-facet-row-value';
     valueSpan.innerText = value;
     row.appendChild(valueSpan);
 
     if (!active) {
         var countSpan = document.createElement('span');
-        countSpan.innerText = ' (' + count + ')';
+        countSpan.className = 'tess-facet-row-count';
+        countSpan.innerText = count;
         row.appendChild(countSpan);
     }
 
@@ -64,7 +67,8 @@ FacetsSidebarRenderer.prototype.renderFacet = function (container, key, availabl
     category.className = 'tess-facet';
     category.setAttribute('data-tess-facet-key', key);
 
-    var title = document.createElement('h3');
+    var title = document.createElement('div');
+    title.className = 'tess-facet-title';
     title.appendChild(document.createTextNode(Util.humanize(key)));
     category.appendChild(title);
 
