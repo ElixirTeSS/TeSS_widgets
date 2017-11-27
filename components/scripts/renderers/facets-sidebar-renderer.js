@@ -81,8 +81,8 @@ FacetsSidebarRenderer.prototype.renderFacet = function (container, key, availabl
         self.renderFacetRow(list, true, key, val);
     });
     availableFacets.forEach(function (row) {
-        // Don't render active facets twice!
-        if (!activeFacets.includes(row.value)) {
+        // Don't render active facets twice, or blank values
+        if (!activeFacets.includes(row.value) && row.value) {
             self.renderFacetRow(list, false, key, row.value, row.count);
         }
     });
