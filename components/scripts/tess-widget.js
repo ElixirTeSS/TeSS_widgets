@@ -1,7 +1,9 @@
 'use strict';
 
-var TessApi = require('tess_json_api');
-var api = new TessApi.DefaultApi();
+// var TessApi = require('tess_json_api');
+// var api = new TessApi.DefaultApi();
+var LightApi = require('./light-tess-client.js');
+var api = new LightApi('https://tess.oerc.ox.ac.uk');
 
 function TessWidget(element, renderer, options) {
     this.name = 'ElixirTess_list_widget';
@@ -23,7 +25,7 @@ TessWidget.prototype.initialize = function () {
  * @return {String} Absolute URL
  */
 TessWidget.prototype.buildUrl = function (path) {
-    return api.apiClient.buildUrl(path);
+    return api.buildUrl(path);
 };
 
 TessWidget.prototype.applyFacet = function (key, value) {

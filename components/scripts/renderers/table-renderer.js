@@ -40,7 +40,7 @@ TableRenderer.prototype.render = function (errors, data, response) {
     // Render TeSS link
     var tessLinkContainer = document.createElement('p');
     var tessLink = document.createElement('a');
-    tessLink.href = response.req.url;
+    tessLink.href = data.links['self'];
     tessLink.appendChild(document.createTextNode('View your results on TeSS'));
     tessLinkContainer.appendChild(tessLink);
     this.container.appendChild(tessLinkContainer);
