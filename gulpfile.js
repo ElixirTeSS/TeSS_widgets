@@ -21,7 +21,7 @@ if (env === 'development') {
   sassStyle = 'compressed';
 }
 
-gulp.task('serve', ['js', 'sass'], function() {
+gulp.task('serve', ['js', 'sass', 'html'], function() {
     browserSync.init({
         server: outputDir
     });
