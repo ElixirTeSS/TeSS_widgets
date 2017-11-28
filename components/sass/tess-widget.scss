@@ -18,19 +18,6 @@ $elixir-grey-20: transparentize($elixir-grey, 0.8);
 $elixir-blue-20: transparentize($elixir-blue, 0.8);
 $elixir-green-20: transparentize($elixir-green, 0.8);
 
-body {
-  font-size: 1em;
-  font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
-}
-
-section {
-  margin: 0 auto;
-  width: 80%;
-}
-
-a {
-  color: $elixir-blue;
-}
 
 .tess-widget-faceted-table {
   display: flex;

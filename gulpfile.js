@@ -25,8 +25,8 @@ if (env==='development') {
 }
 
 // Sources (arrays)
-jsSources = ['components/scripts/embed.js'];
-sassSources = ['components/sass/style.scss'];
+jsSources = ['components/scripts/standalone.js'];
+sassSources = ['components/sass/tess-widget.scss'];
 htmlSources = [outputDir + '*.html'];
 
 gulp.task('serve', ['js', 'sass'], function() {
@@ -41,7 +41,7 @@ gulp.task('serve', ['js', 'sass'], function() {
 
 gulp.task('js', function() {
   gulp.src(jsSources)
-    .pipe(browserify())
+    .pipe(browserify({ standalone: 'TessWidget' }))
     .pipe(gulpif(env === 'production', uglify()))
     .pipe(gulp.dest(outputDir + 'js'))
     .pipe(browserSync.stream());

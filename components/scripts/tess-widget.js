@@ -1,11 +1,23 @@
 'use strict';
 
 var TessApi = require('tess_json_api');
+
+var defaultRenderers = {
+    FacetedTableRenderer: require('./renderers/faceted-table-renderer.js'),
+    SimpleListRenderer: require('./renderers/simple-list-renderer.js')
+};
+
 var api = new TessApi.EventsApi();
 
 function TessWidget(element, renderer, options) {
     this.name = 'ElixirTess_list_widget';
-    this.renderer = new renderer(this, element);
+    if (!renderer)
+        renderer = 'FacetedTableRenderer';
+
+    if (typeof renderer === 'string' || renderer instanceof String)
+        renderer = defaultRenderers[renderer];
+
+    this.renderer = new renderer(this, element, options.rendererOptions || {});
     this.render = this.renderer.render.bind(this.renderer);
     this.options = options || {};
     this.queryParameters = this.options.queryParameters || {};

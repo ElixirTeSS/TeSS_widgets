@@ -6,7 +6,22 @@
   <title>TeSS widget - production</title>
   <meta name="description" content="TeSS widget">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/tess-widget.css">
+  <style>
+    body {
+      font-size: 1em;
+      font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
+    }
+
+    section {
+      margin: 0 auto;
+      width: 80%;
+    }
+
+    a {
+      color: rgb(0, 84, 114);
+    }
+  </style>
 </head>
 
 <body>
@@ -23,6 +38,28 @@
 
   <hr/>
 </section>
-<script src="js/embed.js"></script>
+<script src="js/standalone.js"></script>
+<script>
+  // TeSS widget in table form
+  TessWidget(document.getElementById('tess-widget-table'),
+          'FacetedTableRenderer',
+          {
+            queryParameters: {
+              q: "Python",
+              facets: { "country[]": ["Belgium",  "United Kingdom"] }
+            }
+          });
+
+  // TeSS widget in list form
+  TessWidget(document.getElementById('tess-widget-list'),
+          'SimpleListRenderer',
+          {
+            queryParameters: {
+              pageSize: 5,
+              q: "Python",
+              facets: { "country[]": ["Belgium",  "United Kingdom"] }
+            }
+          });
+</script>
 </body>
 </html>
