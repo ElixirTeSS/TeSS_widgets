@@ -41,8 +41,33 @@ section {
   }
 
   a.tess-facet-row {
-    &.active {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+    font-size: small;
+    padding: 2px 5px;
+
+    &:visited, &:active {
+      color: inherit;
+    }
+    &:hover {
       background-color: #eee;
+    }
+
+    &.active {
+      background-color: #8CA0A6;
+      color: white;
+
+      &:hover {
+        background-color: #206B82;
+      }
+
+      &:after {
+        content: "×";
+        float: right;
+        margin-left: 5px;
+        font-weight: bold;
+      }
     }
     span {
       pointer-events: none;
@@ -52,9 +77,52 @@ section {
   .tess-facets {
     flex-shrink: 0;
     width: 200px;
+    margin-right: 10px;
+    border-bottom: 1px solid #ccc;
+
+    .tess-facet {
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+
+    .tess-facet-title {
+      font-weight: bold;
+      padding: 10px 5px;
+      background-color: #efefef;
+    }
+
+    .tess-facet-title, ul > li a.tess-facet-row {
+      border-top: 1px solid #ccc;
+    }
 
     ul {
-      li { }
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        a.tess-facet-row {
+          display: flex;
+          padding: 7px 10px;
+
+          span {
+            display: inline-block;
+          }
+
+          .tess-facet-row-value {
+            flex-grow: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          .tess-facet-row-count {
+            flex-shrink: 0;
+            font-size: small;
+            color: #666;
+          }
+        }
+      }
     }
   }
 }
