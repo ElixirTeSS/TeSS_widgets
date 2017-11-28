@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
-    browserify = require('gulp-browserify'),
+    browserify = require('browserify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
     sass = require('gulp-sass'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
@@ -32,8 +34,15 @@ gulp.task('serve', ['js', 'sass', 'html'], function() {
 });
 
 gulp.task('js', function() {
-  gulp.src('components/scripts/standalone.js')
-    .pipe(browserify({ standalone: 'TessWidget' }))
+  var b = browserify({
+      entries: './components/scripts/standalone.js',
+      debug: true,
+      standalone: 'TessWidget'
+  });
+
+  b.bundle()
+    .pipe(source('standalone.js'))
+    .pipe(buffer())
     .pipe(gulpif(env === 'production', uglify()))
     .pipe(gulp.dest(outputDir + 'js'))
     .pipe(browserSync.stream());
