@@ -7,17 +7,27 @@ function ActiveFacetsRenderer(widget, element, options) {
     this.container = element;
 }
 
-ActiveFacetsRenderer.prototype.initialize = function () { };
+ActiveFacetsRenderer.prototype.initialize = function () {
+    var widget = this.widget;
+    this.container.addEventListener('click', function (event) {
+        if (event.target.hasAttribute('data-tess-facet-key')) {
+            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? widget.removeFacet : widget.applyFacet;
+            f.bind(widget)(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
+        }
+    });
+};
 
 ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
+    while (this.container.firstChild) {
+        this.container.removeChild(this.container.firstChild);
+    }
+
+    this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' events matching:'));
     this.renderActiveFacets(this.container, data.meta['facets']);
+
 };
 
 ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets) {
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-
     for (var key in activeFacets) {
         container.appendChild(this.generateActiveFacet(key, activeFacets[key]));
     }

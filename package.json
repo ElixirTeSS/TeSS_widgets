@@ -21,6 +21,6 @@
     "gulp-util": "^3.0.8"
   },
   "dependencies": {
-    "tess_json_api": "git+https://github.com/ElixirTeSS/tess-json-api-client.git"
+    "tess_json_api": "github:ElixirTeSS/tess-json-api-client"
   }
 }

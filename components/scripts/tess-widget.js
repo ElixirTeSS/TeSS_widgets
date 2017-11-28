@@ -1,7 +1,7 @@
 'use strict';
 
 var TessApi = require('tess_json_api');
-var api = new TessApi.DefaultApi();
+var api = new TessApi.EventsApi();
 
 function TessWidget(element, renderer, options) {
     this.name = 'ElixirTess_list_widget';
@@ -56,6 +56,11 @@ TessWidget.prototype.removeFacet = function (key, value) {
         delete this.queryParameters.facets[actualKey];
     }
 
+    this.getEvents();
+};
+
+TessWidget.prototype.setPage = function (page) {
+    this.queryParameters['pageNumber'] = page;
     this.getEvents();
 };
 

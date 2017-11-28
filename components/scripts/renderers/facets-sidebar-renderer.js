@@ -7,7 +7,15 @@ function FacetsSidebarRenderer(widget, element, options) {
     this.container = element;
 }
 
-FacetsSidebarRenderer.prototype.initialize = function () { };
+FacetsSidebarRenderer.prototype.initialize = function () {
+    var widget = this.widget;
+    this.container.addEventListener('click', function (event) {
+        if (event.target.hasAttribute('data-tess-facet-key')) {
+            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? widget.removeFacet : widget.applyFacet;
+            f.bind(widget)(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
+        }
+    });
+};
 
 FacetsSidebarRenderer.prototype.render = function (errors, data, response) {
     // Render facet sidebar

@@ -36,14 +36,6 @@ TableRenderer.prototype.initialize = function () { };
 TableRenderer.prototype.render = function (errors, data, response) {
     // Render results
     this.renderEvents(this.container, data.data);
-
-    // Render TeSS link
-    var tessLinkContainer = document.createElement('p');
-    var tessLink = document.createElement('a');
-    tessLink.href = response.req.url;
-    tessLink.appendChild(document.createTextNode('View your results on TeSS'));
-    tessLinkContainer.appendChild(tessLink);
-    this.container.appendChild(tessLinkContainer);
 };
 
 TableRenderer.prototype.renderEvent = function (container, event) {
