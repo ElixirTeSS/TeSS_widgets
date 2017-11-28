@@ -1,10 +1,35 @@
+$elixir-orange: rgb(244, 125, 32);
+$elixir-grey: rgb(77, 72, 72);
+$elixir-blue: rgb(0, 84, 114);
+$elixir-green: rgb(190, 191, 50);
+
+$elixir-orange-70: transparentize($elixir-orange, 0.3);
+$elixir-grey-70: transparentize($elixir-grey, 0.3);
+$elixir-blue-70: transparentize($elixir-blue, 0.3);
+$elixir-green-70: transparentize($elixir-green, 0.3);
+
+$elixir-orange-40: transparentize($elixir-orange, 0.6);
+$elixir-grey-40: transparentize($elixir-grey, 0.6);
+$elixir-blue-40: transparentize($elixir-blue, 0.6);
+$elixir-green-40: transparentize($elixir-green, 0.6);
+
+$elixir-orange-20: transparentize($elixir-orange, 0.8);
+$elixir-grey-20: transparentize($elixir-grey, 0.8);
+$elixir-blue-20: transparentize($elixir-blue, 0.8);
+$elixir-green-20: transparentize($elixir-green, 0.8);
+
 body {
   font-size: 1em;
-  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+  font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
 }
+
 section {
   margin: 0 auto;
   width: 80%;
+}
+
+a {
+  color: $elixir-blue;
 }
 
 .tess-widget-faceted-table {
@@ -33,7 +58,7 @@ section {
     }
     th {
       text-align: left;
-      border-bottom: 2px solid #ddd;
+      border-bottom: 2px solid $elixir-orange;
     }
     th:first-child {
       width: 20%;
@@ -51,15 +76,15 @@ section {
       color: inherit;
     }
     &:hover {
-      background-color: #eee;
+      background-color: $elixir-blue-20;
     }
 
     &.active {
-      background-color: #8CA0A6;
+      background-color: $elixir-blue-70;
       color: white;
 
       &:hover {
-        background-color: #206B82;
+        background-color: $elixir-blue-40;
       }
 
       &:after {
@@ -87,21 +112,22 @@ section {
     flex-shrink: 0;
     width: 200px;
     margin-right: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $elixir-grey-20;
 
     .tess-facet {
-      border-left: 1px solid #ccc;
-      border-right: 1px solid #ccc;
+      border-left: 1px solid $elixir-grey-20;
+      border-right: 1px solid $elixir-grey-20;
     }
 
     .tess-facet-title {
       font-weight: bold;
       padding: 10px 5px;
       background-color: #efefef;
+      font-size: small;
     }
 
     .tess-facet-title, ul > li a.tess-facet-row {
-      border-top: 1px solid #ccc;
+      border-top: 1px solid $elixir-grey-20;
     }
 
     ul {
@@ -127,8 +153,7 @@ section {
 
           .tess-facet-row-count {
             flex-shrink: 0;
-            font-size: small;
-            color: #666;
+            color: $elixir-grey;
           }
         }
       }
