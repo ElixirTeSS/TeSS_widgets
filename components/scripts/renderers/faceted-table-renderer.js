@@ -49,7 +49,8 @@ FacetedTableRenderer.prototype.initialize = function () {
     this.container.appendChild(this.elements.facets);
     this.container.appendChild(this.elements.wrapper);
 
-    this.renderers.facets = new FacetsSidebarRenderer(this.widget, this.elements.facets);
+    this.renderers.facets = new FacetsSidebarRenderer(this.widget, this.elements.facets,
+        { allowedFacets: this.options.allowedFacets });
     this.renderers.activeFacets = new ActiveFacetsRenderer(this.widget, this.elements.activeFacets);
     this.renderers.table = new TableRenderer(this.widget, this.elements.results);
     this.renderers.search = new SearchRenderer(this.widget, this.elements.search);

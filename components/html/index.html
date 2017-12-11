@@ -27,7 +27,7 @@
 <section>
     <h1>Widget Examples</h1>
     Scroll down for more examples.
-    <h2 id="table">Table Example</h2>
+    <h2 id="table">Table w/ Sidebar Example</h2>
     <div id="tess-widget-table" class="tess-widget-faceted-table"></div>
 
     <hr/>
@@ -43,6 +43,9 @@
     TessWidget(document.getElementById('tess-widget-table'),
             'FacetedTableRenderer',
             {
+                rendererOptions: {
+                    allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
+                },
                 queryParameters: {
                     q: "Python",
                     facets: { "country[]": ["Belgium",  "United Kingdom"] }
