@@ -36,6 +36,11 @@
     <div id="tess-widget-list" class="tess-widget-list"></div>
 
     <hr/>
+
+    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
+    <div id="tess-widget-dropdown-table" class="tess-widget-faceted-table"></div>
+
+    <hr/>
 </section>
 <script src="js/standalone.js"></script>
 <script>
@@ -62,6 +67,20 @@
                     facets: { "country[]": ["Belgium",  "United Kingdom"] }
                 }
             });
+
+    // TeSS widget in dropdown form
+    TessWidget(document.getElementById('tess-widget-dropdown-table'),
+            'DropdownTableRenderer',
+            {
+                rendererOptions: {
+                    allowedFacets: ['event-types', 'country', 'scientific-topics']
+                },
+                queryParameters: {
+                    q: "Python",
+                    facets: { "country[]": ["United Kingdom"] }
+                }
+            });
+
 </script>
 </body>
 </html>

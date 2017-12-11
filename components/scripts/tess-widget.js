@@ -4,7 +4,8 @@ var TessApi = require('tess_json_api');
 
 var defaultRenderers = {
     FacetedTableRenderer: require('./renderers/faceted-table-renderer.js'),
-    SimpleListRenderer: require('./renderers/simple-list-renderer.js')
+    SimpleListRenderer: require('./renderers/simple-list-renderer.js'),
+    DropdownTableRenderer: require('./renderers/dropdown-table-renderer.js')
 };
 
 var api = new TessApi.EventsApi();
@@ -38,7 +39,7 @@ TessWidget.prototype.buildUrl = function (path) {
     return api.apiClient.buildUrl(path);
 };
 
-TessWidget.prototype.applyFacet = function (key, value) {
+TessWidget.prototype.addFacet = function (key, value) {
     var actualKey = key.replace(/-/g, '_') + '[]';
 
     if (!this.queryParameters.facets[actualKey]) {
@@ -67,6 +68,22 @@ TessWidget.prototype.removeFacet = function (key, value) {
     if (!this.queryParameters.facets[actualKey].length) {
         delete this.queryParameters.facets[actualKey];
     }
+
+    this.getEvents();
+};
+
+TessWidget.prototype.setFacet = function (key, value) {
+    var actualKey = key.replace(/-/g, '_') + '[]';
+
+    this.queryParameters.facets[actualKey] = [value];
+
+    this.getEvents();
+};
+
+TessWidget.prototype.clearFacet = function (key) {
+    var actualKey = key.replace(/-/g, '_') + '[]';
+
+    delete this.queryParameters.facets[actualKey];
 
     this.getEvents();
 };
