@@ -29,14 +29,18 @@ DropdownTableRenderer.prototype.initialize = function () {
 
     this.elements.search = document.createElement('div');
     this.elements.search.className = 'tess-search';
+    var searchTitle = document.createElement('div');
+    searchTitle.className = 'tess-facet-title';
+    searchTitle.appendChild(document.createTextNode('Search'));
+    this.elements.search.appendChild(searchTitle);
 
     this.elements.pagination = document.createElement('div');
     this.elements.pagination.className = 'tess-pagination';
 
     this.elements.tessLink = document.createElement('div');
 
-    this.elements.controls.appendChild(this.elements.search);
     this.elements.controls.appendChild(this.elements.facetDropdowns);
+    this.elements.controls.appendChild(this.elements.search);
     this.elements.wrapper.appendChild(title);
     this.elements.wrapper.appendChild(this.elements.controls);
     this.elements.wrapper.appendChild(this.elements.results);
