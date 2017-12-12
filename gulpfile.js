@@ -29,13 +29,13 @@ gulp.task('serve', ['js', 'sass', 'html'], function() {
     });
 
     gulp.watch('components/sass/*.scss', ['sass']);
-    gulp.watch('components/scripts/**', ['js']);
+    gulp.watch('components/js/**', ['js']);
     gulp.watch('components/html/*.html', ['html']);
 });
 
 gulp.task('js', function() {
   var b = browserify({
-      entries: './components/scripts/standalone.js',
+      entries: './components/js/standalone.js',
       debug: true,
       standalone: 'TessWidget'
   });
