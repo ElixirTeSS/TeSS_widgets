@@ -11,11 +11,44 @@
         body {
             font-size: 1em;
             font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
         }
 
         section {
-            margin: 0 auto;
+            margin: 50px 0;
+            border-top: 2px dashed #ccc;
+        }
+
+        section > pre {
+            background-color: #eee;
+            font-family: monospace;
+            padding: 10px;
             width: 80%;
+            margin: 20px auto;
+        }
+
+        section > pre::before {
+            content: 'Code:';
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #999;
+        }
+
+        section > h2 {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+        }
+
+        section > div {
+            width: 80%;
+            margin: 0 auto;
         }
 
         a {
@@ -24,63 +57,74 @@
     </style>
 </head>
 <body>
-<section>
-    <h1>Widget Examples</h1>
+<h1>Widget Examples</h1>
+<p style="text-align: center">
     Scroll down for more examples.
+</p>
+<section>
     <h2 id="table">Table w/ Sidebar Example</h2>
-    <div id="tess-widget-table" class="tess-widget-faceted-table"></div>
-
-    <hr/>
-
-    <h2 id="list">List Example</h2>
-    <div id="tess-widget-list" class="tess-widget-list"></div>
-
-    <hr/>
-
-    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
-    <div id="tess-widget-dropdown-table" class="tess-widget-dropdown-table"></div>
-
-    <hr/>
+    <div id="tess-widget-table" class="tess-widget tess-widget-faceted-table"></div>
 </section>
+
+<section>
+    <h2 id="list">List Example</h2>
+    <div id="tess-widget-list" class="tess-widget tess-widget-list"></div>
+</section>
+
+<section>
+    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
+    <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
+</section>
+
 <script src="js/standalone.js"></script>
+<script id="tess-widget-table-code">// TeSS widget in table form with a sidebar
+TessWidget(document.getElementById('tess-widget-table'),
+        'FacetedTableRenderer',
+        {
+            rendererOptions: {
+                allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
+            },
+            queryParameters: {
+                q: 'Python",
+                facets: { "country[]": ["Belgium",  "United Kingdom"] }
+            }
+        });
+</script>
+<script id="tess-widget-list-code">// TeSS widget in list form
+TessWidget(document.getElementById('tess-widget-list'),
+        'SimpleListRenderer',
+        {
+            queryParameters: {
+                pageSize: 5,
+                q: 'Python',
+                facets: { 'country[]': ['Belgium',  'United Kingdom'] }
+            }
+        });
+</script>
+<script id="tess-widget-dropdown-table-code">// TeSS widget in table form with dropdown menus
+TessWidget(document.getElementById('tess-widget-dropdown-table'),
+        'DropdownTableRenderer',
+        {
+            rendererOptions: {
+                allowedFacets: ['event-types', 'country', 'scientific-topics']
+            },
+            queryParameters: {
+                q: 'Python',
+                facets: { 'country[]': ['United Kingdom'] }
+            }
+        });
+</script>
 <script>
-    // TeSS widget in table form
-    TessWidget(document.getElementById('tess-widget-table'),
-            'FacetedTableRenderer',
-            {
-                rendererOptions: {
-                    allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
-                },
-                queryParameters: {
-                    q: "Python",
-                    facets: { "country[]": ["Belgium",  "United Kingdom"] }
-                }
-            });
+    // Show the code under each widget
+    var widgets = document.getElementsByClassName("tess-widget");
 
-    // TeSS widget in list form
-    TessWidget(document.getElementById('tess-widget-list'),
-            'SimpleListRenderer',
-            {
-                queryParameters: {
-                    pageSize: 5,
-                    q: "Python",
-                    facets: { "country[]": ["Belgium",  "United Kingdom"] }
-                }
-            });
-
-    // TeSS widget in dropdown form
-    TessWidget(document.getElementById('tess-widget-dropdown-table'),
-            'DropdownTableRenderer',
-            {
-                rendererOptions: {
-                    allowedFacets: ['event-types', 'country', 'scientific-topics']
-                },
-                queryParameters: {
-                    q: "Python",
-                    facets: { "country[]": ["United Kingdom"] }
-                }
-            });
-
+    for (var i = 0; i < widgets.length; i++) {
+        var pre = document.createElement('pre');
+        var id = widgets[i].id;
+        var script = document.getElementById(id + '-code');
+        pre.appendChild(document.createTextNode(script.innerHTML));
+        widgets[i].parentNode.appendChild(pre);
+    }
 </script>
 </body>
 </html>
