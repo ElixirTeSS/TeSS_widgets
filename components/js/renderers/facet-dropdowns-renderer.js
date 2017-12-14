@@ -78,7 +78,7 @@ FacetDropdowns.prototype.renderFacet = function (container, key, availableFacets
 
     var self = this;
     // Render a blank option.
-    self.renderFacetOption(list, !activeFacets.length, '', '');
+    self.renderFacetOption(list, !activeFacets.length, '', '(any)');
     list.value = ''; // Select the blank option to begin with
 
     // Render the active facets first so they appear at the top.
