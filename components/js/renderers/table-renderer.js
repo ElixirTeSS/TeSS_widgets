@@ -1,30 +1,11 @@
 'use strict';
 var Util = require('../util.js');
 
-var fieldRenderers = {
-    location: function (event) {
-        var city = event.attributes['city'];
-        var country = event.attributes['country'];
-
-        if ((event.attributes['city'] !== 'null') && (event.attributes['country'] !== 'null')) {
-            city = event.attributes['city'] + ', ';
-        }
-        if (event.attributes['city'] === 'null') {
-            city = '';
-        }
-        if (event.attributes['country'] === 'null' ) {
-            country = '';
-        }
-
-        return city + country;
-    }
-};
-
 function TableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
-    this.options.fields = this.options.fields ||
+    this.options.columns = this.options.columns ||
         [{ name: 'Date', field: 'start' },
             { name: 'Name', field: 'title' },
             // { name: 'Organizer', field: 'organizer' },
@@ -42,13 +23,13 @@ TableRenderer.prototype.renderEvent = function (container, event) {
     var eventRow = container.insertRow();
 
     var widget = this.widget;
-    this.options.fields.forEach(function (fieldPair) {
+    this.options.columns.forEach(function (fieldPair) {
         var field = fieldPair.field;
         var value = event.attributes[field];
         var valueNode;
 
-        if (fieldRenderers.hasOwnProperty(field)) {
-            value = fieldRenderers[field](event);
+        if (Util.fieldRenderers.hasOwnProperty(field)) {
+            value = Util.fieldRenderers[field](event);
             valueNode = document.createTextNode(value);
         } else if (value instanceof Date) {
             valueNode = document.createTextNode(Util.formatDate(value));
@@ -83,7 +64,7 @@ TableRenderer.prototype.renderEvents = function (container, events) {
 
     // Headings
     var headingRow = head.insertRow();
-    this.options.fields.forEach(function (fieldPair) {
+    this.options.columns.forEach(function (fieldPair) {
         var heading = fieldPair.name;
         var cell = document.createElement('th');
         cell.appendChild(document.createTextNode(heading));

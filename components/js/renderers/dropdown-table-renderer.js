@@ -49,8 +49,9 @@ DropdownTableRenderer.prototype.initialize = function () {
     this.container.appendChild(this.elements.wrapper);
 
     this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.facetDropdowns,
-        { allowedFacets: this.options.allowedFacets });
-    this.renderers.table = new TableRenderer(this.widget, this.elements.results);
+        { dropdowns: this.options.dropdowns });
+    this.renderers.table = new TableRenderer(this.widget, this.elements.results,
+        { columns: this.options.columns });
     this.renderers.search = new SearchRenderer(this.widget, this.elements.search);
     this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
 

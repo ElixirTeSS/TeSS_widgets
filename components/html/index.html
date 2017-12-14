@@ -79,38 +79,47 @@
 <script src="js/standalone.js"></script>
 <script id="tess-widget-table-code">// TeSS widget in table form with a sidebar
 TessWidget(document.getElementById('tess-widget-table'),
-        'FacetedTableRenderer',
+        'FacetedTable',
         {
-            rendererOptions: {
+            opts: {
+                columns: [{ name: 'Date', field: 'start' },
+                    { name: 'Name', field: 'title' },
+                    { name: 'Location', field: 'location' }],
                 allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
             },
-            queryParameters: {
+            params: {
                 q: 'Python',
-                facets: { 'country[]': ['Belgium',  'United Kingdom'] }
+                facets: { 'country': ['Belgium',  'United Kingdom'] }
             }
         });
 </script>
 <script id="tess-widget-list-code">// TeSS widget in list form
 TessWidget(document.getElementById('tess-widget-list'),
-        'SimpleListRenderer',
+        'SimpleList',
         {
-            queryParameters: {
+            params: {
                 pageSize: 5,
-                q: 'Python',
-                facets: { 'country[]': ['Belgium',  'United Kingdom'] }
+                q: 'Matlab',
+                facets: { 'country': ['Belgium'] }
             }
         });
 </script>
 <script id="tess-widget-dropdown-table-code">// TeSS widget in table form with dropdown menus
 TessWidget(document.getElementById('tess-widget-dropdown-table'),
-        'DropdownTableRenderer',
+        'DropdownTable',
         {
-            rendererOptions: {
-                allowedFacets: ['event-types', 'country', 'scientific-topics']
+            opts: {
+                columns: [{ name: 'Date', field: 'start' },
+                    { name: 'Name', field: 'title' },
+                    { name: 'Organizer', field: 'organizer' },
+                    { name: 'Location', field: 'location' }],
+                dropdowns: [{ name: 'Type', field: 'event-types' },
+                    { name: 'Country', field: 'country' },
+                    { name: 'Topic', field: 'scientific-topics' }]
             },
-            queryParameters: {
+            params: {
                 q: 'Python',
-                facets: { 'country[]': ['United Kingdom'] }
+                facets: { 'country': ['United Kingdom'] }
             }
         });
 </script>

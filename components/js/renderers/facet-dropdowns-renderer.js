@@ -4,6 +4,10 @@ var Util = require('../util.js');
 function FacetDropdowns(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
+    this.options.dropdowns = this.options.dropdowns ||
+        [{ name: 'Event Type', field: 'event-types' },
+         { name: 'Country', field: 'country' }];
+
     this.container = element;
 }
 
@@ -13,7 +17,7 @@ FacetDropdowns.prototype.initialize = function () {
     this.dropdowns = {};
     
     var self = this;
-    this.options.allowedFacets.forEach(function (facet) {
+    this.options.dropdowns.forEach(function (pair) {
         // wrapper
         var category = document.createElement('div');
         category.className = 'tess-facet';
@@ -21,12 +25,12 @@ FacetDropdowns.prototype.initialize = function () {
         // title
         var title = document.createElement('div');
         title.className = 'tess-facet-title';
-        title.appendChild(document.createTextNode(Util.humanize(facet)));
+        title.appendChild(document.createTextNode(pair.name));
         category.appendChild(title);
 
         // dropdown
         var list = document.createElement('select');
-        list.setAttribute('data-tess-facet-key', facet);
+        list.setAttribute('data-tess-facet-key', pair.field);
         category.appendChild(list); 
         list.addEventListener('change', function () {
             if (this.value) {
@@ -35,7 +39,7 @@ FacetDropdowns.prototype.initialize = function () {
                 widget.clearFacet(list.getAttribute('data-tess-facet-key'));
             }
         });
-        self.dropdowns[facet] = list;
+        self.dropdowns[pair.field] = list;
 
         self.container.appendChild(category);
     });
@@ -43,7 +47,7 @@ FacetDropdowns.prototype.initialize = function () {
 
 FacetDropdowns.prototype.render = function (errors, data, response) {
     for (var key in data.meta['available-facets']) {
-        if (this.options.allowedFacets.indexOf(key) !== -1) {
+        if (this.dropdowns.hasOwnProperty(key)) {
             if (data.meta['available-facets'][key].length) {
                 this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
             }
