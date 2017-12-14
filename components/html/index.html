@@ -126,14 +126,22 @@ TessWidget(document.getElementById('tess-widget-dropdown-table'),
 <script>
     // Show the code under each widget
     var widgets = document.getElementsByClassName("tess-widget");
-    var codePrefix = "<script src=\"https://elixirtess.github.io/list_widget/js/tess-widget-standalone.js\"><\/script>\n<script>";
-    var codeSuffix = "\n<\/script>";
+    var url = "https://elixirtess.github.io/list_widget";
+
+    var cssTag = "<link rel=\"stylesheet\" property=\"stylesheet\" href=\""+url+"/css/tess-widget.css\"/>\n"
+    var scriptTag = "<script src=\""+url+"\"/js/tess-widget-standalone.js\"><\/script>\n";
 
     for (var i = 0; i < widgets.length; i++) {
         var pre = document.createElement('pre');
         var id = widgets[i].id;
         var script = document.getElementById(id + '-code');
-        pre.appendChild(document.createTextNode(codePrefix + script.innerHTML + codeSuffix));
+        var text = cssTag +
+            scriptTag +
+            '<div id="'+id+'"></div>' +
+            '\n<script>' +
+            script.innerHTML +
+            '\n<\/script>';
+        pre.appendChild(document.createTextNode(text));
         widgets[i].parentNode.appendChild(pre);
     }
 </script>
