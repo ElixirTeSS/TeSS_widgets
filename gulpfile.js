@@ -35,13 +35,13 @@ gulp.task('serve', ['js', 'sass', 'html'], function() {
 
 gulp.task('js', function() {
   var b = browserify({
-      entries: './components/js/standalone.js',
+      entries: './components/js/tess-widget-standalone.js',
       debug: true,
       standalone: 'TessWidget'
   });
 
   b.bundle()
-    .pipe(source('standalone.js'))
+    .pipe(source('tess-widget-standalone.js'))
     .pipe(buffer())
     .pipe(gulpif(env === 'production', uglify()))
     .pipe(gulp.dest(outputDir + 'js'))

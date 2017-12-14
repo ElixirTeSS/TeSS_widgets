@@ -76,8 +76,8 @@
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
 </section>
 
-<script src="js/standalone.js"></script>
-<script id="tess-widget-table-code">// TeSS widget in table form with a sidebar
+<script src="js/tess-widget-standalone.js"></script>
+<script id="tess-widget-table-code">
 TessWidget(document.getElementById('tess-widget-table'),
         'FacetedTable',
         {
@@ -93,7 +93,7 @@ TessWidget(document.getElementById('tess-widget-table'),
             }
         });
 </script>
-<script id="tess-widget-list-code">// TeSS widget in list form
+<script id="tess-widget-list-code">
 TessWidget(document.getElementById('tess-widget-list'),
         'SimpleList',
         {
@@ -104,7 +104,7 @@ TessWidget(document.getElementById('tess-widget-list'),
             }
         });
 </script>
-<script id="tess-widget-dropdown-table-code">// TeSS widget in table form with dropdown menus
+<script id="tess-widget-dropdown-table-code">
 TessWidget(document.getElementById('tess-widget-dropdown-table'),
         'DropdownTable',
         {
@@ -126,12 +126,14 @@ TessWidget(document.getElementById('tess-widget-dropdown-table'),
 <script>
     // Show the code under each widget
     var widgets = document.getElementsByClassName("tess-widget");
+    var codePrefix = "<script src=\"https://elixirtess.github.io/list_widget/js/tess-widget-standalone.js\"><\/script>\n<script>";
+    var codeSuffix = "\n<\/script>";
 
     for (var i = 0; i < widgets.length; i++) {
         var pre = document.createElement('pre');
         var id = widgets[i].id;
         var script = document.getElementById(id + '-code');
-        pre.appendChild(document.createTextNode(script.innerHTML));
+        pre.appendChild(document.createTextNode(codePrefix + script.innerHTML + codeSuffix));
         widgets[i].parentNode.appendChild(pre);
     }
 </script>
