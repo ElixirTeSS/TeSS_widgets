@@ -18,9 +18,6 @@ DropdownTableRenderer.prototype.initialize = function () {
     this.elements.wrapper = document.createElement('div');
     this.elements.wrapper.className = 'tess-wrapper';
 
-    var title = document.createElement('h2');
-    title.innerText = 'Events';
-
     this.elements.results = document.createElement('div');
     this.elements.results.className = 'tess-results';
 
@@ -41,7 +38,6 @@ DropdownTableRenderer.prototype.initialize = function () {
 
     this.elements.controls.appendChild(this.elements.facetDropdowns);
     this.elements.controls.appendChild(this.elements.search);
-    this.elements.wrapper.appendChild(title);
     this.elements.wrapper.appendChild(this.elements.controls);
     this.elements.wrapper.appendChild(this.elements.results);
     this.elements.wrapper.appendChild(this.elements.pagination);

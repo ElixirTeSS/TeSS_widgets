@@ -22,7 +22,7 @@ ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
         this.container.removeChild(this.container.firstChild);
     }
 
-    this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' events matching:'));
+    this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' events found'));
     this.renderActiveFacets(this.container, data.meta['facets']);
 
 };

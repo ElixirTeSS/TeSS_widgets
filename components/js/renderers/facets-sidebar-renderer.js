@@ -23,10 +23,6 @@ FacetsSidebarRenderer.prototype.render = function (errors, data, response) {
         this.container.removeChild(this.container.firstChild);
     }
 
-    var title = document.createElement('h2');
-    title.innerText = 'Filters';
-    this.container.appendChild(title);
-
     var anyFacets = false;
     for (var key in data.meta['available-facets']) {
         if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
