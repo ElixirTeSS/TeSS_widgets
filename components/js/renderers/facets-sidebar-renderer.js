@@ -25,10 +25,12 @@ FacetsSidebarRenderer.prototype.render = function (errors, data, response) {
 
     var anyFacets = false;
     for (var key in data.meta['available-facets']) {
-        if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
-            if (data.meta['available-facets'][key].length) {
-                anyFacets = true;
-                this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
+        if (data.meta['available-facets'].hasOwnProperty(key)) {
+            if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
+                if (data.meta['available-facets'][key].length) {
+                    anyFacets = true;
+                    this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
+                }
             }
         }
     }

@@ -24,12 +24,15 @@ ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
 
     this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' events found'));
     this.renderActiveFacets(this.container, data.meta['facets']);
-
 };
 
 ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets) {
     for (var key in activeFacets) {
-        container.appendChild(this.generateActiveFacet(key, activeFacets[key]));
+        if (activeFacets.hasOwnProperty(key)) {
+            if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
+                container.appendChild(this.generateActiveFacet(key, activeFacets[key]));
+            }
+        }
     }
 };
 
