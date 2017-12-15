@@ -48,9 +48,7 @@ FacetDropdowns.prototype.initialize = function () {
 FacetDropdowns.prototype.render = function (errors, data, response) {
     for (var key in data.meta['available-facets']) {
         if (this.dropdowns.hasOwnProperty(key)) {
-            if (data.meta['available-facets'][key].length) {
-                this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
-            }
+            this.renderFacet(this.container, key, data.meta['available-facets'][key], (data.meta['facets'][key] || []));
         }
     }
 };
