@@ -104,14 +104,6 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       pointer-events: none;
     }
   }
-
-  .tess-pagination {
-    text-align: right;
-
-    a.tess-pagination-link {
-      margin: 0 5px;
-    }
-  }
 }
 
 .tess-facets {
@@ -169,3 +161,10 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
   }
 }
 
+.tess-pagination {
+  text-align: right;
+
+  a.tess-pagination-link {
+    margin: 0 5px;
+  }
+}
