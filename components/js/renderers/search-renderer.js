@@ -21,7 +21,7 @@ SearchRenderer.prototype.initialize = function () {
 
     this.field.addEventListener('keyup', function (event) {
         if (event.keyCode === 13) {
-            performSearch();
+            widget.search(field.value);
         }
     });
 
@@ -29,7 +29,7 @@ SearchRenderer.prototype.initialize = function () {
     this.button.innerText = 'Search';
     this.button.addEventListener('click', function (event) {
         event.preventDefault();
-        performSearch();
+        widget.search(field.value);
         return false;
     });
 

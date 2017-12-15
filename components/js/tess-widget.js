@@ -52,8 +52,6 @@ TessWidget.prototype.buildUrl = function (path) {
     return api.apiClient.buildUrl(path);
 };
 
-
-
 TessWidget.prototype.addFacet = function (key, value) {
     var actualKey = formatKey(key);
 
@@ -64,6 +62,8 @@ TessWidget.prototype.addFacet = function (key, value) {
     if (!this.queryParameters.facets[actualKey].includes(value)) {
         this.queryParameters.facets[actualKey].push(value);
     }
+
+    delete this.queryParameters['pageNumber'];
 
     this.getEvents();
 };
@@ -84,6 +84,8 @@ TessWidget.prototype.removeFacet = function (key, value) {
         delete this.queryParameters.facets[actualKey];
     }
 
+    delete this.queryParameters['pageNumber'];
+
     this.getEvents();
 };
 
@@ -91,6 +93,8 @@ TessWidget.prototype.setFacet = function (key, value) {
     var actualKey = formatKey(key);
 
     this.queryParameters.facets[actualKey] = [value];
+
+    delete this.queryParameters['pageNumber'];
 
     this.getEvents();
 };
@@ -100,11 +104,21 @@ TessWidget.prototype.clearFacet = function (key) {
 
     delete this.queryParameters.facets[actualKey];
 
+    delete this.queryParameters['pageNumber'];
+
     this.getEvents();
 };
 
 TessWidget.prototype.setPage = function (page) {
     this.queryParameters['pageNumber'] = page;
+    this.getEvents();
+};
+
+TessWidget.prototype.search = function (query) {
+    this.queryParameters.q = query;
+
+    delete this.queryParameters['pageNumber'];
+
     this.getEvents();
 };
 
