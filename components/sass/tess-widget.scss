@@ -18,153 +18,188 @@ $elixir-grey-20: transparentize($elixir-grey, 0.8);
 $elixir-blue-20: transparentize($elixir-blue, 0.8);
 $elixir-green-20: transparentize($elixir-green, 0.8);
 
-.tess-results {
-  table {
-    border-collapse: collapse;
-  }
-
-  th, td {
-    padding: 8px 10px;
-  }
-  th {
-    text-align: left;
-    border-bottom: 2px solid $elixir-orange;
-  }
-  th:first-child {
-    width: 20%;
-  }
+@keyframes tess-loader-spin {
+  to {transform: rotate(360deg);}
 }
 
-
-.tess-controls {
-  display: flex;
-
-  .tess-active-facets {
-    flex-grow: 1;
-  }
-
-  .tess-facet-title {
-    font-weight: bold;
-    padding: 10px 5px;
-    font-size: small;
-  }
-
-  .tess-search {
-    flex-shrink: 1;
-  }
-
-  .tess-facet-dropdowns {
-    display: flex;
-    .tess-facet {
-      flex: 1;
-      margin-right: 1em;
-
-      select { }
-    }
-  }
-}
-
-.tess-widget-faceted-table {
-  display: flex;
+.tess-widget {
+  position: relative;
 
   .tess-results {
-    flex-grow: 1;
+    table {
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px 10px;
+    }
+    th {
+      text-align: left;
+      border-bottom: 2px solid $elixir-orange;
+    }
+    th:first-child {
+      width: 20%;
+    }
   }
 
-  a.tess-facet-row {
-    display: inline-block;
-    color: inherit;
-    text-decoration: none;
-    font-size: small;
-    padding: 2px 5px;
+  .tess-controls {
+    display: flex;
 
-    &:visited, &:active {
+    .tess-active-facets {
+      flex-grow: 1;
+    }
+
+    .tess-facet-title {
+      font-weight: bold;
+      padding: 10px 5px;
+      font-size: small;
+    }
+
+    .tess-search {
+      flex-shrink: 1;
+    }
+
+    .tess-facet-dropdowns {
+      display: flex;
+      .tess-facet {
+        flex: 1;
+        margin-right: 1em;
+
+        select { }
+      }
+    }
+  }
+
+  &.tess-widget-faceted-table {
+    display: flex;
+
+    .tess-results {
+      flex-grow: 1;
+    }
+
+    a.tess-facet-row {
+      display: inline-block;
       color: inherit;
-    }
-    &:hover {
-      background-color: $elixir-blue-20;
-    }
+      text-decoration: none;
+      font-size: small;
+      padding: 2px 5px;
 
-    &.active {
-      background-color: $elixir-blue-70;
-      color: white;
-
+      &:visited, &:active {
+        color: inherit;
+      }
       &:hover {
-        background-color: $elixir-blue-40;
+        background-color: $elixir-blue-20;
       }
 
-      &:after {
-        content: "×";
-        float: right;
-        margin-left: 5px;
-        font-weight: bold;
+      &.active {
+        background-color: $elixir-blue-70;
+        color: white;
+
+        &:hover {
+          background-color: $elixir-blue-40;
+        }
+
+        &:after {
+          content: "×";
+          float: right;
+          margin-left: 5px;
+          font-weight: bold;
+        }
+      }
+      span {
+        pointer-events: none;
       }
     }
-    span {
-      pointer-events: none;
+  }
+
+  .tess-facets {
+    flex-shrink: 0;
+    width: 220px;
+    margin-right: 20px;
+
+    .tess-facet {
+      border-left: 1px solid $elixir-grey-20;
+      border-right: 1px solid $elixir-grey-20;
+
+      &:last-child {
+        border-bottom: 1px solid $elixir-grey-20;
+      }
     }
+
+    .tess-facet-title {
+      font-weight: bold;
+      padding: 10px 5px;
+      background-color: #efefef;
+      font-size: small;
+    }
+
+    .tess-facet-title, ul > li a.tess-facet-row {
+      border-top: 1px solid $elixir-grey-20;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        a.tess-facet-row {
+          display: flex;
+          padding: 7px 10px;
+
+          span {
+            display: inline-block;
+          }
+
+          .tess-facet-row-value {
+            flex-grow: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          .tess-facet-row-count {
+            flex-shrink: 0;
+            color: $elixir-grey;
+          }
+        }
+      }
+    }
+  }
+
+  .tess-pagination {
+    text-align: right;
+
+    a.tess-pagination-link {
+      margin: 0 5px;
+    }
+  }
+
+  &.tess-loader, &.tess-loader-large {
+    opacity: 0.75;
   }
 }
 
-.tess-facets {
-  flex-shrink: 0;
-  width: 220px;
-  margin-right: 20px;
-
-  .tess-facet {
-    border-left: 1px solid $elixir-grey-20;
-    border-right: 1px solid $elixir-grey-20;
-
-    &:last-child {
-      border-bottom: 1px solid $elixir-grey-20;
-    }
-  }
-
-  .tess-facet-title {
-    font-weight: bold;
-    padding: 10px 5px;
-    background-color: #efefef;
-    font-size: small;
-  }
-
-  .tess-facet-title, ul > li a.tess-facet-row {
-    border-top: 1px solid $elixir-grey-20;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      a.tess-facet-row {
-        display: flex;
-        padding: 7px 10px;
-
-        span {
-          display: inline-block;
-        }
-
-        .tess-facet-row-value {
-          flex-grow: 1;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-        }
-
-        .tess-facet-row-count {
-          flex-shrink: 0;
-          color: $elixir-grey;
-        }
-      }
-    }
-  }
+.tess-loader:before, .tess-loader-large:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid $elixir-grey-20;
+  border-top-color: $elixir-orange;
+  animation: tess-loader-spin .6s linear infinite;
 }
 
-.tess-pagination {
-  text-align: right;
-
-  a.tess-pagination-link {
-    margin: 0 5px;
-  }
+.tess-loader-large:before {
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  margin-left: -30px;
+  border-width: 6px;
 }

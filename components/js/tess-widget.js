@@ -22,8 +22,8 @@ function TessWidget(element, renderer, options) {
     if (typeof renderer === 'string' || renderer instanceof String)
         renderer = defaultRenderers[renderer];
 
+    this.element = element;
     this.renderer = new renderer(this, element, options.opts || {});
-    this.render = this.renderer.render.bind(this.renderer);
     this.options = options || {};
     this.queryParameters = this.options.params || {};
     if (this.queryParameters.facets) {
@@ -123,7 +123,13 @@ TessWidget.prototype.search = function (query) {
 };
 
 TessWidget.prototype.getEvents = function () {
-    api.eventsGet(this.queryParameters, this.render);
+    this.element.classList.add('tess-loader-large');
+
+    var widget = this;
+    api.eventsGet(this.queryParameters, function (errors, data, response) {
+        widget.renderer.render.apply(widget.renderer, [errors, data, response]);
+        widget.element.classList.remove('tess-loader-large');
+    });
 };
 
 module.exports = TessWidget;
