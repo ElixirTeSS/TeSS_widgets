@@ -27,6 +27,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
 
   .tess-results {
     table {
+      width: 100%;
       border-collapse: collapse;
     }
 
@@ -55,9 +56,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       font-size: small;
     }
 
-    .tess-search {
-      flex-shrink: 1;
-    }
+    .tess-search { }
 
     .tess-facet-dropdowns {
       display: flex;
@@ -73,7 +72,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
   &.tess-widget-faceted-table {
     display: flex;
 
-    .tess-results {
+    .tess-wrapper {
       flex-grow: 1;
     }
 
