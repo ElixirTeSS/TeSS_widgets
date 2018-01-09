@@ -11,7 +11,13 @@ var defaultRenderers = {
 var api = new TessApi.EventsApi();
 
 function formatKey(key) {
-    return key.replace(/-/g, '_').replace('[]', '') + '[]';
+    var newKey = key.replace(/-/g, '_').replace('[]', '');
+
+    if (newKey !== 'include_expired' && newKey !== 'online') {
+        newKey = newKey + '[]';
+    }
+
+    return newKey;
 }
 
 function TessWidget(element, renderer, options) {
