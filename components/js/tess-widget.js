@@ -13,10 +13,6 @@ var api = new TessApi.EventsApi();
 function formatKey(key) {
     var newKey = key.replace(/-/g, '_').replace('[]', '');
 
-    if (newKey !== 'include_expired' && newKey !== 'online') {
-        newKey = newKey + '[]';
-    }
-
     return newKey;
 }
 
@@ -33,13 +29,11 @@ function TessWidget(element, renderer, options) {
     this.options = options || {};
     this.queryParameters = this.options.params || {};
     if (this.queryParameters.facets) {
-        var actualFacets = {};
         for (var key in this.queryParameters.facets) {
             if (this.queryParameters.facets.hasOwnProperty(key)) {
-                actualFacets[formatKey(key)] = this.queryParameters.facets[key];
+                this.queryParameters[formatKey(key)] = this.queryParameters.facets[key];
             }
         }
-        this.queryParameters.facets = actualFacets;
     }
 }
 
