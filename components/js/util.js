@@ -60,13 +60,13 @@ module.exports = {
             var city = event.attributes['city'];
             var country = event.attributes['country'];
 
-            if ((event.attributes['city'] !== 'null') && (event.attributes['country'] !== 'null')) {
+            if ((event.attributes['city'] !== null) && (event.attributes['country'] !== null)) {
                 city = event.attributes['city'] + ', ';
             }
-            if (event.attributes['city'] === 'null') {
+            if (event.attributes['city'] === null) {
                 city = '';
             }
-            if (event.attributes['country'] === 'null' ) {
+            if (event.attributes['country'] === null ) {
                 country = '';
             }
 
