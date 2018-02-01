@@ -177,6 +177,12 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
   &.tess-loader, &.tess-loader-large {
     opacity: 0.75;
   }
+
+  .tess-google-map {
+    height: 400px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 
 .tess-loader:before, .tess-loader-large:before {

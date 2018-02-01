@@ -6,7 +6,8 @@ var Util = require('./util.js');
 var defaultRenderers = {
     FacetedTable: require('./renderers/faceted-table-renderer.js'),
     SimpleList: require('./renderers/simple-list-renderer.js'),
-    DropdownTable: require('./renderers/dropdown-table-renderer.js')
+    DropdownTable: require('./renderers/dropdown-table-renderer.js'),
+    GoogleMap: require('./renderers/google-map-renderer.js')
 };
 
 var api = new TessApi.EventsApi();

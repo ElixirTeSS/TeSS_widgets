@@ -76,6 +76,11 @@
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
 </section>
 
+<section>
+    <h2 id="google-map">Google Map Example</h2>
+    <div id="tess-widget-google-map" class="tess-widget tess-widget-google-map"></div>
+</section>
+
 <script src="js/tess-widget-standalone.js"></script>
 <script id="tess-widget-table-code">
 TessWidget(document.getElementById('tess-widget-table'),
@@ -120,6 +125,21 @@ TessWidget(document.getElementById('tess-widget-dropdown-table'),
             params: {
                 q: 'Python',
                 country: ['United Kingdom']
+            }
+        });
+</script>
+<script id="tess-widget-google-map-code">
+TessWidget(document.getElementById('tess-widget-google-map'),
+        'GoogleMap',
+        {
+            opts: {
+                apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo', // Get your own API key!
+                lat: -25.363,
+                lon: 131.044,
+                zoom: 4
+            },
+            params: {
+                country: ['Australia']
             }
         });
 </script>
