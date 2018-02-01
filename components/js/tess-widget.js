@@ -1,6 +1,7 @@
 'use strict';
 
 var TessApi = require('tess_json_api');
+var Util = require('./util.js');
 
 var defaultRenderers = {
     FacetedTable: require('./renderers/faceted-table-renderer.js'),
@@ -9,12 +10,6 @@ var defaultRenderers = {
 };
 
 var api = new TessApi.EventsApi();
-
-function formatKey(key) {
-    var newKey = key.replace(/-/g, '_').replace('[]', '');
-
-    return newKey;
-}
 
 function TessWidget(element, renderer, options) {
     this.name = 'ElixirTess_list_widget';
@@ -28,13 +23,6 @@ function TessWidget(element, renderer, options) {
     this.renderer = new renderer(this, element, options.opts || {});
     this.options = options || {};
     this.queryParameters = this.options.params || {};
-    if (this.queryParameters.facets) {
-        for (var key in this.queryParameters.facets) {
-            if (this.queryParameters.facets.hasOwnProperty(key)) {
-                this.queryParameters[formatKey(key)] = this.queryParameters.facets[key];
-            }
-        }
-    }
 }
 
 TessWidget.prototype.initialize = function () {
@@ -53,14 +41,14 @@ TessWidget.prototype.buildUrl = function (path) {
 };
 
 TessWidget.prototype.addFacet = function (key, value) {
-    var actualKey = formatKey(key);
+    var actualKey = Util.camelize(key);
 
-    if (!this.queryParameters.facets[actualKey]) {
-        this.queryParameters.facets[actualKey] = [];
+    if (!this.queryParameters[actualKey]) {
+        this.queryParameters[actualKey] = [];
     }
 
-    if (!this.queryParameters.facets[actualKey].includes(value)) {
-        this.queryParameters.facets[actualKey].push(value);
+    if (!this.queryParameters[actualKey].includes(value)) {
+        this.queryParameters[actualKey].push(value);
     }
 
     delete this.queryParameters['pageNumber'];
@@ -69,19 +57,19 @@ TessWidget.prototype.addFacet = function (key, value) {
 };
 
 TessWidget.prototype.removeFacet = function (key, value) {
-    var actualKey = formatKey(key);
+    var actualKey = Util.camelize(key);
 
-    if (!this.queryParameters.facets[actualKey])
+    if (!this.queryParameters[actualKey])
         return;
 
-    var index = this.queryParameters.facets[actualKey].indexOf(value);
+    var index = this.queryParameters[actualKey].indexOf(value);
 
     if (index !== -1) {
-        this.queryParameters.facets[actualKey].splice(index, 1);
+        this.queryParameters[actualKey].splice(index, 1);
     }
 
-    if (!this.queryParameters.facets[actualKey].length) {
-        delete this.queryParameters.facets[actualKey];
+    if (!this.queryParameters[actualKey].length) {
+        delete this.queryParameters[actualKey];
     }
 
     delete this.queryParameters['pageNumber'];
@@ -90,9 +78,9 @@ TessWidget.prototype.removeFacet = function (key, value) {
 };
 
 TessWidget.prototype.setFacet = function (key, value) {
-    var actualKey = formatKey(key);
+    var actualKey = Util.camelize(key);
 
-    this.queryParameters.facets[actualKey] = [value];
+    this.queryParameters[actualKey] = [value];
 
     delete this.queryParameters['pageNumber'];
 
@@ -100,9 +88,9 @@ TessWidget.prototype.setFacet = function (key, value) {
 };
 
 TessWidget.prototype.clearFacet = function (key) {
-    var actualKey = formatKey(key);
+    var actualKey = Util.camelize(key);
 
-    delete this.queryParameters.facets[actualKey];
+    delete this.queryParameters[actualKey];
 
     delete this.queryParameters['pageNumber'];
 
@@ -120,6 +108,7 @@ TessWidget.prototype.search = function (query) {
     delete this.queryParameters['pageNumber'];
 
     this.getEvents();
+
 };
 
 TessWidget.prototype.getEvents = function () {

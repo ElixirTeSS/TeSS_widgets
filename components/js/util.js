@@ -43,6 +43,18 @@ module.exports = {
         })
     },
 
+    camelize: function (key) {
+        return key.replace(/-/g, '_').
+        replace('[]', '').
+        replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
+    },
+
+    snakeize: function (key) {
+        return key.replace(/-/g, '_').
+        replace('[]', '').
+        replace(/([a-z][A-Z])/g, function (g) { return g[0] + '-' + g[1].toLowerCase(); });
+    },
+
     fieldRenderers: {
         location: function (event) {
             var city = event.attributes['city'];
