@@ -5,6 +5,7 @@ function GoogleMapRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
+    this.markers = [];
 }
 
 GoogleMapRenderer.prototype.initialize = function () {
@@ -17,8 +18,7 @@ GoogleMapRenderer.prototype.initialize = function () {
     var self = this;
     googleMapScript.onload = function () {
         self.map = new google.maps.Map(self.mapContainer, {
-            zoom: self.options.zoom,
-            center: { lat: self.options.lat, lng: self.options.lon },
+            maxZoom: 12,
             styles: [{
                 'featureType': 'poi',
                 'elementType': 'all'
@@ -50,14 +50,27 @@ GoogleMapRenderer.prototype.renderEvent = function (event) {
         self.infoWindow.setContent(info);
         self.infoWindow.open(self.map, marker);
     });
+
+    this.bounds.extend(marker.position);
+    this.markers.push(marker);
 };
 
 GoogleMapRenderer.prototype.renderEvents = function (container, events) {
+    // Clear bounds
+    this.bounds = new google.maps.LatLngBounds();
+    // Clear markers
+    this.markers.forEach(function (marker) {
+       marker.setMap(null);
+    });
+    this.markers = [];
+
     // Events
     var self = this;
     events.forEach(function (event) {
         self.renderEvent(event);
     });
+
+    this.map.fitBounds(this.bounds);
 };
 
 module.exports = GoogleMapRenderer;
