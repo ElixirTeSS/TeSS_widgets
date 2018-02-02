@@ -1,5 +1,4 @@
 'use strict';
-var Util = require('../../util.js');
 
 function PaginationRenderer(widget, element, options) {
     this.widget = widget;
@@ -32,7 +31,6 @@ PaginationRenderer.prototype.render = function (errors, data, response) {
         this.container.appendChild(this.pageLink('Next', data.links.next));
     if (data.links.last)
         this.container.appendChild(this.pageLink('Last', data.links.last));
-    
 };
 
 PaginationRenderer.prototype.pageLink = function (title, path) {

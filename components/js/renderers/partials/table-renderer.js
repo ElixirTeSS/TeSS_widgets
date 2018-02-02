@@ -7,9 +7,8 @@ function TableRenderer(widget, element, options) {
     this.container = element;
     this.options.columns = this.options.columns ||
         [{ name: 'Date', field: 'start' },
-            { name: 'Name', field: 'title' },
-            // { name: 'Organizer', field: 'organizer' },
-            { name: 'Location', field: 'location' }]
+         { name: 'Name', field: 'title' },
+         { name: 'Location', field: 'location' }]
 }
 
 TableRenderer.prototype.initialize = function () { };

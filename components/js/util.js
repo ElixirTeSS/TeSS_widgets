@@ -32,7 +32,7 @@ module.exports = {
     /**
      * Turns a JSON key-like string into a humanize version.
      *
-     * @param {string} Computerized string
+     * @param {string} string - Computerized string
      * @return {String} Humanized string
      */
     humanize: function (string) {

@@ -1,5 +1,4 @@
 'use strict';
-var Util = require('../../util.js');
 
 function FacetDropdowns(widget, element, options) {
     this.widget = widget;
@@ -15,7 +14,7 @@ FacetDropdowns.prototype.initialize = function () {
     var widget = this.widget;
 
     this.dropdowns = {};
-    
+
     var self = this;
     this.options.dropdowns.forEach(function (pair) {
         // wrapper
@@ -31,7 +30,7 @@ FacetDropdowns.prototype.initialize = function () {
         // dropdown
         var list = document.createElement('select');
         list.setAttribute('data-tess-facet-key', pair.field);
-        category.appendChild(list); 
+        category.appendChild(list);
         list.addEventListener('change', function () {
             if (this.value) {
                 widget.setFacet(list.getAttribute('data-tess-facet-key'), this.value);

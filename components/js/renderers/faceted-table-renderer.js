@@ -30,7 +30,7 @@ FacetedTableRenderer.prototype.initialize = function () {
 
     this.elements.wrapper = document.createElement('div');
     this.elements.wrapper.className = 'tess-wrapper';
-    
+
     this.elements.results = document.createElement('div');
     this.elements.results.className = 'tess-results';
 

@@ -14,10 +14,6 @@ SearchRenderer.prototype.initialize = function () {
     // Closures!
     var field = this.field;
     var widget = this.widget;
-    var performSearch = function () {
-        widget.queryParameters.q = field.value;
-        widget.getEvents();
-    };
 
     this.field.addEventListener('keyup', function (event) {
         if (event.keyCode === 13) {

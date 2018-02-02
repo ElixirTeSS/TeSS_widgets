@@ -40,8 +40,22 @@ GoogleMapRenderer.prototype.initialize = function () {
 };
 
 GoogleMapRenderer.prototype.render = function (errors, data, response) {
-    // Render results
-    this.renderEvents(this.container, data.data);
+    // Clear bounds
+    this.bounds = new google.maps.LatLngBounds();
+    // Clear markers
+    this.markers.forEach(function (marker) {
+        marker.setMap(null);
+    });
+    this.markers = [];
+
+    // Events
+    var events = data.data;
+    var self = this;
+    events.forEach(function (event) {
+        self.renderEvent(event);
+    });
+
+    this.map.fitBounds(this.bounds);
 };
 
 GoogleMapRenderer.prototype.renderEvent = function (event) {
@@ -51,13 +65,15 @@ GoogleMapRenderer.prototype.renderEvent = function (event) {
                     lng: parseFloat(event.attributes['longitude']) },
         title: event.attributes['title']
     });
-    var self = this;
-    var redirectUrl = (event.links['self'] + '/redirect?widget=' + self.widget.name); // TODO: Fix me when 'redirect' link is available through API
+
+    var redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.name); // TODO: Fix me when 'redirect' link is available through API
     var info = '<div>' +
-        '<a href="'+ self.widget.buildUrl(redirectUrl) +'" target="_blank">' + event.attributes['title'] + '</a>' +
+        '<a href="'+ this.widget.buildUrl(redirectUrl) +'" target="_blank">' + event.attributes['title'] + '</a>' +
         '<br/><strong>Date:</strong> ' + Util.formatDate(event.attributes['start']) +
         '<br/><strong>Location:</strong> ' + Util.fieldRenderers['location'](event) +
         '<br/><strong>Organizer:</strong> ' + event.attributes['organizer'] + '</div>';
+
+    var self = this;
     google.maps.event.addListener(marker, 'click', function () {
         self.infoWindow.setContent(info);
         self.infoWindow.open(self.map, marker);
@@ -65,24 +81,6 @@ GoogleMapRenderer.prototype.renderEvent = function (event) {
 
     this.bounds.extend(marker.position);
     this.markers.push(marker);
-};
-
-GoogleMapRenderer.prototype.renderEvents = function (container, events) {
-    // Clear bounds
-    this.bounds = new google.maps.LatLngBounds();
-    // Clear markers
-    this.markers.forEach(function (marker) {
-       marker.setMap(null);
-    });
-    this.markers = [];
-
-    // Events
-    var self = this;
-    events.forEach(function (event) {
-        self.renderEvent(event);
-    });
-
-    this.map.fitBounds(this.bounds);
 };
 
 module.exports = GoogleMapRenderer;
