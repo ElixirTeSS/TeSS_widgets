@@ -1,6 +1,13 @@
 'use strict';
 var Util = require('../util.js');
 
+/**
+ * Events displayed in a simple bulletted list.
+ *
+ * @constructor
+ * @param {Object} widget - The TeSS widget.
+ * @param {Object} element - The element to contain the rendered table.
+ */
 function SimpleListRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};

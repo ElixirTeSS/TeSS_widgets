@@ -1,5 +1,5 @@
 'use strict';
-var Util = require('../util.js');
+var Util = require('../../util.js');
 
 function FacetsSidebarRenderer(widget, element, options) {
     this.widget = widget;

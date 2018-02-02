@@ -1,6 +1,15 @@
 'use strict';
 var Util = require('../util.js');
 
+/**
+ * Events displayed on a Google Map.
+ *
+ * @constructor
+ * @param {Object} widget - The TeSS widget.
+ * @param {Object} element - The element to contain the rendered table.
+ * @param {Object} options - Options for the renderer.
+ * @param {Object[]} options.apiKey - The Google Maps API key.
+ */
 function GoogleMapRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};

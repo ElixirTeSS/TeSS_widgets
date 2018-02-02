@@ -1,9 +1,21 @@
-var FacetsSidebarRenderer = require('./facets-sidebar-renderer.js');
-var ActiveFacetsRenderer = require('./active-facets-renderer.js');
-var TableRenderer = require('./table-renderer.js');
-var SearchRenderer = require('./search-renderer.js');
-var PaginationRenderer = require('./pagination-renderer.js');
+var FacetsSidebarRenderer = require('./partials/facets-sidebar-renderer.js');
+var ActiveFacetsRenderer = require('./partials/active-facets-renderer.js');
+var TableRenderer = require('./partials/table-renderer.js');
+var SearchRenderer = require('./partials/search-renderer.js');
+var PaginationRenderer = require('./partials/pagination-renderer.js');
 
+/**
+ * A list of events in a table, with a sidebar containing various filters.
+ *
+ * @constructor
+ * @param {Object} widget - The TeSS widget.
+ * @param {Object} element - The element to contain the rendered table.
+ * @param {Object} options - Options for the renderer.
+ * @param {Object[]} options.columns - A list of columns that the table should display.
+ * @param {Object[]} options.columns[].name - The label to display at the top of the column.
+ * @param {Object[]} options.columns[].field - The event field to use.
+ * @param {string[]} options.allowedFacets - A list of possible facets (filters) to display in the sidebar.
+ */
 function FacetedTableRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
