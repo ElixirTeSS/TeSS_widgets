@@ -43,9 +43,12 @@ GoogleMapRenderer.prototype.renderEvent = function (event) {
         title: event.attributes['title']
     });
     var self = this;
-    var info = '<div><strong>Date:</strong> ' + Util.formatDate(event.attributes['start']) +
-            '<br/><strong>Location:</strong> ' + Util.fieldRenderers['location'](event) +
-        '<br/><strong>Organizer:</strong> ' + event.attributes['organizer'];
+    var redirectUrl = (event.links['self'] + '/redirect?widget=' + self.widget.name); // TODO: Fix me when 'redirect' link is available through API
+    var info = '<div>' +
+        '<a href="'+ self.widget.buildUrl(redirectUrl) +'" target="_blank">' + event.attributes['title'] + '</a>' +
+        '<br/><strong>Date:</strong> ' + Util.formatDate(event.attributes['start']) +
+        '<br/><strong>Location:</strong> ' + Util.fieldRenderers['location'](event) +
+        '<br/><strong>Organizer:</strong> ' + event.attributes['organizer'] + '</div>';
     google.maps.event.addListener(marker, 'click', function () {
         self.infoWindow.setContent(info);
         self.infoWindow.open(self.map, marker);
