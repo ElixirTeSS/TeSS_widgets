@@ -2,6 +2,10 @@
 
 var TessApi = require('tess_json_api');
 var Util = require('./util.js');
+// Swagger's generated API client breaks dates in Safari & IE. This hack fixes that.
+TessApi.ApiClient.parseDate = function(str) {
+    return new Date(str);
+};
 
 var defaultRenderers = {
     FacetedTable: require('./renderers/faceted-table-renderer.js'),
