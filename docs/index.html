@@ -1,0 +1,166 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>TeSS widget</title>
+    <meta name="description" content="TeSS widget">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/tess-widget.css">
+    <style>
+        body {
+            font-size: 1em;
+            font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        section {
+            margin: 50px 0;
+            border-top: 2px dashed #ccc;
+        }
+
+        section > pre {
+            background-color: #eee;
+            font-family: monospace;
+            padding: 10px;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        section > pre::before {
+            content: 'Code:';
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #999;
+        }
+
+        section > h2 {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+        }
+
+        section > div {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        a {
+            color: rgb(0, 84, 114);
+        }
+    </style>
+</head>
+<body>
+<h1>Widget Examples</h1>
+<p style="text-align: center">
+    Scroll down for more examples.
+</p>
+<section>
+    <h2 id="table">Table w/ Sidebar Example</h2>
+    <div id="tess-widget-table" class="tess-widget tess-widget-faceted-table"></div>
+</section>
+
+<section>
+    <h2 id="list">List Example</h2>
+    <div id="tess-widget-list" class="tess-widget tess-widget-list"></div>
+</section>
+
+<section>
+    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
+    <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
+</section>
+
+<section>
+    <h2 id="google-map">Google Map Example</h2>
+    <div id="tess-widget-google-map" class="tess-widget tess-widget-google-map"></div>
+</section>
+
+<script src="js/tess-widget-standalone.js"></script>
+<script id="tess-widget-table-code">
+TessWidget(document.getElementById('tess-widget-table'),
+        'FacetedTable',
+        {
+            opts: {
+                columns: [{ name: 'Date', field: 'start' },
+                    { name: 'Name', field: 'title' },
+                    { name: 'Location', field: 'location' }],
+                allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
+            },
+            params: {
+                q: 'Python',
+                country: ['Belgium',  'United Kingdom']
+            }
+        });
+</script>
+<script id="tess-widget-list-code">
+TessWidget(document.getElementById('tess-widget-list'),
+        'SimpleList',
+        {
+            params: {
+                pageSize: 5,
+                q: 'Matlab',
+                country: ['Belgium']
+            }
+        });
+</script>
+<script id="tess-widget-dropdown-table-code">
+TessWidget(document.getElementById('tess-widget-dropdown-table'),
+        'DropdownTable',
+        {
+            opts: {
+                columns: [{ name: 'Date', field: 'start' },
+                    { name: 'Name', field: 'title' },
+                    { name: 'Organizer', field: 'organizer' },
+                    { name: 'Location', field: 'location' }],
+                dropdowns: [{ name: 'Type', field: 'event-types' },
+                    { name: 'Country', field: 'country' },
+                    { name: 'Topic', field: 'scientific-topics' }]
+            },
+            params: {
+                q: 'Python',
+                country: ['United Kingdom']
+            }
+        });
+</script>
+<script id="tess-widget-google-map-code">
+TessWidget(document.getElementById('tess-widget-google-map'),
+        'GoogleMap',
+        {
+            opts: {
+                apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo' // Get your own API key!
+            },
+            params: {
+                country: ['Australia']
+            }
+        });
+</script>
+<script>
+    // Show the code under each widget
+    var widgets = document.getElementsByClassName("tess-widget");
+    var url = "https://elixirtess.github.io/list_widget";
+
+    var cssTag = "<link rel=\"stylesheet\" property=\"stylesheet\" href=\"" + url + "/css/tess-widget.css\"/>\n"
+    var scriptTag = "<script src=\"" + url + "/js/tess-widget-standalone.js\"><\/script>\n";
+
+    for (var i = 0; i < widgets.length; i++) {
+        var pre = document.createElement('pre');
+        var id = widgets[i].id;
+        var script = document.getElementById(id + '-code');
+        var text = cssTag +
+            scriptTag +
+            '<div id="'+id+'"></div>' +
+            '\n<script>' +
+            script.innerHTML +
+            '<\/script>';
+        pre.appendChild(document.createTextNode(text));
+        widgets[i].parentNode.appendChild(pre);
+    }
+</script>
+</body>
+</html>
