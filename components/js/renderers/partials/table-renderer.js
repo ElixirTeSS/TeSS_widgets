@@ -15,27 +15,32 @@ TableRenderer.prototype.initialize = function () { };
 
 TableRenderer.prototype.render = function (errors, data, response) {
     // Render results
-    this.renderEvents(this.container, data.data);
+    this.renderResources(this.container, data.data);
 };
 
-TableRenderer.prototype.renderEvent = function (container, event) {
-    var eventRow = container.insertRow();
+TableRenderer.prototype.renderResource = function (container, resource) {
+    var resourceRow = container.insertRow();
 
     var widget = this.widget;
     this.options.columns.forEach(function (fieldPair) {
         var field = fieldPair.field;
-        var value = event.attributes[field];
+        var value = resource.attributes[field];
         var valueNode;
 
         if (Util.fieldRenderers.hasOwnProperty(field)) {
-            value = Util.fieldRenderers[field](event);
+            value = Util.fieldRenderers[field](resource);
             valueNode = document.createTextNode(value);
         } else if (value instanceof Date) {
             valueNode = document.createTextNode(Util.formatDate(value));
         } else if (field === 'title') {
             valueNode = document.createElement('a');
-            var redirectUrl = (event.links['self'] + '/redirect?widget=' + widget.identifier); // TODO: Fix me when 'redirect' link is available through API
-            valueNode.href = widget.buildUrl(redirectUrl);
+            var url;
+            if (resource.type === 'events') {
+                url = widget.buildUrl(resource.links['self'] + '/redirect?widget=' + widget.identifier); // TODO: Fix me when 'redirect' link is available through API
+            } else {
+                url = resource.attributes['url'];
+            }
+            valueNode.href = url;
             valueNode.target = '_blank';
             valueNode.appendChild(document.createTextNode(value));
         } else if (value === null || value === 'null') {
@@ -44,12 +49,12 @@ TableRenderer.prototype.renderEvent = function (container, event) {
             valueNode = document.createTextNode(value);
         }
 
-        var cell = eventRow.insertCell();
+        var cell = resourceRow.insertCell();
         cell.appendChild(valueNode);
     });
 };
 
-TableRenderer.prototype.renderEvents = function (container, events) {
+TableRenderer.prototype.renderResources = function (container, resources) {
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
@@ -70,10 +75,10 @@ TableRenderer.prototype.renderEvents = function (container, events) {
         headingRow.appendChild(cell);
     });
 
-    // Events
+    // Resources
     var self = this;
-    events.forEach(function (event) {
-        self.renderEvent(body, event);
+    resources.forEach(function (resource) {
+        self.renderResource(body, resource);
     });
 };
 
