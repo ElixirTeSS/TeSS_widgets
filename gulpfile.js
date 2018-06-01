@@ -62,3 +62,10 @@ gulp.task('html', function() {
 });
 
 gulp.task('default', ['serve']);
+
+gulp.task('build', ['js', 'sass', 'html']);
+
+gulp.task('build-examples', ['build'], function () {
+    gulp.src(outputDir + '/**')
+        .pipe(gulp.dest('./docs/'));
+});
