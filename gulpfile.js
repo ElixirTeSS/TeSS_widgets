@@ -16,11 +16,11 @@ var env,
 env = process.env.NODE_ENV || 'development';
 
 if (env === 'development') {
-  outputDir = 'builds/development/';
-  sassStyle = 'expanded';
+    outputDir = 'builds/development/';
+    sassStyle = 'expanded';
 } else {
-  outputDir = 'builds/production/';
-  sassStyle = 'compressed';
+    outputDir = 'builds/production/';
+    sassStyle = 'compressed';
 }
 
 gulp.task('serve', ['js', 'sass', 'html'], function() {
@@ -34,38 +34,38 @@ gulp.task('serve', ['js', 'sass', 'html'], function() {
 });
 
 gulp.task('js', function() {
-  var b = browserify({
-      entries: './components/js/tess-widget-standalone.js',
-      debug: true,
-      standalone: 'TessWidget'
-  });
+    var b = browserify({
+        entries: './components/js/tess-widget-standalone.js',
+        debug: true,
+        standalone: 'TessWidget'
+    });
 
-  b.bundle()
-    .pipe(source('tess-widget-standalone.js'))
-    .pipe(buffer())
-    .pipe(gulpif(env === 'production', uglify()))
-    .pipe(gulp.dest(outputDir + 'js'))
-    .pipe(browserSync.stream());
+    return b.bundle()
+        .pipe(source('tess-widget-standalone.js'))
+        .pipe(buffer())
+        .pipe(gulpif(env === 'production', uglify()))
+        .pipe(gulp.dest(outputDir + 'js'))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('sass', function() {
-  gulp.src('components/sass/*.scss')
-  .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
-  .pipe(gulp.dest(outputDir + 'css'))
-  .pipe(browserSync.stream());
+    return gulp.src('components/sass/*.scss')
+        .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+        .pipe(gulp.dest(outputDir + 'css'))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('html', function() {
-  gulp.src('components/html/index.html')
-    .pipe(gulp.dest(outputDir))
-    .pipe(browserSync.stream());
+    return gulp.src('components/html/index.html')
+        .pipe(gulp.dest(outputDir))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('default', ['serve']);
 
 gulp.task('build', ['js', 'sass', 'html']);
 
-gulp.task('build-examples', ['build'], function () {
-    gulp.src(outputDir + '/**')
+gulp.task('build-examples', ['js', 'sass', 'html'], function () {
+    return gulp.src(outputDir + '/**')
         .pipe(gulp.dest('./docs/'));
 });
