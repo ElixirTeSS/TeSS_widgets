@@ -4,7 +4,7 @@ var SearchRenderer = require('./partials/search-renderer.js');
 var PaginationRenderer = require('./partials/pagination-renderer.js');
 
 /**
- * A list of events in a table, with dropdown lists to filter across various categories.
+ * A list of resources in a table, with dropdown lists to filter across various categories.
  *
  * @constructor
  * @param {Object} widget - The TeSS widget.
@@ -12,10 +12,10 @@ var PaginationRenderer = require('./partials/pagination-renderer.js');
  * @param {Object} options - Options for the renderer.
  * @param {Object[]} options.columns - A list of columns that the table should display.
  * @param {Object[]} options.columns[].name - The label to display at the top of the column.
- * @param {Object[]} options.columns[].field - The event field to use.
+ * @param {Object[]} options.columns[].field - The resource field to use.
  * @param {Object[]} options.dropdowns - A list of dropdown menus should appear above the table.
  * @param {Object[]} options.dropdowns[].name - The label to display next to the menu.
- * @param {Object[]} options.dropdowns[].field - The event field to filter by.
+ * @param {Object[]} options.dropdowns[].field - The resource field to filter by.
  */
 function DropdownTableRenderer(widget, element, options) {
     this.widget = widget;

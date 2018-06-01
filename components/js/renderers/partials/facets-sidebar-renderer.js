@@ -10,6 +10,7 @@ function FacetsSidebarRenderer(widget, element, options) {
 FacetsSidebarRenderer.prototype.initialize = function () {
     var widget = this.widget;
     this.container.addEventListener('click', function (event) {
+        event.preventDefault();
         if (event.target.hasAttribute('data-tess-facet-key')) {
             var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? widget.removeFacet : widget.addFacet;
             f.bind(widget)(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));

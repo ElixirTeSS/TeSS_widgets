@@ -9,6 +9,7 @@ function PaginationRenderer(widget, element, options) {
 PaginationRenderer.prototype.initialize = function () {
     var widget = this.widget;
     this.container.addEventListener('click', function (event) {
+        event.preventDefault();
         if (event.target.hasAttribute('data-tess-page')) {
             widget.setPage(event.target.getAttribute('data-tess-page'));
         }
