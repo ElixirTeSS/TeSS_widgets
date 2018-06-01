@@ -1,10 +1,10 @@
 // A standalone file that globally exposes a single function to create and initialize a TessWidget object.
 // Allows it to run in a browser without having to `require` anything.
-var TessWidgetObj = require('./tess-widget.js');
+var TessEventsWidgetObj = require('./tess-events-widget.js');
 
-function TessWidget(element, renderer, options) {
-    var widget = new TessWidgetObj(element, renderer, options);
+function TessEventsWidget(element, renderer, options) {
+    var widget = new TessEventsWidgetObj(element, renderer, options);
     widget.initialize();
 }
 
-module.exports = TessWidget;
+module.exports = { Events: TessEventsWidget };

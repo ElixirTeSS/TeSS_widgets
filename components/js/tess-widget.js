@@ -7,17 +7,8 @@ TessApi.ApiClient.parseDate = function(str) {
     return new Date(str);
 };
 
-var defaultRenderers = {
-    FacetedTable: require('./renderers/faceted-table-renderer.js'),
-    SimpleList: require('./renderers/simple-list-renderer.js'),
-    DropdownTable: require('./renderers/dropdown-table-renderer.js'),
-    GoogleMap: require('./renderers/google-map-renderer.js')
-};
-
-var api = new TessApi.EventsApi();
-
 /**
- * A TeSS events widget.
+ * A TeSS widget.
  *
  * @constructor
  * @param {Object} element - The HTML element to contain the widget
@@ -30,12 +21,7 @@ var api = new TessApi.EventsApi();
  */
 function TessWidget(element, renderer, options) {
     this.options = options || {};
-    this.name = this.options.name || 'ElixirTess_list_widget';
-    if (!renderer)
-        renderer = 'FacetedTable';
-
-    if (typeof renderer === 'string' || renderer instanceof String)
-        renderer = defaultRenderers[renderer];
+    this.identifier = this.options.identifier || 'TeSS-Widget';
 
     this.element = element;
     this.renderer = new renderer(this, element, options.opts || {});
@@ -44,7 +30,7 @@ function TessWidget(element, renderer, options) {
 
 TessWidget.prototype.initialize = function () {
     this.renderer.initialize();
-    this.getEvents();
+    this.refresh();
 };
 
 /**
@@ -54,11 +40,11 @@ TessWidget.prototype.initialize = function () {
  * @return {String} Absolute URL
  */
 TessWidget.prototype.buildUrl = function (path) {
-    return api.apiClient.buildUrl(path);
+    return this.api.apiClient.buildUrl(path);
 };
 
 /**
- * Apply the given facet to the current set of events. Will apply as a union with any existing facet values.
+ * Apply the given facet to the current set of resources. Will apply as a union with any existing facet values.
  *
  * @param {string} key - The facet field.
  * @param {string} value - The facet value to apply.
@@ -76,11 +62,11 @@ TessWidget.prototype.addFacet = function (key, value) {
 
     delete this.queryParameters['pageNumber'];
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
- * Remove the given facet from the current set of events.
+ * Remove the given facet from the current set of resources.
  *
  * @param {string} key - The facet field.
  * @param {string} value - The facet value to remove.
@@ -103,7 +89,7 @@ TessWidget.prototype.removeFacet = function (key, value) {
 
     delete this.queryParameters['pageNumber'];
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
@@ -119,7 +105,7 @@ TessWidget.prototype.setFacet = function (key, value) {
 
     delete this.queryParameters['pageNumber'];
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
@@ -134,22 +120,22 @@ TessWidget.prototype.clearFacet = function (key) {
 
     delete this.queryParameters['pageNumber'];
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
- * Set the page for the current event collection.
+ * Set the page for the current resource collection.
  *
  * @param {string|integer} page - The facet field.
  */
 TessWidget.prototype.setPage = function (page) {
     this.queryParameters['pageNumber'] = page;
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
- * Apply a search query over the current set of events.
+ * Apply a search query over the current set of resources.
  *
  * @param {string} query - The search query.
  */
@@ -158,17 +144,17 @@ TessWidget.prototype.search = function (query) {
 
     delete this.queryParameters['pageNumber'];
 
-    this.getEvents();
+    this.refresh();
 };
 
 /**
- * Perform an API request to fetch a set of events matching the applied facets/search query/page number.
+ * Perform an API request to fetch a set of resources matching the applied facets/search query/page number.
  */
-TessWidget.prototype.getEvents = function () {
+TessWidget.prototype.refresh = function () {
     this.element.classList.add('tess-loader-large');
 
     var widget = this;
-    api.eventsGet(this.queryParameters, function (errors, data, response) {
+    this.api[this.endpoint](this.queryParameters, function (errors, data, response) {
         widget.renderer.render.apply(widget.renderer, [errors, data, response]);
         widget.element.classList.remove('tess-loader-large');
     });

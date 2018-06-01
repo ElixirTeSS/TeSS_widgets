@@ -34,7 +34,7 @@ TableRenderer.prototype.renderEvent = function (container, event) {
             valueNode = document.createTextNode(Util.formatDate(value));
         } else if (field === 'title') {
             valueNode = document.createElement('a');
-            var redirectUrl = (event.links['self'] + '/redirect?widget=' + widget.name); // TODO: Fix me when 'redirect' link is available through API
+            var redirectUrl = (event.links['self'] + '/redirect?widget=' + widget.identifier); // TODO: Fix me when 'redirect' link is available through API
             valueNode.href = widget.buildUrl(redirectUrl);
             valueNode.target = '_blank';
             valueNode.appendChild(document.createTextNode(value));

@@ -66,7 +66,7 @@ GoogleMapRenderer.prototype.renderEvent = function (event) {
         title: event.attributes['title']
     });
 
-    var redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.name); // TODO: Fix me when 'redirect' link is available through API
+    var redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
     var info = '<div>' +
         '<a href="'+ this.widget.buildUrl(redirectUrl) +'" target="_blank">' + event.attributes['title'] + '</a>' +
         '<br/><strong>Date:</strong> ' + Util.formatDate(event.attributes['start']) +

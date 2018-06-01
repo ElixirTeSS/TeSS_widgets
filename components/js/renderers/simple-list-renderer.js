@@ -30,7 +30,7 @@ SimpleListRenderer.prototype.render = function (errors, data, response) {
         var li = document.createElement('li');
 
         var link = document.createElement('a');
-        var redirectUrl = (event.links['self'] + '/redirect?widget=' + self.widget.name); // TODO: Fix me when 'redirect' link is available through API
+        var redirectUrl = (event.links['self'] + '/redirect?widget=' + self.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
         link.href = self.widget.buildUrl(redirectUrl);
         link.target = '_blank';
         link.appendChild(document.createTextNode(event.attributes['title']));

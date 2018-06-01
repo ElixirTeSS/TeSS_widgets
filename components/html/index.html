@@ -83,7 +83,7 @@
 
 <script src="js/tess-widget-standalone.js"></script>
 <script id="tess-widget-table-code">
-TessWidget(document.getElementById('tess-widget-table'),
+TessWidget.Events(document.getElementById('tess-widget-table'),
         'FacetedTable',
         {
             opts: {
@@ -99,7 +99,7 @@ TessWidget(document.getElementById('tess-widget-table'),
         });
 </script>
 <script id="tess-widget-list-code">
-TessWidget(document.getElementById('tess-widget-list'),
+TessWidget.Events(document.getElementById('tess-widget-list'),
         'SimpleList',
         {
             params: {
@@ -110,7 +110,7 @@ TessWidget(document.getElementById('tess-widget-list'),
         });
 </script>
 <script id="tess-widget-dropdown-table-code">
-TessWidget(document.getElementById('tess-widget-dropdown-table'),
+TessWidget.Events(document.getElementById('tess-widget-dropdown-table'),
         'DropdownTable',
         {
             opts: {
@@ -129,7 +129,7 @@ TessWidget(document.getElementById('tess-widget-dropdown-table'),
         });
 </script>
 <script id="tess-widget-google-map-code">
-TessWidget(document.getElementById('tess-widget-google-map'),
+TessWidget.Events(document.getElementById('tess-widget-google-map'),
         'GoogleMap',
         {
             opts: {
