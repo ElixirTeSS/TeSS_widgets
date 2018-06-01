@@ -62,8 +62,13 @@
     Scroll down for more examples.
 </p>
 <section>
-    <h2 id="table">Table w/ Sidebar Example</h2>
-    <div id="tess-widget-table" class="tess-widget tess-widget-faceted-table"></div>
+    <h2 id="table">Events Table w/ Sidebar Example</h2>
+    <div id="tess-widget-events-table" class="tess-widget tess-widget-faceted-table"></div>
+</section>
+
+<section>
+    <h2 id="table">Materials Table w/ Sidebar Example</h2>
+    <div id="tess-widget-materials-table" class="tess-widget tess-widget-faceted-table"></div>
 </section>
 
 <section>
@@ -82,8 +87,8 @@
 </section>
 
 <script src="js/tess-widget-standalone.js"></script>
-<script id="tess-widget-table-code">
-TessWidget.Events(document.getElementById('tess-widget-table'),
+<script id="tess-widget-events-table-code">
+TessWidget.Events(document.getElementById('tess-widget-events-table'),
         'FacetedTable',
         {
             opts: {
@@ -95,6 +100,21 @@ TessWidget.Events(document.getElementById('tess-widget-table'),
             params: {
                 q: 'Python',
                 country: ['Belgium',  'United Kingdom']
+            }
+        });
+</script>
+<script id="tess-widget-materials-table-code">
+TessWidget.Materials(document.getElementById('tess-widget-materials-table'),
+        'FacetedTable',
+        {
+            opts: {
+                columns: [{ name: 'Name', field: 'title' },
+                    { name: 'Description', field: 'short-description' }],
+                allowedFacets: ['scientific-topics', 'target-audience']
+            },
+            params: {
+                pageSize: 5,
+                q: 'Python'
             }
         });
 </script>
