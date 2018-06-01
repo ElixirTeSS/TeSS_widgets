@@ -1,6 +1,8 @@
 # TeSS widget
+A javascript widget you that can embed in a website and display events from [tess.elixir-europe.org](tess.elixir-europe.org) in various forms.
 
-A javascript widget you that can embed in a website and display events from [tess.elixir-europe.org](tess.elixir-europe.org).
+## Live examples
+Live examples of the widget in various modes can be viewed here: https://elixirtess.github.io/TeSS_widgets/
 
 ## Background
 TeSS is a portal for bioinformatics events, training courses and training materials. It is part of the [ELIXIR infrastructure](https://www.elixir-europe.org/), and gathers events from all around Europe.
@@ -15,7 +17,7 @@ The code makes use of the [TeSS JSON-API client](https://github.com/ElixirTeSS/t
 ## Usage
 First you'll need npm installed.
 
-`git clone https://github.com/ElixirTeSS/list_widget.git`
+`git clone https://github.com/ElixirTeSS/TeSS_widgets.git`
 
 `npm install`
 
