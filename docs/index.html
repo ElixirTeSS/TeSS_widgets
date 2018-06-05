@@ -190,13 +190,13 @@ for (var i = 0; i < widgets.length; i++) {
     // Do some string magic to remove the example-specific code, and needless spaces
     var code = script.innerHTML.split("\n").slice(2,-2).map(function (s) { return s.slice(8); }).join("\n");
     var text = cssTag +
-        scriptTag +
         '<div id="'+id+'" class="'+widgets[i].className+'"></div>' +
         '\n<script>' +
         preCode +
         code +
         postCode +
-        '<\/script>';
+        '<\/script>\n' +
+        scriptTag;
     pre.appendChild(document.createTextNode(text));
     widgets[i].parentNode.appendChild(pre);
 }
