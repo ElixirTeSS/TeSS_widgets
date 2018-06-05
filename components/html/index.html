@@ -61,126 +61,151 @@
 <p style="text-align: center">
     Scroll down for more examples.
 </p>
+<script>
+    var widgetList = [];
+</script>
 <section>
     <h2 id="table">Events Table w/ Sidebar Example</h2>
     <div id="tess-widget-events-table" class="tess-widget tess-widget-faceted-table"></div>
+    <script id="tess-widget-events-table-code">
+        widgetList.push(function () {
+            TessWidget.Events(document.getElementById('tess-widget-events-table'),
+                'FacetedTable',
+                {
+                    opts: {
+                        columns: [{name: 'Date', field: 'start'},
+                            {name: 'Name', field: 'title'},
+                            {name: 'Location', field: 'location'}],
+                        allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
+                    },
+                    params: {
+                        q: 'Python',
+                        country: ['Belgium', 'United Kingdom']
+                    }
+                });
+        });
+    </script>
 </section>
 
 <section>
     <h2 id="materials-table">Materials Table w/ Sidebar Example</h2>
     <div id="tess-widget-materials-table" class="tess-widget tess-widget-faceted-table"></div>
+    <script id="tess-widget-materials-table-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('tess-widget-materials-table'),
+                'FacetedTable',
+                {
+                    opts: {
+                        columns: [{name: 'Name', field: 'title'},
+                            {name: 'Description', field: 'short-description'}],
+                        allowedFacets: ['scientific-topics', 'target-audience']
+                    },
+                    params: {
+                        pageSize: 5,
+                        q: 'Python'
+                    }
+                });
+        });
+    </script>
 </section>
 
 <section>
     <h2 id="list">List Example</h2>
     <div id="tess-widget-list" class="tess-widget tess-widget-list"></div>
+    <script id="tess-widget-list-code">
+        widgetList.push(function () {
+            TessWidget.Events(document.getElementById('tess-widget-list'),
+                'SimpleList',
+                {
+                    params: {
+                        pageSize: 5,
+                        q: 'Matlab',
+                        country: ['Belgium']
+                    }
+                });
+        });
+    </script>
 </section>
 
 <section>
     <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
+    <script id="tess-widget-dropdown-table-code">
+        widgetList.push(function () {
+            TessWidget.Events(document.getElementById('tess-widget-dropdown-table'),
+                'DropdownTable',
+                {
+                    opts: {
+                        columns: [{name: 'Date', field: 'start'},
+                            {name: 'Name', field: 'title'},
+                            {name: 'Organizer', field: 'organizer'},
+                            {name: 'Location', field: 'location'}],
+                        dropdowns: [{name: 'Type', field: 'event-types'},
+                            {name: 'Country', field: 'country'},
+                            {name: 'Topic', field: 'scientific-topics'}]
+                    },
+                    params: {
+                        q: 'Python',
+                        country: ['United Kingdom']
+                    }
+                });
+        });
+    </script>
 </section>
 
 <section>
     <h2 id="google-map">Google Map Example</h2>
     <div id="tess-widget-google-map" class="tess-widget tess-widget-google-map"></div>
+    <script id="tess-widget-google-map-code">
+        widgetList.push(function () {
+            TessWidget.Events(document.getElementById('tess-widget-google-map'),
+                'GoogleMap',
+                {
+                    opts: {
+                        apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo' // Get your own API key!
+                    },
+                    params: {
+                        country: ['Australia']
+                    }
+                });
+        });
+    </script>
 </section>
 
-<script src="js/tess-widget-standalone.js"></script>
-<script id="tess-widget-events-table-code">
-TessWidget.Events(document.getElementById('tess-widget-events-table'),
-        'FacetedTable',
-        {
-            opts: {
-                columns: [{ name: 'Date', field: 'start' },
-                    { name: 'Name', field: 'title' },
-                    { name: 'Location', field: 'location' }],
-                allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
-            },
-            params: {
-                q: 'Python',
-                country: ['Belgium',  'United Kingdom']
-            }
-        });
-</script>
-<script id="tess-widget-materials-table-code">
-TessWidget.Materials(document.getElementById('tess-widget-materials-table'),
-        'FacetedTable',
-        {
-            opts: {
-                columns: [{ name: 'Name', field: 'title' },
-                    { name: 'Description', field: 'short-description' }],
-                allowedFacets: ['scientific-topics', 'target-audience']
-            },
-            params: {
-                pageSize: 5,
-                q: 'Python'
-            }
-        });
-</script>
-<script id="tess-widget-list-code">
-TessWidget.Events(document.getElementById('tess-widget-list'),
-        'SimpleList',
-        {
-            params: {
-                pageSize: 5,
-                q: 'Matlab',
-                country: ['Belgium']
-            }
-        });
-</script>
-<script id="tess-widget-dropdown-table-code">
-TessWidget.Events(document.getElementById('tess-widget-dropdown-table'),
-        'DropdownTable',
-        {
-            opts: {
-                columns: [{ name: 'Date', field: 'start' },
-                    { name: 'Name', field: 'title' },
-                    { name: 'Organizer', field: 'organizer' },
-                    { name: 'Location', field: 'location' }],
-                dropdowns: [{ name: 'Type', field: 'event-types' },
-                    { name: 'Country', field: 'country' },
-                    { name: 'Topic', field: 'scientific-topics' }]
-            },
-            params: {
-                q: 'Python',
-                country: ['United Kingdom']
-            }
-        });
-</script>
-<script id="tess-widget-google-map-code">
-TessWidget.Events(document.getElementById('tess-widget-google-map'),
-        'GoogleMap',
-        {
-            opts: {
-                apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo' // Get your own API key!
-            },
-            params: {
-                country: ['Australia']
-            }
-        });
-</script>
+<script async="" defer="" src="js/tess-widget-standalone.js" onload="initTeSSWidgets()"></script>
 <script>
-    // Show the code under each widget
-    var widgets = document.getElementsByClassName("tess-widget");
-    var url = "https://elixirtess.github.io/TeSS_widgets";
+// Show the code under each widget
+var widgets = document.getElementsByClassName("tess-widget");
+var url = "https://elixirtess.github.io/TeSS_widgets";
 
-    var cssTag = "<link rel=\"stylesheet\" property=\"stylesheet\" href=\"" + url + "/css/tess-widget.css\"/>\n"
-    var scriptTag = "<script src=\"" + url + "/js/tess-widget-standalone.js\"><\/script>\n";
+var cssTag = "<link rel=\"stylesheet\" property=\"stylesheet\" href=\"" + url + "/css/tess-widget.css\"/>\n"
+var scriptTag = "<script src=\"" + url + "/js/tess-widget-standalone.js\" onload=\"initTeSSWidgets()\"><\/script>\n";
+var preCode = "\nfunction initTeSSWidgets() {\n";
+var postCode = "\n}\n";
 
-    for (var i = 0; i < widgets.length; i++) {
-        var pre = document.createElement('pre');
-        var id = widgets[i].id;
-        var script = document.getElementById(id + '-code');
-        var text = cssTag +
-            scriptTag +
-            '<div id="'+id+'"></div>' +
-            '\n<script>' +
-            script.innerHTML +
-            '<\/script>';
-        pre.appendChild(document.createTextNode(text));
-        widgets[i].parentNode.appendChild(pre);
+for (var i = 0; i < widgets.length; i++) {
+    var pre = document.createElement('pre');
+    var id = widgets[i].id;
+    var script = document.getElementById(id + '-code');
+    // Do some string magic to remove the example-specific code, and needless spaces
+    var code = script.innerHTML.split("\n").slice(2,-2).map(function (s) { return s.slice(8); }).join("\n");
+    var text = cssTag +
+        scriptTag +
+        '<div id="'+id+'" class="'+widgets[i].className+'"></div>' +
+        '\n<script>' +
+        preCode +
+        code +
+        postCode +
+        '<\/script>';
+    pre.appendChild(document.createTextNode(text));
+    widgets[i].parentNode.appendChild(pre);
+}
+
+function initTeSSWidgets() {
+    for (var j = 0; j < widgetList.length; j++) {
+        widgetList[j]();
     }
+}
 </script>
 </body>
 </html>
