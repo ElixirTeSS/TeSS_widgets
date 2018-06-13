@@ -31,8 +31,7 @@ SimpleMaterialsListRenderer.prototype.render = function (errors, data, response)
         var li = document.createElement('li');
 
         var link = document.createElement('a');
-        var redirectUrl = material.attributes['url'];
-        link.href = self.widget.buildUrl(redirectUrl);
+        link.href = material.attributes['url'];
         link.target = '_blank';
         link.appendChild(document.createTextNode(material.attributes['title']));
 
