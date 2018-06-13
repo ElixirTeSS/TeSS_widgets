@@ -110,17 +110,34 @@
 </section>
 
 <section>
-    <h2 id="list">List Example</h2>
-    <div id="tess-widget-list" class="tess-widget tess-widget-list"></div>
-    <script id="tess-widget-list-code">
+    <h2 id="events-list">Events List Example</h2>
+    <div id="tess-widget-events-list" class="tess-widget tess-widget-list"></div>
+    <script id="tess-widget-events-list-code">
         widgetList.push(function () {
-            TessWidget.Events(document.getElementById('tess-widget-list'),
+            TessWidget.Events(document.getElementById('tess-widget-events-list'),
                 'SimpleList',
                 {
                     params: {
                         pageSize: 5,
                         q: 'Matlab',
                         country: ['Belgium']
+                    }
+                });
+        });
+    </script>
+</section>
+
+<section>
+    <h2 id="materials-list">Materials List Example</h2>
+    <div id="tess-widget-materials-list" class="tess-widget tess-widget-list"></div>
+    <script id="tess-widget-materials-list-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('tess-widget-materials-list'),
+                'SimpleList',
+                {
+                    params: {
+                        pageSize: 5,
+                        scientificTopics: ['RNA-Seq']
                     }
                 });
         });

@@ -8,18 +8,18 @@ var Util = require('../util.js');
  * @param {Object} widget - The TeSS widget.
  * @param {Object} element - The element to contain the rendered table.
  */
-function SimpleListRenderer(widget, element, options) {
+function SimpleEventsListRenderer(widget, element, options) {
     this.widget = widget;
     this.options = options || {};
     this.container = element;
 }
 
-SimpleListRenderer.prototype.initialize = function () {
+SimpleEventsListRenderer.prototype.initialize = function () {
     this.list = document.createElement('ul');
     this.container.appendChild(this.list);
 };
 
-SimpleListRenderer.prototype.render = function (errors, data, response) {
+SimpleEventsListRenderer.prototype.render = function (errors, data, response) {
     // Clean up
     while (this.list.firstChild) {
         this.list.removeChild(this.list.firstChild);
@@ -43,4 +43,4 @@ SimpleListRenderer.prototype.render = function (errors, data, response) {
     });
 };
 
-module.exports = SimpleListRenderer;
+module.exports = SimpleEventsListRenderer;
