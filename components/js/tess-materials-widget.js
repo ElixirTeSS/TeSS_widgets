@@ -4,7 +4,7 @@ var TessWidget = require('./tess-widget.js');
 
 var defaultRenderers = {
     FacetedTable: require('./renderers/faceted-table-renderer.js'),
-    SimpleList: require('./renderers/simple-materials-list-renderer.js'),
+    SimpleList: require('./renderers/simple-list-renderer.js'),
     DropdownTable: require('./renderers/dropdown-table-renderer.js')
 };
 

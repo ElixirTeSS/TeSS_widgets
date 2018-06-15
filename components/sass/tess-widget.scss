@@ -25,6 +25,12 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
 .tess-widget {
   position: relative;
 
+  &.tess-widget-list {
+    .tess-controls {
+      justify-content: flex-end;
+    }
+  }
+
   .tess-results {
     table {
       width: 100%;

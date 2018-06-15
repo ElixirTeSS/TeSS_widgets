@@ -135,9 +135,12 @@
             TessWidget.Materials(document.getElementById('tess-widget-materials-list'),
                 'SimpleList',
                 {
+                    opts: {
+                      enableSearch: true
+                    },
                     params: {
                         pageSize: 5,
-                        scientificTopics: ['RNA-Seq']
+                        q: 'RNA-Seq'
                     }
                 });
         });
