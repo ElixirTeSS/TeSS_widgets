@@ -1,11 +1,10 @@
 {
-  "name": "tess_widget2",
+  "name": "tess_widgets",
   "version": "1.0.0",
-  "description": "For pulling events from TeSS",
-  "main": "index.js",
+  "description": "Embeddable widgets for displaying training events and materials from ELIXIR TeSS (https://tess.elixir-europe.org)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ElixirTeSS/list_widget.git"
+    "url": "https://github.com/ElixirTeSS/TeSS_widgets.git"
   },
   "author": "",
   "license": "ISC",
