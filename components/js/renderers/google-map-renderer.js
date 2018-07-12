@@ -34,12 +34,23 @@ GoogleMapRenderer.prototype.initialize = function () {
             }]
         });
         self.infoWindow = new google.maps.InfoWindow({content: ""});
+        if (self.queuedRender) {
+            self.queuedRender();
+        }
     };
 
     document.head.appendChild(googleMapScript);
 };
 
 GoogleMapRenderer.prototype.render = function (errors, data, response) {
+    // Queue render if map has not loaded yet
+    if (!this.map) {
+        this.queuedRender = function () {
+            GoogleMapRenderer.prototype.render(errors, data, response);
+        };
+
+        return;
+    }
     // Clear bounds
     this.bounds = new google.maps.LatLngBounds();
     // Clear markers
