@@ -35,7 +35,8 @@ PaginationRenderer.prototype.render = function (errors, data, response) {
 };
 
 PaginationRenderer.prototype.pageLink = function (title, path) {
-    var page = path.match(/page%5Bnumber%5D=([0-9]+)/)[1]; // Strip the actual page number out from the path
+    // Strip the actual page number out from the path
+    var page = (path.match(/page%5Bnumber%5D=([0-9]+)/) || path.match(/page_number=([0-9]+)/))[1];
     var link = document.createElement('a');
     link.className = 'tess-pagination-link';
     link.href = '#';

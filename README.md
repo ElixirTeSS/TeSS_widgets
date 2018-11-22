@@ -22,3 +22,9 @@ First you'll need npm installed.
 `npm install`
 
 `gulp`
+
+## Building
+
+This will build the production, embeddable JS code and update the example docs:
+
+`NODE_ENV=production gulp build-examples`
