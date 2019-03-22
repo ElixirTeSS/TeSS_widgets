@@ -1,7 +1,10 @@
-var FacetDropdownsRenderer = require('./partials/facet-dropdowns-renderer.js');
-var TableRenderer = require('./partials/table-renderer.js');
-var SearchRenderer = require('./partials/search-renderer.js');
-var PaginationRenderer = require('./partials/pagination-renderer.js');
+'use strict';
+const Renderer = require('./renderer.js');
+const FacetDropdownsRenderer = require('./partials/facet-dropdowns-renderer.js');
+const TableRenderer = require('./partials/table-renderer.js');
+const SearchRenderer = require('./partials/search-renderer.js');
+const PaginationRenderer = require('./partials/pagination-renderer.js');
+const n = require('../util.js').makeElement;
 
 /**
  * A list of resources in a table, with dropdown lists to filter across various categories.
@@ -17,77 +20,50 @@ var PaginationRenderer = require('./partials/pagination-renderer.js');
  * @param {Object[]} options.dropdowns[].name - The label to display next to the menu.
  * @param {Object[]} options.dropdowns[].field - The resource field to filter by.
  */
-function DropdownTableRenderer(widget, element, options) {
-    this.widget = widget;
-    this.options = options || {};
-    this.container = element;
-    this.elements = {};
-    this.renderers = {};
-}
+class DropdownTableRenderer extends Renderer {
 
-DropdownTableRenderer.prototype.initialize = function () {
-    this.elements.facetDropdowns = document.createElement('div');
-    this.elements.facetDropdowns.className = 'tess-facet-dropdowns';
+    initialize () {
+        // Top drop-down menus above the table and search bar
+        this.elements.facetDropdowns = n('div', { className: 'tess-facet-dropdowns' });
+        this.elements.search = n('div', { className: 'tess-search' },
+            n('div', { className: 'tess-facet-title' }, 'Search'));
+        this.elements.controls = n('div', { className: 'tess-controls' },
+            this.elements.facetDropdowns,
+            this.elements.search
+        );
 
-    this.elements.wrapper = document.createElement('div');
-    this.elements.wrapper.className = 'tess-wrapper';
+        // Main table view with pagination
+        this.elements.results = n('div', { className: 'tess-results' });
+        this.elements.pagination = n('div', { className: 'tess-pagination' });
+        this.elements.tessLink = n('div');
+        this.elements.wrapper = n('div', { className: 'tess-wrapper' },
+            this.elements.controls,
+            this.elements.results,
+            this.elements.pagination,
+            this.elements.tessLink
+        );
 
-    this.elements.results = document.createElement('div');
-    this.elements.results.className = 'tess-results';
+        this.container.appendChild(this.elements.wrapper);
 
-    this.elements.controls = document.createElement('div');
-    this.elements.controls.className = 'tess-controls';
+        this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.facetDropdowns,
+            { dropdowns: this.options.dropdowns });
+        this.renderers.table = new TableRenderer(this.widget, this.elements.results,
+            { columns: this.options.columns });
+        this.renderers.search = new SearchRenderer(this.widget, this.elements.search);
+        this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
 
-    this.elements.search = document.createElement('div');
-    this.elements.search.className = 'tess-search';
-    var searchTitle = document.createElement('div');
-    searchTitle.className = 'tess-facet-title';
-    searchTitle.appendChild(document.createTextNode('Search'));
-    this.elements.search.appendChild(searchTitle);
-
-    this.elements.pagination = document.createElement('div');
-    this.elements.pagination.className = 'tess-pagination';
-
-    this.elements.tessLink = document.createElement('div');
-
-    this.elements.controls.appendChild(this.elements.facetDropdowns);
-    this.elements.controls.appendChild(this.elements.search);
-    this.elements.wrapper.appendChild(this.elements.controls);
-    this.elements.wrapper.appendChild(this.elements.results);
-    this.elements.wrapper.appendChild(this.elements.pagination);
-    this.elements.wrapper.appendChild(this.elements.tessLink);
-    this.container.appendChild(this.elements.wrapper);
-
-    this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.facetDropdowns,
-        { dropdowns: this.options.dropdowns });
-    this.renderers.table = new TableRenderer(this.widget, this.elements.results,
-        { columns: this.options.columns });
-    this.renderers.search = new SearchRenderer(this.widget, this.elements.search);
-    this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
-
-    this.renderers.facetDropdowns.initialize();
-    this.renderers.table.initialize();
-    this.renderers.search.initialize();
-    this.renderers.pagination.initialize();
-};
-
-DropdownTableRenderer.prototype.render = function (errors, data, response) {
-    this.renderers.facetDropdowns.render(errors, data, response);
-    this.renderers.table.render(errors, data, response);
-    this.renderers.search.render(errors, data, response);
-    this.renderers.pagination.render(errors, data, response);
-
-    // Render TeSS link
-    while (this.elements.tessLink.firstChild) {
-        this.elements.tessLink.removeChild(this.elements.tessLink.firstChild);
+        super.initialize();
     }
 
-    var tessLinkContainer = document.createElement('p');
-    var tessLink = document.createElement('a');
-    tessLink.href = response.req.url;
-    tessLink.appendChild(document.createTextNode('View your results on TeSS'));
-    tessLinkContainer.appendChild(tessLink);
-    this.elements.tessLink.appendChild(tessLinkContainer);
-};
+
+    render (errors, data, response) {
+        super.render(errors, data, response);
+
+        // TeSS link
+        Renderer.clear(this.elements.tessLink);
+        this.elements.tessLink.appendChild(n('p', n('a', { href: response.req.url }, 'View your results on TeSS')));
+    }
+
+}
 
 module.exports = DropdownTableRenderer;

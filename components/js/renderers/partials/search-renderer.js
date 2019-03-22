@@ -1,40 +1,37 @@
 'use strict';
-var Util = require('../../util.js');
+const Renderer = require('../renderer.js');
+const Util = require('../../util.js');
+const n = Util.makeElement;
 
-function SearchRenderer(widget, element, options) {
-    this.widget = widget;
-    this.options = options || {};
-    this.container = element;
-}
+class SearchRenderer extends Renderer {
 
-SearchRenderer.prototype.initialize = function () {
-    this.field = document.createElement('input');
-    this.field.type = 'text';
+    initialize () {
+        this.field = n('input', { type: 'text' });
 
-    // Closures!
-    var field = this.field;
-    var widget = this.widget;
+        const widget = this.widget;
+        const field = this.field;
 
-    this.field.addEventListener('keyup', function (event) {
-        if (event.keyCode === 13) {
+        this.field.addEventListener('keyup', function (event) {
+            if (event.keyCode === 13) {
+                widget.search(this.value);
+            }
+        });
+
+        this.button = n('button', 'Search');
+        this.button.addEventListener('click', function (event) {
+            event.preventDefault();
             widget.search(field.value);
-        }
-    });
+            return false;
+        });
 
-    this.button = document.createElement('button');
-    this.button.innerText = 'Search';
-    this.button.addEventListener('click', function (event) {
-        event.preventDefault();
-        widget.search(field.value);
-        return false;
-    });
+        this.container.appendChild(this.field);
+        this.container.appendChild(this.button);
+    }
 
-    this.container.appendChild(this.field);
-    this.container.appendChild(this.button);
-};
+    render (errors, data, response) {
+        this.field.value = data.meta.query;
+    }
 
-SearchRenderer.prototype.render = function (errors, data, response) {
-    this.field.value = data.meta.query;
-};
+}
 
 module.exports = SearchRenderer;

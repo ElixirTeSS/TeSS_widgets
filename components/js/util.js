@@ -20,13 +20,12 @@ module.exports = {
     /**
      * Formats a date.
      *
-     * @param {String or Date object} date
+     * @param {String|Date} date
+     * @param {Object} dateFormat
      * @return {String} Formatted date
      */
     formatDate: function (date, dateFormat) {
-        var parsedDate = new Date(date);
-
-        return parsedDate.toLocaleDateString(this.locale(), dateFormat || this.dateFormat);
+        return new Date(date).toLocaleDateString(this.locale(), dateFormat || this.dateFormat);
     },
 
     /**
@@ -36,7 +35,7 @@ module.exports = {
      * @return {String} Humanized string
      */
     humanize: function (string) {
-        var stripped = string.toLowerCase().replace(/[_-]/, ' ');
+        const stripped = string.toLowerCase().replace(/[_-]/, ' ');
         // Replace first character, and any character occurring after whitespace, with a capitalized version.
         return stripped.replace(/(^| )(\w)/g, function (x) {
             return x.toUpperCase();
@@ -57,8 +56,8 @@ module.exports = {
 
     fieldRenderers: {
         location: function (event) {
-            var city = event.attributes['city'];
-            var country = event.attributes['country'];
+            let city = event.attributes['city'];
+            let country = event.attributes['country'];
 
             if ((event.attributes['city'] !== null) && (event.attributes['country'] !== null)) {
                 city = event.attributes['city'] + ', ';

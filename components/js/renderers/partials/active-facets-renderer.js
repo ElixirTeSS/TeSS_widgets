@@ -1,66 +1,63 @@
 'use strict';
-var Util = require('../../util.js');
+const Renderer = require('../renderer.js');
+const Util = require('../../util.js');
+const n = Util.makeElement;
 
-function ActiveFacetsRenderer(widget, element, options) {
-    this.widget = widget;
-    this.options = options || {};
-    this.container = element;
-}
+class ActiveFacetsRenderer extends Renderer {
 
-ActiveFacetsRenderer.prototype.initialize = function () {
-    var widget = this.widget;
-    this.container.addEventListener('click', function (event) {
-        if (event.target.hasAttribute('data-tess-facet-key')) {
-            var f = event.target.getAttribute('data-tess-facet-active') === 'true' ? widget.removeFacet : widget.addFacet;
-            f.bind(widget)(event.target.getAttribute('data-tess-facet-key'), event.target.getAttribute('data-tess-facet-value'));
-        }
-    });
-};
+    initialize () {
+        const widget = this.widget;
+        this.container.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (event.target.hasAttribute('data-tess-facet-key')) {
+                const key = event.target.getAttribute('data-tess-facet-key');
+                const value = event.target.getAttribute('data-tess-facet-value');
 
-ActiveFacetsRenderer.prototype.render = function (errors, data, response) {
-    while (this.container.firstChild) {
-        this.container.removeChild(this.container.firstChild);
-    }
+                if (event.target.getAttribute('data-tess-facet-active') === 'true') {
+                    widget.removeFacet(key, value);
+                } else {
+                    widget.addFacet(key, value);
+                }
+            }
+        });
+    };
 
-    this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' results found'));
-    this.renderActiveFacets(this.container, data.meta['facets']);
-};
+    render (errors, data, response) {
+        Renderer.clear(this.container);
 
-ActiveFacetsRenderer.prototype.renderActiveFacets = function (container, activeFacets) {
-    for (var key in activeFacets) {
-        if (activeFacets.hasOwnProperty(key)) {
-            if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
-                container.appendChild(this.generateActiveFacet(key, activeFacets[key]));
+        this.container.appendChild(document.createTextNode('' + data.meta['results-count'] + ' results found'));
+
+        const activeFacets = data.meta['facets'];
+        for (const key in activeFacets) {
+            if (activeFacets.hasOwnProperty(key)) {
+                if (!this.options.allowedFacets || (this.options.allowedFacets.indexOf(key) !== -1)) {
+                    this.container.appendChild(this.renderActiveFacet(key, activeFacets[key]));
+                }
             }
         }
     }
-};
 
-ActiveFacetsRenderer.prototype.generateActiveFacet = function (key, value) {
-    var af = document.createElement('div');
-    af.className = 'tess-active-facet';
-    var afKey = document.createElement('strong');
-    afKey.appendChild(document.createTextNode(Util.humanize(key) + ': '));
+    renderActiveFacet (key, value) {
+        const af = n('div', { className: 'tess-active-facet' },
+            n('strong', Util.humanize(key) + ': '));
 
-    af.appendChild(afKey);
+        const values = Array.isArray(value) ? value : [value];
+        values.forEach(function (value, index) {
+            const afVal = n('a', { href: '#', className: 'tess-facet-row active', data: {
+                    'tess-facet-key' : key,
+                    'tess-facet-value' : value,
+                    'tess-facet-active' : true
+                }
+            }, value);
 
-    var values = Array.isArray(value) ? value : [value];
-    values.forEach(function (value, index) {
-        var afVal = document.createElement('a');
-        afVal.href = '#';
-        afVal.className = 'tess-facet-row active';
+            af.appendChild(afVal);
+            if (index < (values.length - 1))
+                af.appendChild(document.createTextNode(' or '));
+        });
 
-        afVal.appendChild(document.createTextNode(value));
-        afVal.setAttribute('data-tess-facet-key', key);
-        afVal.setAttribute('data-tess-facet-value', value);
-        afVal.setAttribute('data-tess-facet-active', true);
+        return af;
+    }
 
-        af.appendChild(afVal);
-        if (index < (values.length - 1))
-            af.appendChild(document.createTextNode(' or '));
-    });
-
-    return af;
-};
+}
 
 module.exports = ActiveFacetsRenderer;
