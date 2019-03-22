@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
+    babel = require('gulp-babel'),
     browserSync = require('browser-sync').create();
 
 var env,
@@ -44,6 +45,7 @@ gulp.task('js', function() {
         .pipe(source('tess-widget-standalone.js'))
         .pipe(buffer())
         .pipe(gulpif(env === 'production', uglify()))
+        .pipe(babel({ presets: ['@babel/preset-env'] }))
         .pipe(gulp.dest(outputDir + 'js'))
         .pipe(browserSync.stream());
 });
