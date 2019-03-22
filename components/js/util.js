@@ -72,6 +72,31 @@ module.exports = {
 
             return city + country;
         }
-    }
+    },
 
+    makeElement: function (type, htmlPropsOrFirstChild, ...children) {
+        const element = document.createElement(type);
+
+        if (htmlPropsOrFirstChild) {
+            if (htmlPropsOrFirstChild.constructor === Object) {
+                if (htmlPropsOrFirstChild.data) {
+                    Object.entries(htmlPropsOrFirstChild.data).forEach(
+                        ([key, value]) => {
+                            element.setAttribute(('data-' + key), value)
+                        }
+                    );
+                }
+
+                Object.assign(element, htmlPropsOrFirstChild);
+            } else {
+                children.unshift(htmlPropsOrFirstChild);
+            }
+        }
+
+        children.forEach((child) => {
+            element.appendChild((child instanceof HTMLElement) ? child : document.createTextNode(child));
+        });
+
+        return element;
+    }
 };
