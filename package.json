@@ -1,6 +1,6 @@
 {
   "name": "tess_widgets",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Embeddable widgets for displaying training events and materials from ELIXIR TeSS (https://tess.elixir-europe.org)",
   "repository": {
     "type": "git",
@@ -11,18 +11,19 @@
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
-    "browser-sync": "^2.24.4",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.3",
     "browserify": "^14.5.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^8.0.0",
+    "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.5.0",
+    "gulp-connect": "^5.7.0",
     "gulp-if": "^2.0.2",
     "gulp-sass": "^3.2.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "node-sass": "^4.11.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "tess_json_api": "github:ElixirTeSS/tess-json-api-client"
