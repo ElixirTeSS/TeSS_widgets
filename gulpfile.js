@@ -44,8 +44,8 @@ gulp.task('js', function() {
     return b.bundle()
         .pipe(source('tess-widget-standalone.js'))
         .pipe(buffer())
-        .pipe(gulpif(env === 'production', uglify()))
         .pipe(babel({ presets: ['@babel/preset-env'] }))
+        .pipe(gulpif(env === 'production', uglify()))
         .pipe(gulp.dest(outputDir + 'js'))
         .pipe(browserSync.stream());
 });
