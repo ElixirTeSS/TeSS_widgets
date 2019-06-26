@@ -11,6 +11,7 @@ const n = Util.makeElement;
  * @param {Object} element - The element to contain the rendered table.
  * @param {Object} options - Options for the renderer.
  * @param {Object[]} options.apiKey - The Google Maps API key.
+ * @param {Object[]} options.cluster - Whether to use marker cluster or not.
  */
 class GoogleMapRenderer extends Renderer {
 
@@ -40,7 +41,11 @@ class GoogleMapRenderer extends Renderer {
             }
         });
 
+        const clusterScript = n('script',{
+            src: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js'
+        });
         document.head.appendChild(googleMapScript);
+        document.head.appendChild(clusterScript);
     }
 
     render (errors, data, response) {
@@ -62,6 +67,12 @@ class GoogleMapRenderer extends Renderer {
         data.data.forEach((event) => { this.renderEvent(event) });
 
         this.map.fitBounds(this.bounds);
+
+        if(this.options.cluster == true) {
+            // Add a marker cluster to manage the markers
+        var markerCluster = new MarkerClusterer(this.map, this.markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+        }
     }
 
 
