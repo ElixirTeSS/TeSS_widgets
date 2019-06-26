@@ -147,7 +147,7 @@
 </section>
 
 <section>
-    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
+    <h2 id="dropdown-table">Table w/ Dropdowns Example - Events</h2>
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
     <script id="tess-widget-dropdown-table-code">
         widgetList.push(function () {
@@ -170,6 +170,29 @@
                 });
         });
     </script>
+</section>
+
+<section>
+    <h2 id="dropdown-table-materials">Table w/ Dropdowns Example - Materials</h2>
+    <div id="tess-widget-dropdown-materials-table" class="tess-widget tess-widget-dropdown-materials-table"></div>
+    <script id="tess-widget-dropdown-materials-table-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('tess-widget-dropdown-materials-table'),
+                'DropdownTable',
+                {
+                    opts: {
+                        columns: [{name: 'Name', field: 'title'},
+                            {name: 'Target Audience', field: 'target-audience'},
+                            {name: 'Description', field: 'short-description'}],
+                        dropdowns: [{name: 'Topic', field: 'scientific-topics'}]
+                    },
+                    params: {
+                        pageSize: 5,
+                        q: 'Python'
+                    }
+                });
+        });
+        </script>
 </section>
 
 <section>
