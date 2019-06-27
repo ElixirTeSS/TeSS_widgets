@@ -37,11 +37,13 @@ class FacetedTableRenderer extends Renderer {
         this.elements.results = n('div', { className: 'tess-results' });
         this.elements.pagination = n('div', { className: 'tess-pagination' });
         this.elements.tessLink = n('div');
+        this.elements.filterControl = n('div', { className: 'tess-filter'});
         this.elements.wrapper = n('div', { className: 'tess-wrapper' },
             this.elements.controls,
             this.elements.results,
             this.elements.pagination,
-            this.elements.tessLink
+            this.elements.tessLink,
+            this.elements.filterControl
         );
 
         this.container.appendChild(this.elements.facets);
@@ -65,6 +67,26 @@ class FacetedTableRenderer extends Renderer {
         // TeSS link
         Renderer.clear(this.elements.tessLink);
         this.elements.tessLink.appendChild(n('p', n('a', { href: response.req.url }, 'View your results on TeSS')));
+
+        // TeSS filter button 
+        Renderer.clear(this.elements.filterControl);
+        this.elements.filterControl.appendChild(n('button',{ className: 'filterButton'}, 'Filter'));
+        this.elements.filterControl.appendChild(n('button',{ className: 'closeButton'}, 'Close'));
+        var allFilterButtons = document.getElementsByClassName('filterButton');
+        var num;
+        for (var i = 0; i < allFilterButtons.length; i++) {
+            allFilterButtons[i].addEventListener('click',function(index){
+                document.getElementsByClassName('tess-facets')[index].style.display = 'block'; 
+                document.getElementsByClassName('tess-facets')[index].style.width = '110px';
+            }.bind(this, i));
+        }
+
+        var allCloseButtons = document.getElementsByClassName('closeButton');
+        for (var i = 0; i < allCloseButtons.length; i++) {
+            allCloseButtons[i].addEventListener('click',function(index){
+                document.getElementsByClassName('tess-facets')[index].style.display = 'none'; 
+            }.bind(this, i));
+        }
     }
 
 }
