@@ -80,6 +80,21 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
 
     .tess-wrapper {
       flex-grow: 1;
+
+      .closeButton {
+        display: none;
+      }
+
+
+      /* Style buttons */
+      .btn {
+        background-color: DodgerBlue; /* Blue background */
+        border: none; /* Remove borders */
+        color: white; /* White text */
+        padding: 8px 10px; /* Some padding */
+        font-size: 14px; /* Set a font size */
+        cursor: pointer; /* Mouse pointer on hover */
+      }
     }
 
     a.tess-facet-row {

@@ -28,7 +28,6 @@ class GoogleMapRenderer extends Renderer {
             src: 'https://maps.googleapis.com/maps/api/js?key=' + this.options.apiKey,
             onload: () => {
                 this.map = new google.maps.Map(this.mapContainer, {
-                    maxZoom: 12,
                     styles: [{
                         'featureType': 'poi',
                         'elementType': 'all'

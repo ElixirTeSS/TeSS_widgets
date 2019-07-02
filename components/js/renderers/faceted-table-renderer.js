@@ -22,6 +22,9 @@ const n = require('../util.js').makeElement;
 class FacetedTableRenderer extends Renderer {
 
     initialize () {
+        // Icon stylesheet
+        this.elements.icon = n('link',{rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' })
+
         // Left-hand facets sidebar
         this.elements.facets = n('div', { className: 'tess-facets' });
 
@@ -39,13 +42,14 @@ class FacetedTableRenderer extends Renderer {
         this.elements.tessLink = n('div');
         this.elements.filterControl = n('div', { className: 'tess-filter'});
         this.elements.wrapper = n('div', { className: 'tess-wrapper' },
+            this.elements.filterControl,
             this.elements.controls,
             this.elements.results,
             this.elements.pagination,
-            this.elements.tessLink,
-            this.elements.filterControl
+            this.elements.tessLink
         );
 
+        this.container.appendChild(this.elements.icon);
         this.container.appendChild(this.elements.facets);
         this.container.appendChild(this.elements.wrapper);
 
@@ -70,21 +74,25 @@ class FacetedTableRenderer extends Renderer {
 
         // TeSS filter button 
         Renderer.clear(this.elements.filterControl);
-        this.elements.filterControl.appendChild(n('button',{ className: 'filterButton'}, 'Filter'));
-        this.elements.filterControl.appendChild(n('button',{ className: 'closeButton'}, 'Close'));
+        this.elements.filterControl.appendChild(n('button',{ className: 'btn filterButton'},n('i',{className: 'fa fa-filter'}),'Show Filter'));
+        this.elements.filterControl.appendChild(n('button',{ className: 'btn closeButton'}, n('i',{className:'fa fa-close'}),'Close Filter'));
         var allFilterButtons = document.getElementsByClassName('filterButton');
         var num;
         for (var i = 0; i < allFilterButtons.length; i++) {
             allFilterButtons[i].addEventListener('click',function(index){
                 document.getElementsByClassName('tess-facets')[index].style.display = 'block'; 
                 document.getElementsByClassName('tess-facets')[index].style.width = '110px';
+                document.getElementsByClassName('closeButton')[index].style.display = 'inline';
+                document.getElementsByClassName('filterButton')[index].style.display = 'none';
             }.bind(this, i));
         }
 
         var allCloseButtons = document.getElementsByClassName('closeButton');
         for (var i = 0; i < allCloseButtons.length; i++) {
             allCloseButtons[i].addEventListener('click',function(index){
+                document.getElementsByClassName('filterButton')[index].style.display = 'block';
                 document.getElementsByClassName('tess-facets')[index].style.display = 'none'; 
+                document.getElementsByClassName('closeButton')[index].style.display = 'none';
             }.bind(this, i));
         }
     }
