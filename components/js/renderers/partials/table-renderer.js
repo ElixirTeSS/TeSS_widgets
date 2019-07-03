@@ -38,7 +38,7 @@ class TableRenderer extends Renderer {
             const field = fieldPair.field;
             let value = resource.attributes[field];
             let valueNode;
-
+            let shortDescNode = false;
             if (Util.fieldRenderers.hasOwnProperty(field)) {
                 value = Util.fieldRenderers[field](resource);
                 valueNode = document.createTextNode(value);
@@ -55,10 +55,27 @@ class TableRenderer extends Renderer {
             } else if (value === null || value === 'null') {
                 valueNode = document.createTextNode('');
             } else {
-                valueNode = document.createTextNode(value);
+                if (field == 'short-description' && value.length > 100 ){
+                    valueNode = document.createTextNode(value.substring(0,100) + '...');
+                    shortDescNode = true;
+                } else {
+                    valueNode = document.createTextNode(value);
+                }
             }
+            let currentCell = row.insertCell();
+            currentCell.appendChild(valueNode);
 
-            row.insertCell().appendChild(valueNode);
+            if (shortDescNode) {
+                currentCell.style = 'cursor:pointer';
+                currentCell.addEventListener('click', function(){
+                    let innerValue = this.innerHTML;
+                    if (innerValue.substring(innerValue.length - 3, innerValue.length) == '...') {
+                        this.innerHTML = value;
+                    } else {
+                        this.innerHTML = value.substring(0,100) + '...';
+                    }
+                });
+            }
         });
     }
 
