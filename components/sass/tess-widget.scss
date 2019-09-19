@@ -82,7 +82,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       flex-grow: 1;
     }
 
-    a.tess-facet-row {
+    a.tess-facet-row, a.tess-facet-expander {
       display: inline-block;
       color: inherit;
       text-decoration: none;
@@ -129,6 +129,14 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       &:last-child {
         border-bottom: 1px solid $elixir-grey-20;
       }
+
+      &.tess-facet-expanded .hidden {
+        display: initial !important;
+      }
+
+      .hidden {
+        display: none;
+      }
     }
 
     .tess-facet-title {
@@ -138,7 +146,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       font-size: small;
     }
 
-    .tess-facet-title, ul > li a.tess-facet-row {
+    .tess-facet-title, ul > li a {
       border-top: 1px solid $elixir-grey-20;
     }
 
@@ -169,6 +177,12 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
           }
         }
       }
+    }
+
+    .tess-facet-expander {
+      display: block !important;
+      color: #666 !important;
+      background-color: #f9f9f9;
     }
   }
 
