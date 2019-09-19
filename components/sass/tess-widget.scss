@@ -62,7 +62,34 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
       font-size: small;
     }
 
-    .tess-search { }
+    .tess-search {
+      position: relative;
+      
+      input, button {
+        line-height: 20px;
+        padding: 2px 5px;
+        border: 1px solid #ccc;
+      }
+
+      input {
+        border-right: 0;
+        padding-right: 16px
+      }
+      
+      .tess-search-clear {
+        position: absolute;
+        margin-left: -16px;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 26px;
+        text-decoration: none;
+        color: #666;
+        &:hover, &:active, &:visited {
+          text-decoration: none;
+          color: #666;
+        }
+      }
+    }
 
     .tess-facet-dropdowns {
       display: flex;
