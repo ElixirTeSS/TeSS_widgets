@@ -57,28 +57,30 @@ It takes 3 arguments, `(errors, data, response)`:
 ### Example:
 An example of a simple renderer to render a `<ul>` list of event titles:
 
-    class MyCustomRenderer {
-      constructor (widget, element, options) {
-        this.widget = widget;
-        this.element = element;
-      }
-      
-      initialize () {
-        const title = document.createElement('h1');
-        title.innerText = "TeSS Events:"
-        this.element.appendChild(title);
-        this.list = document.createElement('ul');
-        this.element.appendChild(this.list);
-      }
-      
-      render (errors, data, response) {
-        this.list.innerHTML = ''; // Clear out old events.
-        data.data.forEach((event) => {
-            const eventElement = document.createElement('li');
-            eventElement.appendChild(document.createTextNode(event.attributes['title']));
-            this.list.appendChild(eventElement);
-        });
-      }
-    }
-    
-    TessWidget.Events(document.getElementById('my-container'), MyCustomRenderer, {});
+```javascript
+class MyCustomRenderer {
+  constructor (widget, element, options) {
+    this.widget = widget;
+    this.element = element;
+  }
+
+  initialize () {
+    const title = document.createElement('h1');
+    title.innerText = "TeSS Events:"
+    this.element.appendChild(title);
+    this.list = document.createElement('ul');
+    this.element.appendChild(this.list);
+  }
+
+  render (errors, data, response) {
+    this.list.innerHTML = ''; // Clear out old events.
+    data.data.forEach((event) => {
+        const eventElement = document.createElement('li');
+        eventElement.appendChild(document.createTextNode(event.attributes['title']));
+        this.list.appendChild(eventElement);
+    });
+  }
+}
+
+TessWidget.Events(document.getElementById('my-container'), MyCustomRenderer, {});
+```
