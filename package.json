@@ -27,6 +27,6 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "tess_json_api": "github:ElixirTeSS/tess-json-api-client"
+    "tess_json_api": "github:ElixirTeSS/tess-json-api-client#0.3.0"
   }
 }
