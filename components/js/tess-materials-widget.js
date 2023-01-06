@@ -22,7 +22,7 @@ const availableRenderers = {
 class TessMaterialsWidget extends TessWidget {
 
     constructor (element, renderer, options) {
-        super(new TessApi.MaterialsApi(), 'materialsGet', element, renderer, options);
+        super(TessApi.MaterialsApi, 'materialsGet', element, renderer, options);
     }
 
     static defaultRenderers() {

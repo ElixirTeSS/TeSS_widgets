@@ -40,8 +40,7 @@ class TableRenderer extends Renderer {
             let valueNode;
             let shortDescNode = false;
             if (Util.fieldRenderers.hasOwnProperty(field)) {
-                value = Util.fieldRenderers[field](resource);
-                valueNode = document.createTextNode(value);
+                valueNode = Util.fieldRenderers[field](resource);
             } else if (value instanceof Date) {
                 valueNode = document.createTextNode(Util.formatDate(value));
             } else if (field === 'title') {

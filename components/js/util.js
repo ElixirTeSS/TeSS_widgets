@@ -1,4 +1,5 @@
 'use strict';
+const Marked = require('marked');
 
 module.exports = {
     locale: function () {
@@ -69,7 +70,13 @@ module.exports = {
                 country = '';
             }
 
-            return city + country;
+            return document.createTextNode(city + country);
+        },
+        description: function (event) {
+            const container = document.createElement('div')
+            container.className = 'tess-markdown';
+            container.innerHTML = Marked.parse(event.attributes['description'])
+            return container;
         }
     },
 

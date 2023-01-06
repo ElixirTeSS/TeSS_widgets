@@ -23,7 +23,7 @@ const availableRenderers = {
 class TessEventsWidget extends TessWidget {
 
     constructor (element, renderer, options) {
-        super(new TessApi.EventsApi(), 'eventsGet', element, renderer, options);
+        super(TessApi.EventsApi, 'eventsGet', element, renderer, options);
     }
 
     static defaultRenderers() {

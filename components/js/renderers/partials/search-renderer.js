@@ -17,6 +17,14 @@ class SearchRenderer extends Renderer {
             }
         });
 
+        this.clearButton = n('a', { className: 'tess-search-clear', href: '#' }, "×");
+        this.clearButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            field.value = "";
+            widget.search(field.value);
+            return false;
+        });
+
         this.button = n('button', 'Search');
         this.button.addEventListener('click', function (event) {
             event.preventDefault();
@@ -25,11 +33,13 @@ class SearchRenderer extends Renderer {
         });
 
         this.container.appendChild(this.field);
+        this.container.appendChild(this.clearButton);
         this.container.appendChild(this.button);
     }
 
     render (errors, data, response) {
         this.field.value = data.meta.query;
+        this.clearButton.style.display = data.meta.query.length ? '' : 'none';
     }
 
 }

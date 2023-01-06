@@ -11,7 +11,7 @@ TessApi.ApiClient.parseDate = function(str) {
  * A TeSS widget.
  *
  * @constructor
- * @param {Object} api - The TeSS API being used by the widget (Events/Materials).
+ * @param {Object} apiClass - The TeSS API class being used by the widget (Events/Materials).
  * @param {Object} endpoint - The specific API endpoint to call when fetching.
  * @param {Object} element - The HTML element to contain the widget
  * @param {defaultRenderers|Object} renderer - The renderer that determines how the widget is displayed.
@@ -20,11 +20,11 @@ TessApi.ApiClient.parseDate = function(str) {
  * @param {Object} options
  * @param {Object} options.opts - Options to pass through to the renderer.
  * @param {Object} options.params - Pre-applied filters to the set of events from TeSS.
+ * @param {Object} options.baseUrl - URL to the TeSS instance the widget should use. Defaults to https://tess.elixir-europe.org
  */
 class TessWidget {
 
-    constructor (api, endpoint, element, renderer, options) {
-        this.api = api;
+    constructor (apiClass, endpoint, element, renderer, options) {
         this.endpoint = endpoint;
         this.options = options || {};
         this.identifier = this.options.identifier || 'TeSS-Widget';
@@ -32,6 +32,10 @@ class TessWidget {
         this.element = element;
         this.renderer = this.buildRenderer(renderer, options.opts);
         this.queryParameters = this.options.params || {};
+        this.baseUrl = (this.options.baseUrl || 'https://tess.elixir-europe.org').replace(/\/+$/, '');
+        const client = new TessApi.ApiClient();
+        client.basePath = this.baseUrl;
+        this.api = new apiClass(client);
     }
 
     buildRenderer (renderer, rendererOptions) {

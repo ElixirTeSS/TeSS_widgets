@@ -18,6 +18,15 @@ class FacetsSidebarRenderer extends Renderer {
                 } else {
                     widget.addFacet(key, value);
                 }
+            } else if (event.target.classList.contains('tess-facet-expander')) {
+                const facet = event.target.closest('.tess-facet');
+                if (facet.classList.contains('tess-facet-expanded')) {
+                    event.target.innerText = 'More...';
+                    facet.classList.remove('tess-facet-expanded');
+                } else {
+                    event.target.innerText = 'Less';
+                    facet.classList.add('tess-facet-expanded');
+                }
             }
         });
     };
@@ -42,7 +51,7 @@ class FacetsSidebarRenderer extends Renderer {
         }
     }
 
-    renderFacetRow (container, active, key, value, count) {
+    renderFacetRow (container, active, key, value, count, hidden) {
         const row = n('a',
             { href: '#',
                 className: 'tess-facet-row' + (active ? ' active' : ''),
@@ -59,7 +68,7 @@ class FacetsSidebarRenderer extends Renderer {
             row.appendChild(n('span', { className: 'tess-facet-row-count' }, count));
         }
 
-        container.appendChild(n('li', row));
+        container.appendChild(n('li', {  className: (hidden ? 'hidden' : '') }, row));
     }
 
     renderFacet (container, key, availableFacets, activeFacets) {
@@ -68,12 +77,18 @@ class FacetsSidebarRenderer extends Renderer {
         activeFacets.forEach((val) => {
             this.renderFacetRow(list, true, key, val);
         });
+        const facetOptionLimit = this.options.facetOptionLimit || 10000;
+        let facetOptionCount = 0;
         availableFacets.forEach((row) => {
             // Don't render active facets twice, or blank values
             if (!activeFacets.includes(row.value) && row.value) {
-                this.renderFacetRow(list, false, key, row.value, row.count);
+                this.renderFacetRow(list, false, key, row.value, row.count, (facetOptionCount++ >= facetOptionLimit));
             }
         });
+
+        if (facetOptionCount > facetOptionLimit) {
+            list.appendChild(n('li', n('a', { href: '#', className: 'tess-facet-expander' }, 'More...')));
+        }
 
         container.appendChild(
             n('div', { className: 'tess-facet', data: { 'tess-facet-key' : key } },

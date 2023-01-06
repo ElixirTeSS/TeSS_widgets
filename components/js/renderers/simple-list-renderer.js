@@ -57,7 +57,7 @@ class SimpleListRenderer extends Renderer {
     };
 
     renderMaterial (material) {
-        let desc = material.attributes['short-description'];
+        let desc = material.attributes['description'];
         if (desc.length > this.options.truncateLength)
             desc = desc.substr(0, this.options.truncateLength - 1) + '&hellip;';
 

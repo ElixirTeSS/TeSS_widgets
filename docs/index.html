@@ -76,7 +76,8 @@
                         columns: [{name: 'Date', field: 'start'},
                             {name: 'Name', field: 'title'},
                             {name: 'Location', field: 'location'}],
-                        allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience']
+                        allowedFacets: ['scientific-topics', 'country', 'city', 'target-audience'],
+                        facetOptionLimit: 5
                     },
                     params: {
                         q: 'Python',
@@ -97,8 +98,9 @@
                 {
                     opts: {
                         columns: [{name: 'Name', field: 'title'},
-                            {name: 'Description', field: 'short-description'}],
-                        allowedFacets: ['scientific-topics', 'target-audience']
+                            {name: 'Description', field: 'description'}],
+                        allowedFacets: ['scientific-topics', 'target-audience'],
+                        facetOptionLimit: 5
                     },
                     params: {
                         pageSize: 5,

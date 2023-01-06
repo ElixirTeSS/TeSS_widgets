@@ -18,6 +18,7 @@ const n = require('../util.js').makeElement;
  * @param {Object[]} options.columns[].name - The label to display at the top of the column.
  * @param {Object[]} options.columns[].field - The resource field to use.
  * @param {string[]} options.allowedFacets - A list of possible facets (filters) to display in the sidebar.
+ * @param {number} options.facetOptionLimit - The number of facet options to show without having to expand.
  */
 class FacetedTableRenderer extends Renderer {
 
@@ -54,7 +55,7 @@ class FacetedTableRenderer extends Renderer {
         this.container.appendChild(this.elements.wrapper);
 
         this.renderers.facets = new FacetsSidebarRenderer(this.widget, this.elements.facets,
-            { allowedFacets: this.options.allowedFacets });
+            { allowedFacets: this.options.allowedFacets, facetOptionLimit: this.options.facetOptionLimit });
         this.renderers.activeFacets = new ActiveFacetsRenderer(this.widget, this.elements.activeFacets,
             { allowedFacets: this.options.allowedFacets });
         this.renderers.table = new TableRenderer(this.widget, this.elements.results,
@@ -70,9 +71,11 @@ class FacetedTableRenderer extends Renderer {
 
         // TeSS link
         Renderer.clear(this.elements.tessLink);
-        this.elements.tessLink.appendChild(n('p', n('a', { href: response.req.url }, 'View your results on TeSS')));
+        this.elements.tessLink.appendChild(n('p',
+            n('a', { href: response.req.url, target: '_blank' },
+                'View your results on TeSS')));
 
-        // TeSS filter button 
+        // TeSS filter button
         Renderer.clear(this.elements.filterControl);
         this.elements.filterControl.appendChild(n('button',{ className: 'btn filterButton'},n('i',{className: 'fa fa-filter'}),'Show Filter'));
         this.elements.filterControl.appendChild(n('button',{ className: 'btn closeButton'}, n('i',{className:'fa fa-close'}),'Close Filter'));
@@ -80,7 +83,7 @@ class FacetedTableRenderer extends Renderer {
         var num;
         for (var i = 0; i < allFilterButtons.length; i++) {
             allFilterButtons[i].addEventListener('click',function(index){
-                document.getElementsByClassName('tess-facets')[index].style.display = 'block'; 
+                document.getElementsByClassName('tess-facets')[index].style.display = 'block';
                 document.getElementsByClassName('tess-facets')[index].style.width = '110px';
                 document.getElementsByClassName('closeButton')[index].style.display = 'inline';
                 document.getElementsByClassName('filterButton')[index].style.display = 'none';
@@ -91,7 +94,7 @@ class FacetedTableRenderer extends Renderer {
         for (var i = 0; i < allCloseButtons.length; i++) {
             allCloseButtons[i].addEventListener('click',function(index){
                 document.getElementsByClassName('filterButton')[index].style.display = 'block';
-                document.getElementsByClassName('tess-facets')[index].style.display = 'none'; 
+                document.getElementsByClassName('tess-facets')[index].style.display = 'none';
                 document.getElementsByClassName('closeButton')[index].style.display = 'none';
             }.bind(this, i));
         }
