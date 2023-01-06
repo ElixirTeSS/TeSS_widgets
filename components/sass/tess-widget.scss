@@ -40,12 +40,18 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
     th, td {
       padding: 8px 10px;
     }
+
     th {
       text-align: left;
       border-bottom: 2px solid $elixir-orange;
     }
+
     th:first-child {
       width: 20%;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.04);
     }
   }
 
