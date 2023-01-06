@@ -217,6 +217,23 @@
     </script>
 </section>
 
+<section>
+    <h2 id="dev-events-list">Other Instance Example</h2>
+    <div id="dev-tess-widget-materials-list" class="tess-widget tess-widget-list"></div>
+    <script id="dev-tess-widget-materials-list-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('dev-tess-widget-materials-list'),
+                'SimpleList',
+                {
+                    params: {
+                        pageSize: 3
+                    },
+                    baseUrl: 'https://dev.tess.elixir-europe.org' // Uses the "dev" instance of TeSS
+                });
+        });
+    </script>
+</section>
+
 <script async="" defer="" src="js/tess-widget-standalone.js" onload="initTeSSWidgets()"></script>
 <script>
 // Show the code under each widget
