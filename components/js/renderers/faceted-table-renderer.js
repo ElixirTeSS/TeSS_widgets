@@ -19,6 +19,7 @@ const n = require('../util.js').makeElement;
  * @param {Object[]} options.columns[].field - The resource field to use.
  * @param {string[]} options.allowedFacets - A list of possible facets (filters) to display in the sidebar.
  * @param {number} options.facetOptionLimit - The number of facet options to show without having to expand.
+ * @param {Object[]} options.descriptionSizeLimit - The maximum size (in px) before descriptions are hidden behind a "Show more" button.
  */
 class FacetedTableRenderer extends Renderer {
 
@@ -59,7 +60,7 @@ class FacetedTableRenderer extends Renderer {
         this.renderers.activeFacets = new ActiveFacetsRenderer(this.widget, this.elements.activeFacets,
             { allowedFacets: this.options.allowedFacets });
         this.renderers.table = new TableRenderer(this.widget, this.elements.results,
-            { columns: this.options.columns });
+            { columns: this.options.columns, descriptionSizeLimit: this.options.descriptionSizeLimit });
         this.renderers.search = new SearchRenderer(this.widget, this.elements.search);
         this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
 

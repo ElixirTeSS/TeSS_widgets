@@ -1,7 +1,7 @@
 'use strict';
 const Marked = require('marked');
 
-module.exports = {
+const Util = {
     locale: function () {
         if (this._locale)
             return this._locale;
@@ -74,10 +74,40 @@ module.exports = {
         },
         description: function (event) {
             const container = document.createElement('div')
-            container.className = 'tess-markdown';
+            container.className = 'tess-markdown tess-expandable';
             container.innerHTML = Marked.parse(event.attributes['description'])
             return container;
         }
+    },
+
+    bindExpandables: function (root, limit) {
+        limit = limit || 200;
+        const toggleExpand = function () {
+            const div = this.parentElement.querySelector('.tess-expandable');
+            if (this.innerHTML === '(Show more)') {
+                div.classList.add('tess-expandable-open');
+                div.classList.remove('tess-expandable-closed');
+                div.style.maxHeight = '' + (parseInt(div.dataset.origHeight) + 80) + 'px';
+                this.innerHTML = '(Show less)';
+            } else {
+                div.classList.remove('tess-expandable-open');
+                div.classList.add('tess-expandable-closed');
+                div.style.maxHeight = '' + limit + 'px';
+                this.innerHTML = '(Show more)';
+            }
+
+            return false;
+        }
+        root.querySelectorAll('.tess-expandable').forEach((element) => {
+            if (element.clientHeight > limit) {
+                element.dataset.origHeight = element.clientHeight;
+                element.style.maxHeight = '' + limit + 'px';
+                element.classList.add('tess-expandable-closed');
+                const btn = Util.makeElement('a', { className: 'tess-expandable-btn' }, '(Show more)');
+                btn.addEventListener('click', toggleExpand);
+                element.parentElement.appendChild(btn);
+            }
+        })
     },
 
     makeElement: function (type, htmlPropsOrFirstChild, ...children) {
@@ -106,3 +136,5 @@ module.exports = {
         return element;
     }
 };
+
+module.exports = Util;

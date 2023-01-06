@@ -11,6 +11,7 @@ class TableRenderer extends Renderer {
             [{ name: 'Date', field: 'start' },
                 { name: 'Name', field: 'title' },
                 { name: 'Location', field: 'location' }]
+        this.options.descriptionSizeLimit = this.options.descriptionSizeLimit || 120;
     }
 
     render (errors, data, response) {
@@ -28,6 +29,7 @@ class TableRenderer extends Renderer {
         data.data.forEach((resource) => { this.renderResource(body, resource) });
 
         this.container.appendChild(n('table', head, body));
+        Util.bindExpandables(this.container, this.options.descriptionSizeLimit); // Needs to be called after all expandable elements are in the DOM.
     }
 
     renderResource (container, resource) {
@@ -38,7 +40,7 @@ class TableRenderer extends Renderer {
             const field = fieldPair.field;
             let value = resource.attributes[field];
             let valueNode;
-            let shortDescNode = false;
+
             if (Util.fieldRenderers.hasOwnProperty(field)) {
                 valueNode = Util.fieldRenderers[field](resource);
             } else if (value instanceof Date) {
@@ -54,27 +56,10 @@ class TableRenderer extends Renderer {
             } else if (value === null || value === 'null') {
                 valueNode = document.createTextNode('');
             } else {
-                if (field == 'short-description' && value.length > 100 ){
-                    valueNode = document.createTextNode(value.substring(0,100) + '...');
-                    shortDescNode = true;
-                } else {
-                    valueNode = document.createTextNode(value);
-                }
+                valueNode = document.createTextNode(value);
             }
-            let currentCell = row.insertCell();
-            currentCell.appendChild(valueNode);
 
-            if (shortDescNode) {
-                currentCell.style = 'cursor:pointer';
-                currentCell.addEventListener('click', function(){
-                    let innerValue = this.innerHTML;
-                    if (innerValue.substring(innerValue.length - 3, innerValue.length) == '...') {
-                        this.innerHTML = value;
-                    } else {
-                        this.innerHTML = value.substring(0,100) + '...';
-                    }
-                });
-            }
+            row.insertCell().appendChild(valueNode);
         });
     }
 

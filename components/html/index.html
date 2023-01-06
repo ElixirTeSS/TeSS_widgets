@@ -185,8 +185,9 @@
                 {
                     opts: {
                         columns: [{name: 'Name', field: 'title'},
-                            {name: 'Description', field: 'short-description'}],
-                        dropdowns: [{name: 'Topic', field: 'scientific-topics'}]
+                            {name: 'Description', field: 'description'}],
+                        dropdowns: [{name: 'Topic', field: 'scientific-topics'}],
+                        descriptionSizeLimit: 55
                     },
                     params: {
                         pageSize: 5,

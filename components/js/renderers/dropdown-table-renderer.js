@@ -19,6 +19,7 @@ const n = require('../util.js').makeElement;
  * @param {Object[]} options.dropdowns - A list of dropdown menus should appear above the table.
  * @param {Object[]} options.dropdowns[].name - The label to display next to the menu.
  * @param {Object[]} options.dropdowns[].field - The resource field to filter by.
+ * @param {Object[]} options.descriptionSizeLimit - The maximum size (in px) before descriptions are hidden behind a "Show more" button.
  */
 class DropdownTableRenderer extends Renderer {
 
@@ -48,7 +49,7 @@ class DropdownTableRenderer extends Renderer {
         this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.facetDropdowns,
             { dropdowns: this.options.dropdowns });
         this.renderers.table = new TableRenderer(this.widget, this.elements.results,
-            { columns: this.options.columns });
+            { columns: this.options.columns, descriptionSizeLimit: this.options.descriptionSizeLimit });
         this.renderers.search = new SearchRenderer(this.widget, this.elements.search);
         this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
 

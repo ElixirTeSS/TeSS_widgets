@@ -263,6 +263,25 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
     max-width: 600px;
     margin: 0 auto;
   }
+
+  .tess-expandable {
+    transition: max-height 0.4s ease-in-out;
+
+    &.tess-expandable-closed {
+      overflow-y: hidden;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    }
+
+    &.tess-expandable-open {
+      overflow-y: scroll;
+      border-bottom: none;
+    }
+  }
+
+  .tess-expandable-btn {
+    cursor: pointer;
+    font-size: small;
+  }
 }
 
 .tess-loader:before, .tess-loader-large:before {
