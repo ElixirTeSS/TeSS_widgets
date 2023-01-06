@@ -65,7 +65,9 @@ class FacetedTableRenderer extends Renderer {
 
         // TeSS link
         Renderer.clear(this.elements.tessLink);
-        this.elements.tessLink.appendChild(n('p', n('a', { href: response.req.url }, 'View your results on TeSS')));
+        this.elements.tessLink.appendChild(n('p',
+            n('a', { href: response.req.url, target: '_blank' },
+                'View your results on TeSS')));
     }
 
 }
