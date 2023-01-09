@@ -24,9 +24,6 @@ const n = require('../util.js').makeElement;
 class FacetedTableRenderer extends Renderer {
 
     initialize () {
-        // Icon stylesheet
-        this.elements.icon = n('link',{rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' })
-
         // Left-hand facets sidebar
         this.elements.facets = n('div', { className: 'tess-facets' });
 
@@ -63,7 +60,6 @@ class FacetedTableRenderer extends Renderer {
             this.elements.tessLink
         );
 
-        this.container.appendChild(this.elements.icon);
         this.container.appendChild(this.elements.facets);
         this.container.appendChild(this.elements.wrapper);
 
