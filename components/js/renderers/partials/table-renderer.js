@@ -11,6 +11,7 @@ class TableRenderer extends Renderer {
             [{ name: 'Date', field: 'start' },
                 { name: 'Name', field: 'title' },
                 { name: 'Location', field: 'location' }]
+        this.options.descriptionSizeLimit = this.options.descriptionSizeLimit || 120;
     }
 
     render (errors, data, response) {
@@ -28,6 +29,7 @@ class TableRenderer extends Renderer {
         data.data.forEach((resource) => { this.renderResource(body, resource) });
 
         this.container.appendChild(n('table', head, body));
+        Util.bindExpandables(this.container, this.options.descriptionSizeLimit); // Needs to be called after all expandable elements are in the DOM.
     }
 
     renderResource (container, resource) {
