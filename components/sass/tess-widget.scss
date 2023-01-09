@@ -18,18 +18,14 @@ $elixir-grey-20: transparentize($elixir-grey, 0.8);
 $elixir-blue-20: transparentize($elixir-blue, 0.8);
 $elixir-green-20: transparentize($elixir-green, 0.8);
 
+$mobile-width: 640px;
+
 @keyframes tess-loader-spin {
   to {transform: rotate(360deg);}
 }
 
 .tess-widget {
   position: relative;
-
-  &.tess-widget-list {
-    .tess-controls {
-      justify-content: flex-end;
-    }
-  }
 
   .tess-results {
     table {
@@ -57,6 +53,7 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
 
   .tess-controls {
     display: flex;
+    justify-content: space-between;
 
     .tess-active-facets {
       flex-grow: 1;
@@ -70,16 +67,19 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
 
     .tess-search {
       position: relative;
+      flex-shrink: 0;
       
       input, button {
         line-height: 20px;
         padding: 2px 5px;
         border: 1px solid #ccc;
+        display: inline-block;
       }
 
       input {
         border-right: 0;
-        padding-right: 16px
+        padding-right: 16px;
+        width: 10em;
       }
       
       .tess-search-clear {
@@ -118,15 +118,11 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
         display: none;
       }
 
-
-      /* Style buttons */
-      .btn {
-        background-color: DodgerBlue; /* Blue background */
-        border: none; /* Remove borders */
-        color: white; /* White text */
-        padding: 8px 10px; /* Some padding */
-        font-size: 14px; /* Set a font size */
-        cursor: pointer; /* Mouse pointer on hover */
+      .tess-facet-btn {
+        padding: 2px 5px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        margin-right: 10px;
       }
     }
 
@@ -165,14 +161,21 @@ $elixir-green-20: transparentize($elixir-green, 0.8);
     }
   }
 
-  @media screen and (max-width: 640px) {
+  @media screen and (max-width: $mobile-width) {
     .tess-facets {
       display: none;
+      &.tess-facets-open {
+        display: block;
       }
+    }
+
+    .tess-active-facets {
+      display: none;
+    }
   }
 
-  @media screen and (min-width: 640px) {
-    .tess-filter {
+  @media screen and (min-width: $mobile-width) {
+    .tess-facet-btn {
       display: none;
     }
   }
