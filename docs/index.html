@@ -80,6 +80,7 @@
                         facetOptionLimit: 5
                     },
                     params: {
+                        pageSize: 5,
                         q: 'Python',
                         country: ['Belgium', 'United Kingdom']
                     }
@@ -149,7 +150,7 @@
 </section>
 
 <section>
-    <h2 id="dropdown-table">Table w/ Dropdowns Example</h2>
+    <h2 id="dropdown-table">Table w/ Dropdowns Example - Events</h2>
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
     <script id="tess-widget-dropdown-table-code">
         widgetList.push(function () {
@@ -175,6 +176,29 @@
 </section>
 
 <section>
+    <h2 id="dropdown-table-materials">Table w/ Dropdowns Example - Materials</h2>
+    <div id="tess-widget-dropdown-materials-table" class="tess-widget tess-widget-dropdown-materials-table"></div>
+    <script id="tess-widget-dropdown-materials-table-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('tess-widget-dropdown-materials-table'),
+                'DropdownTable',
+                {
+                    opts: {
+                        columns: [{name: 'Name', field: 'title'},
+                            {name: 'Description', field: 'description'}],
+                        dropdowns: [{name: 'Topic', field: 'scientific-topics'}],
+                        descriptionSizeLimit: 55
+                    },
+                    params: {
+                        pageSize: 5,
+                        q: 'Python'
+                    }
+                });
+        });
+        </script>
+</section>
+
+<section>
     <h2 id="google-map">Google Map Example</h2>
     <div id="tess-widget-google-map" class="tess-widget tess-widget-google-map"></div>
     <script id="tess-widget-google-map-code">
@@ -183,10 +207,11 @@
                 'GoogleMap',
                 {
                     opts: {
-                        apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo' // Get your own API key!
+                        apiKey: 'AIzaSyAtxeshmu-95V4KZWyDklhhO-UNqNQQJKo', // Get your own API key!
+                        cluster: true
                     },
                     params: {
-                        country: ['Australia']
+                        country: ['United Kingdom', 'Netherlands', 'Germany', 'Belgium']
                     }
                 });
         });
