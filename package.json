@@ -27,6 +27,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
+    "@googlemaps/markerclusterer": "^2.0.15",
     "marked": "^4.2.5",
     "tess_json_api": "github:ElixirTeSS/tess-json-api-client#0.4.0"
   }

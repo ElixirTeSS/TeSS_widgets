@@ -285,6 +285,17 @@ $mobile-width: 640px;
     cursor: pointer;
     font-size: small;
   }
+
+  .tess-map-info {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
 }
 
 .tess-loader:before, .tess-loader-large:before {

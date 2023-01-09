@@ -2,6 +2,7 @@
 const Renderer = require('./renderer.js');
 const Util = require('../util.js');
 const n = Util.makeElement;
+const MarkerClusterer = require("@googlemaps/markerclusterer").MarkerClusterer;
 
 /**
  * Events displayed on a Google Map.
@@ -12,11 +13,13 @@ const n = Util.makeElement;
  * @param {Object} options - Options for the renderer.
  * @param {Object[]} options.apiKey - The Google Maps API key.
  * @param {Object[]} options.cluster - Whether to use marker cluster or not.
+ * @param {Object[]} options.maxZoom - Maximum zoom level of the map.
  */
 class GoogleMapRenderer extends Renderer {
 
     constructor (widget, element, options) {
         super(widget, element, options);
+        this.options.maxZoom = this.options.maxZoom || 18;
         this.markers = [];
     }
 
@@ -28,6 +31,7 @@ class GoogleMapRenderer extends Renderer {
             src: 'https://maps.googleapis.com/maps/api/js?key=' + this.options.apiKey,
             onload: () => {
                 this.map = new google.maps.Map(this.mapContainer, {
+                    maxZoom: this.options.maxZoom,
                     styles: [{
                         'featureType': 'poi',
                         'elementType': 'all'
@@ -40,11 +44,7 @@ class GoogleMapRenderer extends Renderer {
             }
         });
 
-        const clusterScript = n('script',{
-            src: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js'
-        });
         document.head.appendChild(googleMapScript);
-        document.head.appendChild(clusterScript);
     }
 
     render (errors, data, response) {
@@ -61,44 +61,82 @@ class GoogleMapRenderer extends Renderer {
             marker.setMap(null);
         });
         this.markers = [];
+        this.markerSet = {};
 
         // Render events
         data.data.forEach((event) => { this.renderEvent(event) });
 
+        this.markers.forEach((marker) => {
+            google.maps.event.addListener(marker, 'click', (event) => {
+                this.infoWindow.setContent(marker['content']);
+                this.infoWindow.open(this.map, marker);
+            });
+        });
+
         this.map.fitBounds(this.bounds);
 
-        if(this.options.cluster == true) {
+        if (this.options.cluster) {
             // Add a marker cluster to manage the markers
-        var markerCluster = new MarkerClusterer(this.map, this.markers,
-            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+            const markerCluster = new MarkerClusterer({
+                map: this.map,
+                markers: this.markers,
+                maxZoom: this.options.maxZoom
+            });
         }
     }
 
 
     renderEvent (event) {
-        const marker = new google.maps.Marker({
-            map: this.map,
-            position: {
-                lat: parseFloat(event.attributes['latitude']),
-                lng: parseFloat(event.attributes['longitude']) },
-            title: event.attributes['title']
-        });
+        const lat = parseFloat(event.attributes['latitude']);
+        const lng = parseFloat(event.attributes['longitude'])
+
+        if (!lat || !lng) { // Discard events with no location
+            return;
+        }
+        const key = '' + lat + ',' + lng;
+        if (!this.markerSet[key]) {
+            this.markerSet[key] = new google.maps.Marker({
+                map: this.map,
+                position: { lat: lat, lng: lng },
+                title: event.attributes['title'],
+                content: ''
+            })
+
+            this.bounds.extend(this.markerSet[key].position);
+            this.markers.push(this.markerSet[key]);
+        }
 
         const redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
-        const info = n('div',
-            n('a', { href: redirectUrl, target: '_blank' }, event.attributes['title']),
-            n('br'), n('strong', 'Date:'),  Util.formatDate(event.attributes['start']),
-            n('br'), n('strong', 'Location:'),  Util.fieldRenderers['location'](event),
-            n('br'), n('strong', 'Organizer:'),  event.attributes['organizer']
-        );
+        const info = n('div', { className: 'tess-map-info' },
+            n('a', { href: redirectUrl, target: '_blank' }, event.attributes['title']));
+        if (event.attributes['start']) {
+            info.appendChild(
+                n('div',
+                    n('strong', 'Date: '),
+                    Util.formatDate(event.attributes['start'])
+                )
+            );
+        }
 
-        google.maps.event.addListener(marker, 'click', () => {
-            this.infoWindow.setContent(info);
-            this.infoWindow.open(this.map, marker);
-        });
+        if (event.attributes['city'] || event.attributes['country']) {
+            info.appendChild(
+                n('div',
+                    n('strong', 'Location: '),
+                    Util.fieldRenderers['location'](event)
+                )
+            );
+        }
 
-        this.bounds.extend(marker.position);
-        this.markers.push(marker);
+        if (event.attributes['organizer']) {
+            info.appendChild(
+                n('div',
+                    n('strong', 'Organizer: '),
+                    event.attributes['organizer']
+                )
+            );
+        }
+
+        this.markerSet[key]['content'] = this.markerSet[key]['content'] + info.outerHTML;
     }
 
 }

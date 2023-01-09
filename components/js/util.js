@@ -130,7 +130,7 @@ const Util = {
         }
 
         children.forEach((child) => {
-            element.appendChild((child instanceof HTMLElement) ? child : document.createTextNode(child));
+            element.appendChild((child instanceof Node) ? child : document.createTextNode(child));
         });
 
         return element;
