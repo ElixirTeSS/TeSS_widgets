@@ -85,8 +85,6 @@ class FacetedTableRenderer extends Renderer {
                 'View your results on TeSS')));
     }
 
-
-
 }
 
 module.exports = FacetedTableRenderer;
