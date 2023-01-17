@@ -59,7 +59,7 @@ class SimpleListRenderer extends Renderer {
     renderMaterial (material) {
         let desc = material.attributes['description'];
         if (desc.length > this.options.truncateLength)
-            desc = desc.substr(0, this.options.truncateLength - 1) + '&hellip;';
+            desc = desc.substr(0, this.options.truncateLength - 1) + '\u2026';
 
         return n('li',
             n('a', { href: material.attributes['url'], target: '_blank' }, material.attributes['title']),
