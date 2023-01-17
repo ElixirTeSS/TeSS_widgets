@@ -35,6 +35,7 @@ class FacetedTableRenderer extends Renderer {
         this.elements.facetToggle.addEventListener('click', (event) => {
             event.preventDefault();
             this.elements.facets.classList.toggle('tess-facets-open');
+            this.elements.facetToggle.classList.toggle('tess-facet-btn-active');
             if (this.elements.facets.classList.contains('tess-facets-open')) {
                 this.elements.facetToggle.innerText = 'Hide Filters';
             } else {

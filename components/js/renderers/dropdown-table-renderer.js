@@ -25,13 +25,9 @@ class DropdownTableRenderer extends Renderer {
 
     initialize () {
         // Top drop-down menus above the table and search bar
-        this.elements.facetDropdowns = n('div', { className: 'tess-facet-dropdowns' });
         this.elements.search = n('div', { className: 'tess-search' },
             n('div', { className: 'tess-facet-title' }, 'Search'));
-        this.elements.controls = n('div', { className: 'tess-controls' },
-            this.elements.facetDropdowns,
-            this.elements.search
-        );
+        this.elements.controls = n('div', { className: 'tess-controls' });
 
         // Main table view with pagination
         this.elements.results = n('div', { className: 'tess-results' });
@@ -46,7 +42,7 @@ class DropdownTableRenderer extends Renderer {
 
         this.container.appendChild(this.elements.wrapper);
 
-        this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.facetDropdowns,
+        this.renderers.facetDropdowns = new FacetDropdownsRenderer(this.widget, this.elements.controls,
             { dropdowns: this.options.dropdowns });
         this.renderers.table = new TableRenderer(this.widget, this.elements.results,
             { columns: this.options.columns, descriptionSizeLimit: this.options.descriptionSizeLimit });
@@ -54,6 +50,7 @@ class DropdownTableRenderer extends Renderer {
         this.renderers.pagination = new PaginationRenderer(this.widget, this.elements.pagination);
 
         super.initialize();
+        this.elements.controls.appendChild(this.elements.search); // Append search after the dropdowns have been added
     }
 
 

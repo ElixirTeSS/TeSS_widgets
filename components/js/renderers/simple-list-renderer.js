@@ -23,11 +23,10 @@ class SimpleListRenderer extends Renderer {
 
     initialize () {
         if (this.options.enableSearch) {
-            const search = n('div', { className: 'tess-search' });
-            const controls = n('div', { className: 'tess-controls' }, search);
+            const controls = n('div', { className: 'tess-controls' });
 
             this.container.appendChild(controls);
-            this.renderers.search = new SearchRenderer(this.widget, search);
+            this.renderers.search = new SearchRenderer(this.widget, controls);
         }
 
         this.elements.list = n('ul');
