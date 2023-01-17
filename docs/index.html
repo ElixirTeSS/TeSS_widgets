@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="css/tess-widget.css">
     <style>
         body {
-            font-size: 1em;
-            font-family: Corbel,Arial,Helvetica Neue,Helvetica,sans-serif;
+            font-size: 16px;
+            font-family: Corbel, Arial, Helvetica Neue, Helvetica, sans-serif;
             color: #333;
+            background: #eee;
+            margin: 0;
+            padding: 0;
         }
 
         h1 {
@@ -19,53 +22,110 @@
         }
 
         section {
-            margin: 50px 0;
-            border-top: 2px dashed #ccc;
+            margin: 60px auto;
+            border-top: 2px solid #ccc;
+            width: 80%;
+            max-width: 1200px;
+            position: relative;
         }
 
         section > pre {
-            background-color: #eee;
+            background-color: #222230;
             font-family: monospace;
-            padding: 10px;
-            width: 80%;
-            margin: 20px auto;
-        }
-
-        section > pre::before {
-            content: 'Code:';
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #999;
+            padding: 40px;
+            margin-top: 40px;
+            color: #ececff;
+            border-radius: 10px;
+            font-size: 12px;
+            overflow: scroll;
         }
 
         section > h2 {
-            color: #999;
-            font-style: italic;
             text-align: center;
+            margin: 40px 0;
         }
 
         section > div {
-            width: 80%;
-            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
         }
 
         a {
             color: rgb(0, 84, 114);
         }
+
+        div.intro {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        code {
+            color: #ed4a6c;
+        }
+
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: large;
+            padding: 8px 16px;
+        }
     </style>
 </head>
 <body>
 <h1>Widget Examples</h1>
-<p style="text-align: center">
-    Scroll down for more examples.
-</p>
+<div class="intro">
+    <p>
+        Below is a set of live examples of TeSS widgets, with the code for each displayed below.
+    </p>
+    <p>
+        To use a widget, simply copy and paste the entire code block into your HTML document, and tweak the parameters as needed.
+    </p>
+
+    <p>
+        Each widget is instantiated like so:
+    </p>
+
+    <code>TessWidget.Events(element, renderer, { opts: { ... }, params: { ... } })</code>
+
+    <p></p>
+    <ul>
+        <li>
+            <code>element</code> -
+            An <code>HTMLElement</code> object into which the widget will be renderered.
+        </li>
+        <li>
+            <code>renderer</code> -
+            The type of widget to be displayed, either one of the presets (as seen in the examples below) or a
+            <a href="https://github.com/ElixirTeSS/TeSS_widgets#renderers" target="_blank">custom renderer</a> object.
+        </li>
+        <li>options
+            <ul>
+                <li>
+                    <code>opts</code> -
+                    A set of options to pass to the renderer (varies depending on the renderer).
+                </li>
+                <li>
+                    <code>params</code> -
+                    Pre-applied filters/sorting that will be applied to the events or materials.
+                    For a reference on which filters can be applied, see
+                    <a href="https://github.com/ElixirTeSS/tess-json-api-client/blob/master/docs/EventsApi.md#parameters" target="_blank">here for events</a> and
+                    <a href="https://github.com/ElixirTeSS/tess-json-api-client/blob/master/docs/MaterialsApi.md#parameters" target="_blank">here for materials</a>.
+                </li>
+                <li>
+                    <code>baseUrl</code> (optional) -
+                    The base URL of the TeSS instance to use. Defaults to <code>https://tess.elixir-europe.org/</code>.
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
 <script>
     var widgetList = [];
 </script>
 <section>
-    <h2 id="table">Events Table w/ Sidebar Example</h2>
+    <h2 id="table">Events Table with Sidebar</h2>
     <div id="tess-widget-events-table" class="tess-widget tess-widget-faceted-table"></div>
     <script id="tess-widget-events-table-code">
         widgetList.push(function () {
@@ -90,7 +150,7 @@
 </section>
 
 <section>
-    <h2 id="materials-table">Materials Table w/ Sidebar Example</h2>
+    <h2 id="materials-table">Materials Table with Sidebar</h2>
     <div id="tess-widget-materials-table" class="tess-widget tess-widget-faceted-table"></div>
     <script id="tess-widget-materials-table-code">
         widgetList.push(function () {
@@ -113,7 +173,7 @@
 </section>
 
 <section>
-    <h2 id="events-list">Events List Example</h2>
+    <h2 id="events-list">Events List</h2>
     <div id="tess-widget-events-list" class="tess-widget tess-widget-list"></div>
     <script id="tess-widget-events-list-code">
         widgetList.push(function () {
@@ -130,7 +190,7 @@
 </section>
 
 <section>
-    <h2 id="materials-list">Materials List Example</h2>
+    <h2 id="materials-list">Materials List</h2>
     <div id="tess-widget-materials-list" class="tess-widget tess-widget-list"></div>
     <script id="tess-widget-materials-list-code">
         widgetList.push(function () {
@@ -142,7 +202,8 @@
                     },
                     params: {
                         pageSize: 5,
-                        q: 'RNA-Seq'
+                        q: 'Single cell',
+                        scientificTopics: ['RNA-Seq']
                     }
                 });
         });
@@ -150,7 +211,7 @@
 </section>
 
 <section>
-    <h2 id="dropdown-table">Table w/ Dropdowns Example - Events</h2>
+    <h2 id="dropdown-table">Events Table with Dropdowns</h2>
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
     <script id="tess-widget-dropdown-table-code">
         widgetList.push(function () {
@@ -176,7 +237,7 @@
 </section>
 
 <section>
-    <h2 id="dropdown-table-materials">Table w/ Dropdowns Example - Materials</h2>
+    <h2 id="dropdown-table-materials">Materials Table with Dropdowns</h2>
     <div id="tess-widget-dropdown-materials-table" class="tess-widget tess-widget-dropdown-materials-table"></div>
     <script id="tess-widget-dropdown-materials-table-code">
         widgetList.push(function () {
@@ -199,7 +260,7 @@
 </section>
 
 <section>
-    <h2 id="google-map">Google Map Example</h2>
+    <h2 id="google-map">Google Map</h2>
     <div id="tess-widget-google-map" class="tess-widget tess-widget-google-map"></div>
     <script id="tess-widget-google-map-code">
         widgetList.push(function () {
@@ -219,7 +280,7 @@
 </section>
 
 <section>
-    <h2 id="dev-events-list">Other Instance Example</h2>
+    <h2 id="dev-events-list">Using Another Instance</h2>
     <div id="dev-tess-widget-materials-list" class="tess-widget tess-widget-list"></div>
     <script id="dev-tess-widget-materials-list-code">
         widgetList.push(function () {
@@ -245,11 +306,16 @@ var cssTag = "<link rel=\"stylesheet\" property=\"stylesheet\" href=\"" + url + 
 var scriptTag = "<script async=\"\" defer=\"\" src=\"" + url + "/js/tess-widget-standalone.js\" onload=\"initTeSSWidgets()\"><\/script>\n";
 var preCode = "\nfunction initTeSSWidgets() {\n";
 var postCode = "\n}\n";
+var canCopy = navigator && navigator.clipboard && navigator.clipboard.writeText;
 
 for (var i = 0; i < widgets.length; i++) {
     var pre = document.createElement('pre');
     var id = widgets[i].id;
     var script = document.getElementById(id + '-code');
+    var copyButton = document.createElement('button');
+    copyButton.classList.add('copy-button');
+    copyButton.appendChild(document.createTextNode('Copy'));
+    copyButton.addEventListener('click', copyWidgetCode);
     // Do some string magic to remove the example-specific code, and needless spaces
     var code = script.innerHTML.split("\n").slice(2,-2).map(function (s) { return s.slice(8); }).join("\n");
     var text = cssTag +
@@ -262,11 +328,26 @@ for (var i = 0; i < widgets.length; i++) {
         scriptTag;
     pre.appendChild(document.createTextNode(text));
     widgets[i].parentNode.appendChild(pre);
+    if (canCopy) {
+        widgets[i].parentNode.appendChild(copyButton);
+    }
 }
 
 function initTeSSWidgets() {
     for (var j = 0; j < widgetList.length; j++) {
         widgetList[j]();
+    }
+}
+
+function copyWidgetCode() {
+    if (canCopy) {
+        var pre = this.parentNode.querySelector('pre');
+        try {
+            navigator.clipboard.writeText(pre.innerText);
+            this.innerText = 'Copied!'
+        } catch (err) {
+            console.error(err.name, err.message);
+        }
     }
 }
 </script>
