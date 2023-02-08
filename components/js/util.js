@@ -52,7 +52,7 @@ const Util = {
     snakeize: function (key) {
         return key.replace(/-/g, '_').
         replace('[]', '').
-        replace(/([a-z][A-Z])/g, function (g) { return g[0] + '-' + g[1].toLowerCase(); });
+        replace(/([a-z][A-Z])/g, function (g) { return g[0] + '_' + g[1].toLowerCase(); });
     },
 
     fieldRenderers: {
