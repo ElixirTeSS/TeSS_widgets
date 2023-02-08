@@ -1,63 +1,58 @@
-var gulp = require('gulp'),
-    browserify = require('gulp-browserify'),
-    sass = require('gulp-sass'),
+const gulp = require('gulp'),
+    browserify = require('browserify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+    dartSass = require('sass'),
+    sass = require('gulp-sass')(dartSass),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
-    concat = require('gulp-concat'),
-    browserSync = require('browser-sync').create();
-
-var env,
-    jsSources,
-    sassSources,
-    htmlSources,
-    outputDir,
-    sassStyle;
+    babelify = require('babelify'),
+    browserSync = require('browser-sync').create(),
+    process = require('process');
 
 // Use 'NODE_ENV=production gulp' for production mode.
-env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'development';
+const outputDir = (env === 'development') ? 'builds/development/' : 'builds/production/';
 
-if (env==='development') {
-  outputDir = 'builds/development/';
-  sassStyle = 'expanded';
-} else {
-  outputDir = 'builds/production/';
-  sassStyle = 'compressed';
-}
+const html = function () {
+    return gulp.src('components/html/index.html')
+        .pipe(gulp.dest(outputDir))
+};
 
-// Sources (arrays)
-jsSources = ['components/scripts/embed.js'];
-sassSources = ['components/sass/style.scss'];
-htmlSources = [outputDir + '*.html'];
+const css = function () {
+    return gulp.src('components/sass/*.scss')
+        .pipe(sass({ outputStyle: (env === 'development') ? 'expanded' : 'compressed' }).on('error', sass.logError))
+        .pipe(gulp.dest(outputDir + 'css'))
+};
 
-gulp.task('serve', ['js', 'sass'], function() {
-    browserSync.init({
-        server: outputDir
-    });
+const js = function () {
+    return browserify('./components/js/tess-widget-standalone.js', { debug: true, standalone: 'TessWidget' })
+        .transform(babelify, { global: true, presets: ["@babel/preset-env"] })
+        .bundle()
+        .pipe(source('tess-widget-standalone.js'))
+        .pipe(buffer())
+        .pipe(gulpif(env === 'production', uglify()))
+        .pipe(gulp.dest(outputDir + 'js'))
+};
 
-    gulp.watch("components/sass/*.scss", ['sass']);
-    gulp.watch("components/scripts/**", ['js']);
-    gulp.watch(outputDir + '*.html', ['html']);
+const build = gulp.parallel(js, css, html);
+
+const serve = gulp.series(build, function () {
+    browserSync.init({ server: outputDir });
+    function reload(done) {
+        browserSync.reload();
+        done();
+    }
+    gulp.watch('components/sass/*.scss', gulp.series(css, reload));
+    gulp.watch('components/js/**', gulp.series(js, reload));
+    gulp.watch('components/html/*.html', gulp.series(html, reload));
 });
 
-gulp.task('js', function() {
-  gulp.src(jsSources)
-    .pipe(browserify())
-    .pipe(gulpif(env === 'production', uglify()))
-    .pipe(gulp.dest(outputDir + 'js'))
-    .pipe(browserSync.stream());
+const buildExamples = gulp.series(build, function () {
+    return gulp.src(outputDir + '/**')
+        .pipe(gulp.dest('./docs/'));
 });
 
-gulp.task('sass', function() {
-  gulp.src("components/sass/*.scss")
-  .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
-  .pipe(gulp.dest(outputDir + 'css'))
-  .pipe(browserSync.stream());
-});
-
-gulp.task('html', function() {
-  gulp.src(outputDir + '*.html')
-    .pipe(gulp.dest(outputDir))
-    .pipe(browserSync.stream());
-});
-
-gulp.task('default', ['serve']);
+exports.default = serve;
+exports.build = build;
+exports['build-examples'] = buildExamples;

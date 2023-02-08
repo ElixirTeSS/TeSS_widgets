@@ -3,7 +3,5 @@ node_modules
 .tmp
 .sass-cache
 .idea
-builds/development/js
-builds/development/css
-builds/production/js
-builds/production/css
+builds
+
