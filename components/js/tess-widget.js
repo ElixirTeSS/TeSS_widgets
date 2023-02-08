@@ -1,18 +1,11 @@
 'use strict';
-const TessApi = require('tess_json_api');
 const Util = require('./util.js');
 const LightApi = require('./light-tess-client.js');
-
-// Swagger's generated API client breaks dates in Safari & IE. This hack fixes that.
-TessApi.ApiClient.parseDate = function(str) {
-    return new Date(str);
-};
 
 /**
  * A TeSS widget.
  *
  * @constructor
- * @param {Object} apiClass - The TeSS API class being used by the widget (Events/Materials).
  * @param {Object} endpoint - The specific API endpoint to call when fetching.
  * @param {Object} element - The HTML element to contain the widget
  * @param {defaultRenderers|Object} renderer - The renderer that determines how the widget is displayed.
@@ -25,7 +18,7 @@ TessApi.ApiClient.parseDate = function(str) {
  */
 class TessWidget {
 
-    constructor (apiClass, endpoint, element, renderer, options) {
+    constructor (endpoint, element, renderer, options) {
         this.endpoint = endpoint;
         this.options = options || {};
         this.identifier = this.options.identifier || 'TeSS-Widget';

@@ -1,5 +1,4 @@
 'use strict';
-const TessApi = require('tess_json_api');
 const TessWidget = require('./tess-widget.js');
 const availableRenderers = {
     FacetedTable: require('./renderers/faceted-table-renderer.js'),
@@ -23,7 +22,7 @@ const availableRenderers = {
 class TessMaterialsWidget extends TessWidget {
 
     constructor (element, renderer, options) {
-        super(TessApi.MaterialsApi, 'materialsGet', element, renderer, options);
+        super('materialsGet', element, renderer, options);
     }
 
     static defaultRenderers() {
