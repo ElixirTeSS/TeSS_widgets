@@ -48,11 +48,5 @@ const serve = gulp.series(build, function () {
     gulp.watch('components/html/*.html', gulp.series(html, reload));
 });
 
-const buildExamples = gulp.series(build, function () {
-    return gulp.src(outputDir + '/**')
-        .pipe(gulp.dest('./docs/'));
-});
-
 exports.default = serve;
 exports.build = build;
-exports['build-examples'] = buildExamples;
