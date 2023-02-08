@@ -9,15 +9,13 @@ jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install and Build
         run: |
           npm ci
-          gulp build
+          NODE_ENV=production gulp build
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
