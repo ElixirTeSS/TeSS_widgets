@@ -18,7 +18,8 @@ class SimpleListRenderer extends Renderer {
 
     constructor(widget, element, options) {
         super(widget, element, options);
-        this.options.truncateLength = this.options.truncateLength || 160;
+        if (!this.options.truncateLength && this.options.truncateLength !== 0)
+            this.options.truncateLength = 160;
     }
 
     initialize () {
@@ -58,8 +59,11 @@ class SimpleListRenderer extends Renderer {
 
     renderMaterial (material) {
         let desc = material.attributes['description'];
-        if (desc.length > this.options.truncateLength)
+        if (this.options.truncateLength === 0) {
+            desc = '';
+        } else if (desc.length > this.options.truncateLength) {
             desc = desc.substr(0, this.options.truncateLength - 1) + '\u2026';
+        }
 
         return n('li',
             n('a', { href: material.attributes['url'], target: '_blank' }, material.attributes['title']),

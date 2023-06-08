@@ -14,7 +14,7 @@ const availableRenderers = {
  * @param {Object} element - The HTML element to contain the widget
  * @param {defaultRenderers|Object} renderer - The renderer that determines how the widget is displayed.
  *                                             The following pre-defined renderers are available:
- *                                             "FacetedTable", "DropdownTable", "SimpleList", "GoogleMap"
+ *                                             "FacetedTable", "DropdownTable", "SimpleList"
  * @param {Object} options
  * @param {Object} options.opts - Options to pass through to the renderer.
  * @param {Object} options.params - Pre-applied filters to the set of materials from TeSS.

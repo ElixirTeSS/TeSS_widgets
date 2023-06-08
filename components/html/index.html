@@ -211,6 +211,25 @@
 </section>
 
 <section>
+    <h2 id="materials-collection">Materials in a Collection</h2>
+    <div id="tess-widget-materials-collection" class="tess-widget tess-widget-list"></div>
+    <script id="tess-widget-materials-collection-code">
+        widgetList.push(function () {
+            TessWidget.Materials(document.getElementById('tess-widget-materials-collection'),
+                'SimpleList',
+                {
+                    opts: {
+                        truncateLength: 0
+                    },
+                    params: {
+                        collections: ['ELIXIR SIS-Containers - collection of training materials']
+                    }
+                });
+        });
+    </script>
+</section>
+
+<section>
     <h2 id="dropdown-table">Events Table with Dropdowns</h2>
     <div id="tess-widget-dropdown-table" class="tess-widget tess-widget-dropdown-table"></div>
     <script id="tess-widget-dropdown-table-code">
