@@ -21,7 +21,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^1.0.0",
-    "node-sass": "^7.0.3",
+    "node-sass": "^9.0.0",
     "sass": "^1.51.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
