@@ -5,20 +5,20 @@ $elixir-grey: rgb(77, 72, 72);
 $elixir-blue: rgb(0, 84, 114);
 $elixir-green: rgb(190, 191, 50);
 
-$elixir-orange-70: color.adjust($elixir-orange, $alpha: 0.3);
-$elixir-grey-70: color.adjust($elixir-grey, $alpha: 0.3);
-$elixir-blue-70: color.adjust($elixir-blue, $alpha: 0.3);
-$elixir-green-70: color.adjust($elixir-green, $alpha: 0.3);
+$elixir-orange-70: color.adjust($elixir-orange, $alpha: -0.3);
+$elixir-grey-70: color.adjust($elixir-grey, $alpha: -0.3);
+$elixir-blue-70: color.adjust($elixir-blue, $alpha: -0.3);
+$elixir-green-70: color.adjust($elixir-green, $alpha: -0.3);
 
-$elixir-orange-40: color.adjust($elixir-orange, $alpha: 0.6);
-$elixir-grey-40: color.adjust($elixir-grey, $alpha: 0.6);
-$elixir-blue-40: color.adjust($elixir-blue, $alpha: 0.6);
-$elixir-green-40: color.adjust($elixir-green, $alpha: 0.6);
+$elixir-orange-40: color.adjust($elixir-orange, $alpha: -0.6);
+$elixir-grey-40: color.adjust($elixir-grey, $alpha: -0.6);
+$elixir-blue-40: color.adjust($elixir-blue, $alpha: -0.6);
+$elixir-green-40: color.adjust($elixir-green, $alpha: -0.6);
 
-$elixir-orange-20: color.adjust($elixir-orange, $alpha: 0.8);
-$elixir-grey-20: color.adjust($elixir-grey, $alpha: 0.8);
-$elixir-blue-20: color.adjust($elixir-blue, $alpha: 0.8);
-$elixir-green-20: color.adjust($elixir-green, $alpha: 0.8);
+$elixir-orange-20: color.adjust($elixir-orange, $alpha: -0.8);
+$elixir-grey-20: color.adjust($elixir-grey, $alpha: -0.8);
+$elixir-blue-20: color.adjust($elixir-blue, $alpha: -0.8);
+$elixir-green-20: color.adjust($elixir-green, $alpha: -0.8);
 
 $mobile-width: 640px;
 $tablet-width: 990px;
