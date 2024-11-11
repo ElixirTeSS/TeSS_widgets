@@ -29,6 +29,6 @@
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.0.15",
     "marked": "^4.2.5",
-    "tess_json_api": "github:ElixirTeSS/tess-json-api-client#1.3.0a"
+    "tess_json_api": "github:ElixirTeSS/tess-json-api-client#1.4.0"
   }
 }
