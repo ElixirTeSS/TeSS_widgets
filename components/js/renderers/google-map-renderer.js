@@ -106,7 +106,7 @@ class GoogleMapRenderer extends Renderer {
             this.markers.push(this.markerSet[key]);
         }
 
-        const redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
+        const redirectUrl = this.widget.buildUrl(event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
         const info = n('div', { className: 'tess-map-info' },
             n('a', { href: redirectUrl, target: '_blank' }, event.attributes['title']));
         if (event.attributes['start']) {

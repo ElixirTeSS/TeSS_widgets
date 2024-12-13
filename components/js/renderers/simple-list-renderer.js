@@ -48,7 +48,7 @@ class SimpleListRenderer extends Renderer {
     };
 
     renderEvent (event) {
-        const redirectUrl = (event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
+        const redirectUrl = this.widget.buildUrl(event.links['self'] + '/redirect?widget=' + this.widget.identifier); // TODO: Fix me when 'redirect' link is available through API
 
         return n('li',
             n('a', { href: redirectUrl, target: '_blank' }, event.attributes['title']),
