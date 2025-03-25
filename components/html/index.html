@@ -117,6 +117,10 @@
                     <code>baseUrl</code> (optional) -
                     The base URL of the TeSS instance to use. Defaults to <code>https://tess.elixir-europe.org/</code>.
                 </li>
+                <li>
+                    <code>instanceName</code> (optional) -
+                    The name of the TeSS instance to use. Defaults to 'TeSS'.
+                </li>
             </ul>
         </li>
     </ul>
@@ -309,7 +313,8 @@
                     params: {
                         pageSize: 3
                     },
-                    baseUrl: 'https://dev.tess.elixir-europe.org' // Uses the "dev" instance of TeSS
+                    baseUrl: 'https://dev.tess.elixir-europe.org', // Uses the "dev" instance of TeSS
+                    instanceName: 'DevTeSS' // Uses the "dev" instance of TeSS
                 });
         });
     </script>

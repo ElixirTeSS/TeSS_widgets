@@ -21,6 +21,7 @@ TessApi.ApiClient.parseDate = function(str) {
  * @param {Object} options.opts - Options to pass through to the renderer.
  * @param {Object} options.params - Pre-applied filters to the set of events from TeSS.
  * @param {Object} options.baseUrl - URL to the TeSS instance the widget should use. Defaults to https://tess.elixir-europe.org
+ * @param {Object} options.instanceName - name of the TeSS instance the widget should use. Defaults to TeSS
  */
 class TessWidget {
 
@@ -33,6 +34,7 @@ class TessWidget {
         this.renderer = this.buildRenderer(renderer, options.opts);
         this.queryParameters = this.options.params || {};
         this.baseUrl = (this.options.baseUrl || 'https://tess.elixir-europe.org').replace(/\/+$/, '');
+        this.instanceName = (this.options.instanceName || 'TeSS');
         const client = new TessApi.ApiClient();
         client.basePath = this.baseUrl;
         this.api = new apiClass(client);
