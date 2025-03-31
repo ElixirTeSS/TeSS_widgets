@@ -26,6 +26,9 @@ class TableRenderer extends Renderer {
 
         // Resources
         const body = n('tbody');
+        if (!data.data.length) {
+            this.renderBlank(body);
+        }
         data.data.forEach((resource) => { this.renderResource(body, resource) });
 
         this.container.appendChild(n('table', head, body));
@@ -63,6 +66,13 @@ class TableRenderer extends Renderer {
         });
     }
 
+    renderBlank (container) {
+        const row = container.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = this.options.columns.length;
+        cell.className = 'tess-muted';
+        cell.appendChild(document.createTextNode(this.widget.emptyText));
+    }
 }
 
 module.exports = TableRenderer;
