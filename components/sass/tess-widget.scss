@@ -307,6 +307,11 @@ $tablet-width: 990px;
       padding-bottom: 0;
     }
   }
+
+  .tess-muted {
+    color: $elixir-grey;
+    font-style: italic;
+  }
 }
 
 .tess-loader:before, .tess-loader-large:before {

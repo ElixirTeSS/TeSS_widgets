@@ -119,7 +119,11 @@
                 </li>
                 <li>
                     <code>instanceName</code> (optional) -
-                    The name of the TeSS instance to use. Defaults to 'TeSS'.
+                    The name of the TeSS instance to use. Defaults to "TeSS".
+                </li>
+                <li>
+                    <code>emptyText</code> (optional) -
+                    Text to display if no resources are found. Defaults to "Nothing found".
                 </li>
             </ul>
         </li>
@@ -368,7 +372,7 @@ function copyWidgetCode() {
         var pre = this.parentNode.querySelector('pre');
         try {
             navigator.clipboard.writeText(pre.innerText);
-            this.innerText = 'Copied!'
+            this.innerText = 'Copied!';
         } catch (err) {
             console.error(err.name, err.message);
         }

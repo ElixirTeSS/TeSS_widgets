@@ -42,6 +42,9 @@ class SimpleListRenderer extends Renderer {
 
         Renderer.clear(this.elements.list);
 
+        if (!data.data.length) {
+            this.elements.list.appendChild(this.renderBlank());
+        }
         data.data.forEach((item) => {
             this.elements.list.appendChild((item.type === 'events') ? this.renderEvent(item) : this.renderMaterial(item))
         });
@@ -71,6 +74,9 @@ class SimpleListRenderer extends Renderer {
         );
     };
 
+    renderBlank () {
+        return n('span', { className: 'tess-muted' }, this.widget.emptyText);
+    }
 }
 
 module.exports = SimpleListRenderer;
